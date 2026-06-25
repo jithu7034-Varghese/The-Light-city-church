@@ -2337,8 +2337,8 @@
   }
 }
 
-/* Combined Stories & Ministries Section (Figma UI Redesign) */
-.combinedSection {
+/* Testimonies Section (Standalone Cinematic Layout) */
+.testimoniesSection {
   background-color: var(--bg-primary);
   padding: 120px 80px;
   width: 100%;
@@ -2348,185 +2348,183 @@
   position: relative;
   z-index: 10;
   overflow: hidden;
-  transition: background-color 0.5s ease;
   border-top: 1px solid var(--border-color);
 }
 
-.combinedContainer {
+.testimoniesContainer {
   width: 100%;
   max-width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1.3fr;
-  gap: 80px;
-  align-items: start;
 }
 
-/* Ambient Glow Layer */
-.ambientGlow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 650px;
-  height: 650px;
-  border-radius: 50%;
-  filter: blur(140px);
-  opacity: 0.28;
-  pointer-events: none;
-  z-index: 1;
-  transition: background-color 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+.testimoniesHeader {
+  margin-bottom: 60px;
 }
 
-[data-theme="dark"] .ambientGlow {
-  opacity: 0.42;
-}
-
-/* Column Wrappers */
-.leftColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  width: 100%;
-  position: relative;
-  z-index: 2;
-}
-
-.rightColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  width: 100%;
-  position: relative;
-  z-index: 2;
-}
-
-.sectionHeader {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.sectionTag {
+.testimoniesTag {
   font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.78rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.15em;
   color: var(--text-secondary);
-  opacity: 0.8;
+  display: inline-block;
+  margin-bottom: 12px;
 }
 
-.sectionTitle {
-  font-size: 3rem;
-  line-height: 1.15;
+.testimoniesTitle {
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
   font-weight: 700;
-  letter-spacing: -0.03em;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
 }
 
-.gradientText {
-  background: linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.testimoniesCinematicGrid {
+  display: grid;
+  grid-template-columns: 1.1fr 1.3fr;
+  gap: 80px;
+  align-items: center;
 }
 
-/* Left Column: Testimony Spotlight Card (Figma Style) */
-.testimonyCard {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
+/* Left Column: Interactive portrait spotlight */
+.portraitColumn {
+  position: relative;
+  width: 100%;
+  z-index: 5;
+}
+
+.cinematicPortraitWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   border-radius: 32px;
-  padding: 40px 32px;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              box-shadow 0.5s ease;
+}
+
+.cinematicPortraitWrapper:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2);
+}
+
+.portraitImage {
+  object-fit: cover;
+  object-position: center 25%;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cinematicPortraitWrapper:hover .portraitImage {
+  transform: scale(1.04);
+}
+
+.portraitGlowOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--accent-glow, rgba(0, 223, 216, 0.15)),
+    transparent 40%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+.portraitOverlayText {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  z-index: 3;
+}
+
+.portraitPathway {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Right Column: Giant Quote Block & Pagination */
+.copyColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  z-index: 5;
+}
+
+.quoteBlock {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  box-shadow: var(--shadow-md);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 240px;
+  justify-content: center;
 }
 
-.testimonyCard:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-}
-
-.testimonyPortraitWrapper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4/3;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid var(--border-color);
-}
-
-.testimonyPortrait {
-  object-fit: cover;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.testimonyCard:hover .testimonyPortrait {
-  transform: scale(1.03);
-}
-
-.testimonyPathwayBadge {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 4;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: rgba(14, 17, 24, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.testimonyCardBody {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.testimonyQuote {
+.largeQuoteMark {
   font-family: var(--font-heading);
-  font-size: 1.35rem;
-  line-height: 1.5;
+  font-size: 8rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--text-primary);
+  opacity: 0.06;
+  position: absolute;
+  top: -45px;
+  left: -20px;
+  pointer-events: none;
+}
+
+.cinematicQuoteText {
+  font-family: var(--font-heading);
+  font-size: 1.85rem;
   font-weight: 500;
+  line-height: 1.4;
   color: var(--text-primary);
   letter-spacing: -0.01em;
-  margin: 0;
+  font-style: italic;
 }
 
-.testimonyAuthorMeta {
+.cinematicAuthorMeta {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
-.testimonyAuthorName {
-  font-family: var(--font-heading);
-  font-size: 1.15rem;
+.cinematicAuthorName {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.testimonyAuthorRole {
+.cinematicAuthorRole {
   font-family: var(--font-sans);
   font-size: 0.85rem;
+  font-weight: 500;
   color: var(--text-secondary);
 }
 
-/* Custom Sliding Navigation Bar inside Testimony Card */
+/* Pagination menu style matching bento dashboard */
 .cinematicNavWrapper {
+  position: relative;
+  width: fit-content;
   border-top: 1px solid var(--border-color);
   padding-top: 24px;
-  margin-top: 8px;
-  width: 100%;
 }
 
 .cinematicNavMenu {
@@ -2538,151 +2536,179 @@
 .navItem {
   background: none;
   border: none;
-  padding: 8px 0;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   cursor: pointer;
+  padding: 8px 0;
   color: var(--text-secondary);
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 500;
   transition: color 0.3s ease;
-  position: relative;
-}
-
-.navItem:hover {
-  color: var(--text-primary);
 }
 
 .navItemActive {
   color: var(--text-primary);
-  font-weight: 600;
 }
 
 .navIndex {
-  font-size: 0.75rem;
-  opacity: 0.6;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
 }
 
 .navDivider {
-  opacity: 0.3;
+  opacity: 0.4;
+  font-size: 0.72rem;
 }
 
 .navName {
-  letter-spacing: 0.02em;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
+/* Horizontal slide indicator */
 .navIndicator {
   position: absolute;
-  bottom: 0;
+  bottom: -25px;
   height: 2px;
   background-color: var(--text-primary);
-  transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-              width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Entry/Exit Transitions */
-.fadeEntry {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-
-.fadeExit {
-  opacity: 0;
-  transform: translate3d(0, 15px, 0);
-}
-
-/* Right Column: Ministries 2x2 Grid */
-.ministriesGrid2x2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+/* Services (Ministries) Section (Mockup Redesign 3-Column Grid) */
+.servicesSection {
+  background-color: var(--bg-secondary);
+  padding: 120px 80px;
   width: 100%;
-}
-
-.ministryCard {
-  position: relative;
-  border-radius: 28px;
-  padding: 32px;
-  min-height: 350px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 10;
   overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.3s ease,
-              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-top: 1px solid var(--border-color);
 }
 
-.ministryCardLight {
-  background-color: var(--bg-secondary);
+.servicesGridContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  width: 100%;
+  max-width: 100%;
+  align-items: stretch;
+}
+
+.servicesHeadingCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 12px;
+}
+
+.mockupTitleText {
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.mockupPortraitCard {
+  position: relative;
+  border-radius: 32px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1.05;
+  width: 100%;
   border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  background-color: var(--bg-primary);
+}
+
+.portraitCardImage {
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mockupPortraitCard:hover .portraitCardImage {
+  transform: scale(1.04);
+}
+
+.portraitCardBadge {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background-color: #0b0c0e;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: var(--shadow-sm);
 }
 
-.ministryCardLight:hover {
-  transform: translateY(-6px);
-  border-color: var(--text-primary);
-  box-shadow: var(--shadow-lg);
-}
-
-/* Card 2 Dark Theme Style matching Figma mock */
-.ministryCardDark {
-  background-color: #0e1118;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: var(--shadow-md);
-}
-
-[data-theme="dark"] .ministryCardDark {
-  background-color: #07090e;
-}
-
-.ministryCardDark:hover {
-  transform: translateY(-6px);
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: var(--shadow-xl);
-}
-
-.ministryCardContent {
+.mockupCard {
   position: relative;
-  z-index: 2;
-  height: 100%;
+  border-radius: 32px;
+  padding: 40px 32px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-grow: 1;
+  overflow: hidden;
+  justify-content: flex-start;
+  min-height: 280px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
+  cursor: pointer;
 }
 
-/* Hover Accent Glow */
-.ministryGlow {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: var(--accent-gradient);
-  opacity: 0;
-  filter: blur(60px);
-  z-index: 1;
-  pointer-events: none;
-  transform: scale(0.6);
-  transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1),
-              transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+.mockupCardLight {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-primary);
 }
 
-.ministryCardLight:hover .ministryGlow {
-  opacity: 0.06;
-  transform: scale(1);
+.mockupCardLight:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--text-primary);
 }
 
-/* Icon Styles */
-.ministryIconWrapper {
-  margin-bottom: 20px;
+.mockupCardDark {
+  background-color: #0b0c0e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-md);
+  color: #ffffff;
 }
 
-.ministryIconContainer {
+.mockupCardDark:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.mockupCardContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mockupIconWrapper {
+  margin-bottom: 24px;
+}
+
+.mockupIconContainer {
   width: 48px;
   height: 48px;
   border-radius: 14px;
@@ -2693,220 +2719,290 @@
               background-color 0.3s ease;
 }
 
-.ministryCardLight .ministryIconContainer {
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
+.iconContainerYellow {
+  background-color: #ffde59;
+  color: #0b0c0e;
 }
 
-.ministryCardDark .ministryIconContainer {
+.iconContainerDark {
   background-color: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #ffffff;
 }
 
-.ministryCardLight:hover .ministryIconContainer {
-  transform: scale(1.06) rotate(2deg);
+.iconContainerLight {
   background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 
-.ministryCardDark:hover .ministryIconContainer {
+.mockupCardLight:hover .mockupIconContainer {
+  transform: scale(1.06) rotate(2deg);
+}
+
+.mockupCardDark:hover .mockupIconContainer {
   transform: scale(1.06) rotate(2deg);
   background-color: rgba(255, 255, 255, 0.15);
 }
 
-.ministryIcon {
+.mockupIcon {
   width: 20px;
   height: 20px;
 }
 
-/* Card Content Details */
-.ministryMeta {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  width: 100%;
-}
-
-.ministryPathway {
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 10px;
-}
-
-.ministryCardLight .ministryPathway {
-  color: var(--text-secondary);
-}
-
-.ministryCardDark .ministryPathway {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.ministryTitle {
+.mockupCardTitle {
   font-family: var(--font-heading);
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-size: 1.45rem;
+  font-weight: 700;
   letter-spacing: -0.01em;
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 }
 
-.ministryCardLight .ministryTitle {
-  color: var(--text-primary);
-}
-
-.ministryCardDark .ministryTitle {
-  color: #ffffff;
-}
-
-.ministrySchedule {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 3px 8px;
-  border-radius: 6px;
-  margin-bottom: 14px;
-  display: inline-block;
-  width: fit-content;
-}
-
-.ministryCardLight .ministrySchedule {
-  color: var(--text-primary);
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-}
-
-.ministryCardDark .ministrySchedule {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.ministryDescription {
+.mockupCardDescription {
   font-family: var(--font-sans);
   font-size: 0.88rem;
-  line-height: 1.45;
-  margin-bottom: 20px;
+  line-height: 1.5;
+  margin: 0;
 }
 
-.ministryCardLight .ministryDescription {
+.mockupCardLight .mockupCardDescription {
   color: var(--text-secondary);
 }
 
-.ministryCardDark .ministryDescription {
-  color: rgba(255, 255, 255, 0.7);
+.mockupCardDark .mockupCardDescription {
+  color: rgba(255, 255, 255, 0.65);
 }
 
-.ministryAction {
+/* Footer Section (Figma UI Redesign Bottom Half) */
+.footerSection {
+  background-color: #0b0c0e;
+  padding: 80px 80px 40px 80px;
+  margin: 40px auto 80px auto;
+  width: calc(100% - 160px);
+  max-width: 100%;
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.footerContainer {
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+  margin-bottom: 60px;
+}
+
+.footerBrandColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.footerLogoContainer {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-top: auto;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
-.ministryCardLight .ministryAction {
-  color: var(--text-primary);
-}
-
-.ministryCardDark .ministryAction {
+.footerLogoIcon {
+  font-size: 1.5rem;
   color: #ffffff;
 }
 
-.actionText {
-  transition: transform 0.3s ease;
+.footerLogoText {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #ffffff;
 }
 
-.actionArrow {
-  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+.footerSectionHeadline {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 24px 0;
 }
 
-.ministryCardLight:hover .actionArrow {
-  transform: translateX(4px);
+.footerBlueBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  width: fit-content;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
 }
 
-.ministryCardDark:hover .actionArrow {
-  transform: translateX(4px);
+.footerBlueBadge:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.footerLinkColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.footerColumnTitle {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 10px;
+}
+
+.footerLinkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footerLink {
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+.footerLink:hover {
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+/* Footer Bottom Bar */
+.footerBottomBar {
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footerCopyright {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.footerBottomLinks {
+  display: flex;
+  gap: 24px;
+}
+
+.footerBottomLink {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footerBottomLink:hover {
+  color: #ffffff;
 }
 
 /* Responsiveness overrides */
 @media (max-width: 1024px) {
-  .combinedSection {
+  .testimoniesSection, .servicesSection {
     padding: 80px 40px;
   }
-  .combinedContainer {
-    grid-template-columns: 1fr;
-    gap: 60px;
+  .footerSection {
+    padding: 60px 40px;
+    width: calc(100% - 80px);
+    margin: 40px auto 60px auto;
   }
-  .testimonyCard {
-    max-width: 100%;
+  .servicesGridContainer {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .servicesHeadingCard {
+    grid-column: span 2;
+    text-align: center;
+    align-items: center;
+  }
+  .mockupTitleText {
+    font-size: 3rem;
+  }
+  .footerContainer {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .servicesGridContainer {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .servicesHeadingCard {
+    grid-column: span 1;
+  }
+  .footerSection {
+    width: calc(100% - 32px);
+    padding: 40px 24px;
+    margin: 20px auto 40px auto;
   }
 }
 
 @media (max-width: 640px) {
-  .combinedSection {
+  .testimoniesSection, .servicesSection {
     padding: 60px 16px;
   }
-  .combinedContainer {
-    gap: 40px;
+  .mockupTitleText {
+    font-size: 2.5rem;
   }
-  .sectionTitle {
-    font-size: 2.25rem;
-  }
-  .testimonyQuote {
-    font-size: 1.2rem;
-  }
-  .ministriesGrid2x2 {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  .ministryCard {
-    padding: 30px 24px;
-    min-height: auto;
+  .footerBottomBar {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
   }
 }
 
 /* MANDATORY copy-paste safety for reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .bentoGridCell, .bentoPhoto, .revealArrow, .lightboxClose, .lightboxPrev, .lightboxNext, .lightboxContent {
+  .portraitCardImage, .mockupCard, .mockupIconContainer, .footerBlueBadge {
     transition: none !important;
     transform: none !important;
     animation: none !important;
   }
-  .bentoGridCell:hover {
+  .mockupPortraitCard:hover .portraitCardImage {
     transform: none !important;
   }
-  .wavePlaying .waveBar {
-    animation: none !important;
-    height: 12px !important;
-  }
-  .testimonyCard, .testimonyPortrait, .cinematicNavWrapper, .navIndicator, .fadeEntry, .fadeExit {
-    transition: none !important;
-    transform: none !important;
-    animation: none !important;
-  }
-  .testimonyCard:hover {
+  .mockupCard:hover {
     transform: none !important;
   }
-  .testimonyCard:hover .testimonyPortrait {
-    transform: none !important;
-  }
-  .ministryCard, .ministryIconContainer, .actionArrow, .ministryGlow {
-    transition: none !important;
-    transform: none !important;
-    animation: none !important;
-  }
-  .ministryCard:hover {
-    transform: none !important;
-  }
-  .ministryCard:hover .ministryIconContainer {
-    transform: none !important;
-  }
-  .ministryCard:hover .actionArrow {
+  .footerBlueBadge:hover {
     transform: none !important;
   }
 }

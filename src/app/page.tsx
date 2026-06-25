@@ -375,76 +375,7 @@ const testimoniesData: TestimonyItem[] = [
   }
 ];
 
-interface ServiceItem {
-  id: string;
-  title: string;
-  schedule: string;
-  description: string;
-  gradient: string;
-  pathway: string;
-  icon: (props: React.SVGProps<SVGSVGElement>) => React.ReactNode;
-}
 
-const servicesData: ServiceItem[] = [
-  {
-    id: "service-gatherings",
-    title: "Sunday Gatherings",
-    schedule: "Sundays at 9:00 AM & 11:00 AM",
-    description: "Experience powerful in-person worship, inspiring teaching, and a warm, supportive community. Join us as we gather together to lift up the name of Jesus.",
-    gradient: "linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%)",
-    pathway: "In-Person Campus",
-    icon: (props) => (
-      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
-      </svg>
-    )
-  },
-  {
-    id: "service-online",
-    title: "Online Campus",
-    schedule: "Sundays at 11:00 AM Live",
-    description: "Connect with our church family from anywhere in the world. Join our live stream, participate in real-time chat, request digital prayer, and find connection online.",
-    gradient: "linear-gradient(135deg, #4FACFE 0%, #00F2FE 100%)",
-    pathway: "Online Campus",
-    icon: (props) => (
-      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
-        <polyline points="17 2 12 7 7 2" />
-      </svg>
-    )
-  },
-  {
-    id: "service-bible",
-    title: "Bible Studies",
-    schedule: "Wednesdays at 7:00 PM",
-    description: "Deepen your understanding of Scripture through our mid-week Bible studies and Life Groups. Engaging discussions, scripture deep-dives, and shared life.",
-    gradient: "linear-gradient(135deg, #B12A5B 0%, #FF758C 100%)",
-    pathway: "Discipleship Pathway",
-    icon: (props) => (
-      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-      </svg>
-    )
-  },
-  {
-    id: "service-nextgen",
-    title: "NextGen Ministries",
-    schedule: "Sundays & Mid-Week Gatherings",
-    description: "Tailored environments for kids and youth to explore their faith, make life-long friends, and discover their God-given potential in a safe, fun space.",
-    gradient: "linear-gradient(135deg, #11998E 0%, #38EF7D 100%)",
-    pathway: "Youth & Kids Pathway",
-    icon: (props) => (
-      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    )
-  }
-];
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'story' | 'vision' | 'connect'>('story');
@@ -456,6 +387,8 @@ export default function Home() {
   const [indicatorStyle, setIndicatorStyle] = useState<React.CSSProperties>({});
   const navMenuRef = useRef<HTMLDivElement>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
+
+
 
   const handleTestimonyChange = (index: number) => {
     if (index === activeTestimony) return;
@@ -1343,8 +1276,8 @@ export default function Home() {
         </div>
       </ViewportSection>
 
-      {/* Combined Stories & Ministries Section (Figma UI Redesign) */}
-      <ViewportSection as="section" className={styles.combinedSection} id="stories-ministries">
+      {/* Testimonies Section */}
+      <ViewportSection as="section" className={styles.testimoniesSection} id="testimonies">
         <div 
           className={styles.ambientGlow}
           style={{
@@ -1352,54 +1285,58 @@ export default function Home() {
           }}
         />
 
-        <div className={styles.combinedContainer}>
-          {/* Left Column: Stories / Testimonies */}
-          <div className={styles.leftColumn}>
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionTag}>
-                <SplitText text="/Stories" delayOffset={0.0} />
+        <div className={styles.testimoniesContainer}>
+          <div className={styles.testimoniesHeader}>
+            <span className={styles.testimoniesTag}>
+              <SplitText text="/Stories" delayOffset={0.0} />
+            </span>
+            <h2 className={styles.testimoniesTitle}>
+              <SplitText text="Shining Their Light" delayOffset={0.1} />
+              <br />
+              <span className={styles.gradientText}>
+                <SplitText text="Stories of Hope & Purpose" delayOffset={0.6} />
               </span>
-              <h2 className={styles.sectionTitle}>
-                <SplitText text="Shining Their Light" delayOffset={0.1} />
-                <br />
-                <span className={styles.gradientText}>
-                  <SplitText text="Stories of Hope" delayOffset={0.5} />
-                </span>
-              </h2>
-            </div>
+            </h2>
+          </div>
 
-            {/* Testimony Spotlight Card */}
-            <div
-              ref={portraitRef}
-              onMouseMove={handlePortraitMouseMove}
-              className={`${styles.testimonyCard} ${testimonyFade ? styles.fadeExit : styles.fadeEntry}`}
-              style={{
-                position: 'relative',
-                '--accent-glow': testimoniesData[activeTestimony].accentColor
-              } as React.CSSProperties}
-            >
-              <div className={styles.testimonyPortraitWrapper}>
+          <div className={styles.testimoniesCinematicGrid}>
+            {/* Left Column: Interactive Portrait spotlight card */}
+            <div className={styles.portraitColumn}>
+              <div
+                ref={portraitRef}
+                onMouseMove={handlePortraitMouseMove}
+                className={`${styles.cinematicPortraitWrapper} ${testimonyFade ? styles.fadeExit : styles.fadeEntry}`}
+                style={{
+                  position: 'relative',
+                  '--accent-glow': testimoniesData[activeTestimony].accentColor
+                } as React.CSSProperties}
+              >
+                <div className={styles.portraitGlowOverlay} />
                 <Image
                   src={testimoniesData[activeTestimony].portrait}
                   alt={testimoniesData[activeTestimony].author}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 500px"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   priority
-                  className={styles.testimonyPortrait}
+                  className={styles.portraitImage}
                 />
-                <div className={styles.testimonyPathwayBadge}>
-                  /{testimoniesData[activeTestimony].pathway}
+                <div className={styles.portraitOverlayText}>
+                  <span className={styles.portraitPathway}>/{testimoniesData[activeTestimony].pathway}</span>
                 </div>
               </div>
+            </div>
 
-              <div className={styles.testimonyCardBody}>
-                <blockquote className={styles.testimonyQuote}>
-                  &ldquo;{testimoniesData[activeTestimony].quote}&rdquo;
+            {/* Right Column: Giant Quote Block & Pagination */}
+            <div className={styles.copyColumn}>
+              <div className={`${styles.quoteBlock} ${testimonyFade ? styles.fadeExit : styles.fadeEntry}`}>
+                <span className={styles.largeQuoteMark}>“</span>
+                <blockquote className={styles.cinematicQuoteText}>
+                  {testimoniesData[activeTestimony].quote}
                 </blockquote>
                 
-                <div className={styles.testimonyAuthorMeta}>
-                  <h4 className={styles.testimonyAuthorName}>{testimoniesData[activeTestimony].author}</h4>
-                  <span className={styles.testimonyAuthorRole}>{testimoniesData[activeTestimony].role}</span>
+                <div className={styles.cinematicAuthorMeta}>
+                  <h4 className={styles.cinematicAuthorName}>{testimoniesData[activeTestimony].author}</h4>
+                  <span className={styles.cinematicAuthorRole}>{testimoniesData[activeTestimony].role}</span>
                 </div>
               </div>
 
@@ -1426,66 +1363,170 @@ export default function Home() {
               </div>
             </div>
           </div>
-
-          {/* Right Column: Ministries / Services */}
-          <div className={styles.rightColumn}>
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionTag}>
-                <SplitText text="/Ministries" delayOffset={0.0} />
-              </span>
-              <h2 className={styles.sectionTitle}>
-                <SplitText text="Where You Belong" delayOffset={0.1} />
-                <br />
-                <span className={styles.gradientText}>
-                  <SplitText text="Services & Gatherings" delayOffset={0.5} />
-                </span>
-              </h2>
-            </div>
-
-            <div className={styles.ministriesGrid2x2}>
-              {servicesData.map((item, idx) => {
-                const Icon = item.icon;
-                const isDarkCard = idx === 1;
-                return (
-                  <div 
-                    key={item.id} 
-                    className={`${styles.ministryCard} ${isDarkCard ? styles.ministryCardDark : styles.ministryCardLight}`}
-                  >
-                    {!isDarkCard && (
-                      <div 
-                        className={styles.ministryGlow} 
-                        style={{ '--accent-gradient': item.gradient } as React.CSSProperties}
-                      />
-                    )}
-                    <div className={styles.ministryCardContent}>
-                      <div className={styles.ministryIconWrapper}>
-                        <div className={styles.ministryIconContainer}>
-                          <Icon className={styles.ministryIcon} />
-                        </div>
-                      </div>
-                      
-                      <div className={styles.ministryMeta}>
-                        <span className={styles.ministryPathway}>/{item.pathway}</span>
-                        <h3 className={styles.ministryTitle}>{item.title}</h3>
-                        <span className={styles.ministrySchedule}>{item.schedule}</span>
-                        <p className={styles.ministryDescription}>{item.description}</p>
-                      </div>
-
-                      <div className={styles.ministryAction}>
-                        <span className={styles.actionText}>Learn More</span>
-                        <svg className={styles.actionArrow} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="5" y1="12" x2="19" y2="12"></line>
-                          <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
         </div>
       </ViewportSection>
+
+      {/* Services (Ministries) Section (Mockup Redesign 3-Column Grid) */}
+      <ViewportSection as="section" className={styles.servicesSection} id="services">
+        <div className={styles.servicesGridContainer}>
+          
+          {/* Column 1, Row 1: Heading */}
+          <div className={styles.servicesHeadingCard}>
+            <h2 className={styles.mockupTitleText}>
+              Wecatty<br />
+              Meat Børke<br />
+              Balman
+            </h2>
+          </div>
+
+          {/* Column 2, Row 1: Services Card */}
+          <div className={`${styles.mockupCard} ${styles.mockupCardLight}`}>
+            <div className={styles.mockupCardContent}>
+              <div className={styles.mockupIconWrapper}>
+                <div className={`${styles.mockupIconContainer} ${styles.iconContainerYellow}`}>
+                  <svg className={styles.mockupIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className={styles.mockupCardTitle}>Services</h3>
+              <p className={styles.mockupCardDescription}>
+                Weekly gather and worship. Experience life-changing messages, powerful worship, and welcoming community for all ages.
+              </p>
+            </div>
+          </div>
+
+          {/* Column 3, Row 1: Rocioigole Card (Dark) */}
+          <div className={`${styles.mockupCard} ${styles.mockupCardDark}`}>
+            <div className={styles.mockupCardContent}>
+              <div className={styles.mockupIconWrapper}>
+                <div className={`${styles.mockupIconContainer} ${styles.iconContainerDark}`}>
+                  <svg className={styles.mockupIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
+                    <polyline points="17 2 12 7 7 2" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className={styles.mockupCardTitle}>Rocioigole</h3>
+              <p className={styles.mockupCardDescription}>
+                Connecting and engaging our virtual campus community. Streaming services live weekly to members worldwide.
+              </p>
+            </div>
+          </div>
+
+          {/* Column 1, Row 2: Portrait Card with badge */}
+          <div className={styles.mockupPortraitCard}>
+            <Image
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop"
+              alt="Alumnes Portrait"
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
+              className={styles.portraitCardImage}
+            />
+            <div className={styles.portraitCardBadge}>
+              /Alumnes
+            </div>
+          </div>
+
+          {/* Column 2, Row 2: Mortes Card */}
+          <div className={`${styles.mockupCard} ${styles.mockupCardLight}`}>
+            <div className={styles.mockupCardContent}>
+              <div className={styles.mockupIconWrapper}>
+                <div className={`${styles.mockupIconContainer} ${styles.iconContainerLight}`}>
+                  <svg className={styles.mockupIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8" />
+                    <path d="M8 12h8" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className={styles.mockupCardTitle}>Mortes</h3>
+              <p className={styles.mockupCardDescription}>
+                Local community outreach and support programs designed to serve those in need and make a lasting impact.
+              </p>
+            </div>
+          </div>
+
+          {/* Column 3, Row 2: Martitooms Card */}
+          <div className={`${styles.mockupCard} ${styles.mockupCardLight}`}>
+            <div className={styles.mockupCardContent}>
+              <div className={styles.mockupIconWrapper}>
+                <div className={`${styles.mockupIconContainer} ${styles.iconContainerLight}`}>
+                  <svg className={styles.mockupIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className={styles.mockupCardTitle}>Martitooms</h3>
+              <p className={styles.mockupCardDescription}>
+                Tailored youth ministries, gatherings, and events empowering the next generation to lead with faith.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </ViewportSection>
+
+      {/* Footer Section (Figma UI Redesign Bottom Half) */}
+      <footer className={styles.footerSection} id="footer">
+        <div className={styles.footerContainer}>
+          {/* Brand Info Column */}
+          <div className={styles.footerBrandColumn}>
+            <div className={styles.footerLogoContainer}>
+              <span className={styles.footerLogoIcon}>✦</span>
+              <span className={styles.footerLogoText}>LIGHT CITY CHURCH</span>
+            </div>
+            
+            <h2 className={styles.footerSectionHeadline}>
+              Services and Settings
+            </h2>
+
+            {/* Blue badge: BONE DRC */}
+            <div className={styles.footerBlueBadge}>
+              <span className={styles.footerBlueBadgeIcon}>🌐</span>
+              <span className={styles.footerBlueBadgeText}>BONE DRC</span>
+            </div>
+          </div>
+
+          {/* Links Column 1: Sortipy */}
+          <div className={styles.footerLinkColumn}>
+            <h4 className={styles.footerColumnTitle}>Sortipy</h4>
+            <ul className={styles.footerLinkList}>
+              <li><a href="#sermons" className={styles.footerLink}>Sermons</a></li>
+              <li><a href="#groups" className={styles.footerLink}>Life Groups</a></li>
+              <li><a href="#serve" className={styles.footerLink}>Serve Teams</a></li>
+              <li><a href="#contact" className={styles.footerLink}>Contact Us</a></li>
+            </ul>
+          </div>
+
+          {/* Links Column 2: Porlay */}
+          <div className={styles.footerLinkColumn}>
+            <h4 className={styles.footerColumnTitle}>Porlay</h4>
+            <ul className={styles.footerLinkList}>
+              <li><a href="#services" className={styles.footerLink}>Online Campus</a></li>
+              <li><a href="#giving" className={styles.footerLink}>Giving</a></li>
+              <li><a href="#gallery" className={styles.footerLink}>News & Events</a></li>
+              <li><a href="#pastor" className={styles.footerLink}>About Our Pastor</a></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Footer Bottom Bar */}
+        <div className={styles.footerBottomBar}>
+          <p className={styles.footerCopyright}>
+            © 2026 Light City Church. All rights reserved.
+          </p>
+          <div className={styles.footerBottomLinks}>
+            <a href="#privacy" className={styles.footerBottomLink}>Privacy Policy</a>
+            <a href="#terms" className={styles.footerBottomLink}>Terms of Service</a>
+          </div>
+        </div>
+      </footer>
 
       {/* Lightbox Modal */}
       {modalIndex !== null && filteredItems[modalIndex] && (
@@ -1569,6 +1610,7 @@ export default function Home() {
           </div>
         </div>
       )}
+
     </div>
   );
 }
