@@ -2337,6 +2337,588 @@
   }
 }
 
+/* Testimonies Section */
+.testimoniesSection {
+  background-color: var(--bg-primary);
+  padding: 120px 80px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+  transition: background-color 0.5s ease;
+}
+
+.testimoniesContainer {
+  width: 100%;
+  max-width: var(--container-max);
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.testimoniesHeader {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.testimoniesTag {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.testimoniesTitle {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.testimoniesCinematicGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+  width: 100%;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* Ambient Glow Layer */
+.ambientGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 650px;
+  height: 650px;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.28;
+  pointer-events: none;
+  z-index: 1;
+  transition: background-color 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+[data-theme="dark"] .ambientGlow {
+  opacity: 0.42;
+}
+
+/* Left Column: Portrait Card */
+.portraitColumn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.cinematicPortraitWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 3/4;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  box-shadow: var(--shadow-xl);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+              opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cinematicPortraitWrapper:hover {
+  transform: translateY(-8px);
+}
+
+.portraitImage {
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.cinematicPortraitWrapper:hover .portraitImage {
+  transform: scale(1.03);
+}
+
+/* Mouse Glow Overlay on Portrait - Using pathways accent color spotlight */
+.portraitGlowOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 220px) var(--mouse-y, 290px),
+    var(--accent-glow, rgba(255, 255, 255, 0.15)),
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.cinematicPortraitWrapper:hover .portraitGlowOverlay {
+  opacity: 1;
+}
+
+.portraitOverlayText {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  z-index: 4;
+}
+
+.portraitPathway {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: rgba(14, 17, 24, 0.6);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Right Column: Quote Block */
+.copyColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+}
+
+.quoteBlock {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.largeQuoteMark {
+  font-family: var(--font-heading);
+  font-size: 8rem;
+  line-height: 1;
+  color: var(--text-primary);
+  opacity: 0.08;
+  position: absolute;
+  top: -60px;
+  left: -20px;
+  pointer-events: none;
+  font-weight: 900;
+}
+
+.cinematicQuoteText {
+  font-family: var(--font-heading);
+  font-size: 2.25rem;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.cinematicAuthorMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cinematicAuthorName {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cinematicAuthorRole {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* Custom Sliding Navigation Bar */
+.cinematicNavWrapper {
+  border-top: 1px solid var(--border-color);
+  padding-top: 30px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.cinematicNavMenu {
+  display: flex;
+  gap: 48px;
+  position: relative;
+}
+
+.navItem {
+  background: none;
+  border: none;
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.navItem:hover {
+  color: var(--text-primary);
+}
+
+.navItemActive {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.navIndex {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.navDivider {
+  opacity: 0.3;
+}
+
+.navName {
+  letter-spacing: 0.02em;
+}
+
+.navIndicator {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--text-primary);
+  transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Entry/Exit Transitions */
+.fadeEntry {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.fadeExit {
+  opacity: 0;
+  transform: translate3d(0, 15px, 0);
+}
+
+/* Responsiveness overrides */
+@media (max-width: 1024px) {
+  .testimoniesSection {
+    padding: 80px 40px;
+  }
+  .testimoniesCinematicGrid {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  .portraitColumn {
+    max-width: 360px;
+    margin: 0 auto;
+  }
+  .cinematicNavMenu {
+    gap: 32px;
+    justify-content: center;
+  }
+  .quoteBlock {
+    text-align: center;
+  }
+  .largeQuoteMark {
+    left: 50%;
+    transform: translateX(-50%);
+    top: -50px;
+  }
+}
+
+@media (max-width: 640px) {
+  .testimoniesSection {
+    padding: 60px 16px;
+  }
+  .testimoniesContainer {
+    gap: 40px;
+  }
+  .testimoniesTitle {
+    font-size: 2.25rem;
+  }
+  .cinematicQuoteText {
+    font-size: 1.6rem;
+    line-height: 1.5;
+  }
+  .cinematicNavMenu {
+    gap: 24px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 8px;
+    scrollbar-width: none; /* Firefox */
+  }
+  .cinematicNavMenu::-webkit-scrollbar {
+    display: none; /* Safari/Chrome */
+  }
+  .navItem {
+    padding: 8px 0;
+  }
+}
+
+/* Services Section */
+.servicesSection {
+  background-color: var(--bg-secondary);
+  padding: 120px 80px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+  border-top: 1px solid var(--border-color);
+}
+
+.servicesContainer {
+  width: 100%;
+  max-width: var(--container-max);
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.servicesHeader {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.servicesTag {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.servicesTitle {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  width: 100%;
+}
+
+/* Service Card Glassmorphism */
+.serviceCard {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 40px 30px;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.3s ease,
+              box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  cursor: pointer;
+}
+
+[data-theme="dark"] .serviceCard {
+  background-color: rgba(14, 17, 24, 0.2);
+}
+
+.serviceCardContent {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+/* Hover Accent Glow */
+.serviceGlow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: var(--accent-gradient);
+  opacity: 0;
+  filter: blur(80px);
+  z-index: 1;
+  pointer-events: none;
+  transform: scale(0.6);
+  transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.serviceCard:hover .serviceGlow {
+  opacity: 0.08;
+  transform: scale(1);
+}
+
+[data-theme="dark"] .serviceCard:hover .serviceGlow {
+  opacity: 0.15;
+}
+
+.serviceCard:hover {
+  transform: translateY(-8px);
+  border-color: var(--text-primary);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Service Content Details */
+.serviceIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              background-color 0.3s ease;
+}
+
+.serviceCard:hover .serviceIcon {
+  transform: scale(1.08) rotate(3deg);
+  background-color: var(--bg-secondary);
+}
+
+.serviceIconSvg {
+  width: 24px;
+  height: 24px;
+}
+
+.servicePathway {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.serviceCardTitle {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+
+.serviceCardSchedule {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.serviceCardDescription {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  flex-grow: 1;
+}
+
+.serviceAction {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: auto;
+}
+
+.actionText {
+  transition: transform 0.3s ease;
+}
+
+.actionArrow {
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.serviceCard:hover .actionArrow {
+  transform: translateX(6px);
+}
+
+/* Responsiveness overrides for Services */
+@media (max-width: 1024px) {
+  .servicesSection {
+    padding: 80px 40px;
+  }
+  .servicesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .servicesSection {
+    padding: 60px 16px;
+  }
+  .servicesTitle {
+    font-size: 2.25rem;
+  }
+  .servicesGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .serviceCard {
+    padding: 30px 24px;
+    min-height: auto;
+  }
+}
+
 /* MANDATORY copy-paste safety for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .bentoGridCell, .bentoPhoto, .revealArrow, .lightboxClose, .lightboxPrev, .lightboxNext, .lightboxContent {
@@ -2350,6 +2932,31 @@
   .wavePlaying .waveBar {
     animation: none !important;
     height: 12px !important;
+  }
+  .cinematicPortraitWrapper, .quoteBlock, .navIndicator, .portraitImage, .fadeEntry, .fadeExit {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .cinematicPortraitWrapper:hover {
+    transform: none !important;
+  }
+  .cinematicPortraitWrapper:hover .portraitImage {
+    transform: none !important;
+  }
+  .serviceCard, .serviceIcon, .actionArrow, .serviceGlow {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .serviceCard:hover {
+    transform: none !important;
+  }
+  .serviceCard:hover .serviceIcon {
+    transform: none !important;
+  }
+  .serviceCard:hover .actionArrow {
+    transform: none !important;
   }
 }
 

@@ -19,7 +19,9 @@ function SplitText({ text, className, delayOffset = 0, by = 'letters' }: SplitTe
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 0);
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -32,7 +34,10 @@ function SplitText({ text, className, delayOffset = 0, by = 'letters' }: SplitTe
     if (ref.current) {
       observer.observe(ref.current);
     }
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
   }, []);
 
   const words = text.split(" ");
@@ -155,7 +160,9 @@ function ViewportSection({ children, className = "", id, as: Component = 'sectio
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 0);
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -168,7 +175,10 @@ function ViewportSection({ children, className = "", id, as: Component = 'sectio
     if (ref.current) {
       observer.observe(ref.current);
     }
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
   }, []);
 
   let sectionClass = className;
@@ -177,6 +187,7 @@ function ViewportSection({ children, className = "", id, as: Component = 'sectio
   }
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Component ref={ref as any} className={sectionClass} id={id}>
       {children}
     </Component>
@@ -320,10 +331,176 @@ function BentoCard({ children, className = "", ...props }: BentoCardProps) {
   );
 }
 
+interface TestimonyItem {
+  id: string;
+  quote: string;
+  author: string;
+  role: string;
+  pathway: string;
+  avatar: string;
+  portrait: string;
+  accentColor: string;
+}
+
+const testimoniesData: TestimonyItem[] = [
+  {
+    id: "testimony-1",
+    quote: "Finding Light City was like finding home after a long storm. The community wrapped around us with no judgment, just pure grace and support. Our lives are forever changed.",
+    author: "Sarah Jenkins",
+    role: "Community Group Member",
+    pathway: "Community Pathway",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop",
+    portrait: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop",
+    accentColor: "rgba(0, 223, 216, 0.35)"
+  },
+  {
+    id: "testimony-2",
+    quote: "As a designer, I always felt my faith and my art were in separate boxes. Creative Night showed me how to bridge the two, using my talents to glorify God and shape culture.",
+    author: "Marcus Chen",
+    role: "Creative Volunteer",
+    pathway: "Creative Pathway",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
+    portrait: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop",
+    accentColor: "rgba(255, 0, 122, 0.35)"
+  },
+  {
+    id: "testimony-3",
+    quote: "Worship here is not a performance; it is a genuine, heart-stirring encounter. It inspired me to take bold next steps in my spiritual walk and start leading a Life Group.",
+    author: "Elijah Brooks",
+    role: "Worship Team & Life Group Leader",
+    pathway: "Worship Pathway",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop",
+    portrait: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop",
+    accentColor: "rgba(121, 40, 202, 0.35)"
+  }
+];
+
+interface ServiceItem {
+  id: string;
+  title: string;
+  schedule: string;
+  description: string;
+  gradient: string;
+  pathway: string;
+  icon: (props: React.SVGProps<SVGSVGElement>) => React.ReactNode;
+}
+
+const servicesData: ServiceItem[] = [
+  {
+    id: "service-gatherings",
+    title: "Sunday Gatherings",
+    schedule: "Sundays at 9:00 AM & 11:00 AM",
+    description: "Experience powerful in-person worship, inspiring teaching, and a warm, supportive community. Join us as we gather together to lift up the name of Jesus.",
+    gradient: "linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%)",
+    pathway: "In-Person Campus",
+    icon: (props) => (
+      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+    )
+  },
+  {
+    id: "service-online",
+    title: "Online Campus",
+    schedule: "Sundays at 11:00 AM Live",
+    description: "Connect with our church family from anywhere in the world. Join our live stream, participate in real-time chat, request digital prayer, and find connection online.",
+    gradient: "linear-gradient(135deg, #4FACFE 0%, #00F2FE 100%)",
+    pathway: "Online Campus",
+    icon: (props) => (
+      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
+        <polyline points="17 2 12 7 7 2" />
+      </svg>
+    )
+  },
+  {
+    id: "service-bible",
+    title: "Bible Studies",
+    schedule: "Wednesdays at 7:00 PM",
+    description: "Deepen your understanding of Scripture through our mid-week Bible studies and Life Groups. Engaging discussions, scripture deep-dives, and shared life.",
+    gradient: "linear-gradient(135deg, #B12A5B 0%, #FF758C 100%)",
+    pathway: "Discipleship Pathway",
+    icon: (props) => (
+      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      </svg>
+    )
+  },
+  {
+    id: "service-nextgen",
+    title: "NextGen Ministries",
+    schedule: "Sundays & Mid-Week Gatherings",
+    description: "Tailored environments for kids and youth to explore their faith, make life-long friends, and discover their God-given potential in a safe, fun space.",
+    gradient: "linear-gradient(135deg, #11998E 0%, #38EF7D 100%)",
+    pathway: "Youth & Kids Pathway",
+    icon: (props) => (
+      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    )
+  }
+];
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'story' | 'vision' | 'connect'>('story');
-  const [dashboardView, setDashboardView] = useState<'attendance' | 'generosity'>('attendance');
+  // const [dashboardView, setDashboardView] = useState<'attendance' | 'generosity'>('attendance');
   
+  // Testimony Cinematic states
+  const [activeTestimony, setActiveTestimony] = useState(0);
+  const [testimonyFade, setTestimonyFade] = useState(false);
+  const [indicatorStyle, setIndicatorStyle] = useState<React.CSSProperties>({});
+  const navMenuRef = useRef<HTMLDivElement>(null);
+  const portraitRef = useRef<HTMLDivElement>(null);
+
+  const handleTestimonyChange = (index: number) => {
+    if (index === activeTestimony) return;
+    setTestimonyFade(true);
+    setTimeout(() => {
+      setActiveTestimony(index);
+      setTestimonyFade(false);
+    }, 350);
+  };
+
+  const handlePortraitMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!portraitRef.current) return;
+    const rect = portraitRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    portraitRef.current.style.setProperty("--mouse-x", `${x}px`);
+    portraitRef.current.style.setProperty("--mouse-y", `${y}px`);
+  };
+
+  useEffect(() => {
+    const updateIndicator = () => {
+      if (!navMenuRef.current) return;
+      const activeEl = navMenuRef.current.querySelector(`.${styles.navItemActive}`) as HTMLElement;
+      if (activeEl) {
+        setIndicatorStyle({
+          width: activeEl.offsetWidth,
+          left: activeEl.offsetLeft,
+        });
+      }
+    };
+    
+    updateIndicator();
+    const rafId = requestAnimationFrame(updateIndicator);
+    const timer = setTimeout(updateIndicator, 100);
+    const timer2 = setTimeout(updateIndicator, 500);
+    
+    window.addEventListener('resize', updateIndicator);
+    return () => {
+      window.removeEventListener('resize', updateIndicator);
+      cancelAnimationFrame(rafId);
+      clearTimeout(timer);
+      clearTimeout(timer2);
+    };
+  }, [activeTestimony]);
+
   // Bento states
   const [galleryFilter, setGalleryFilter] = useState<'all' | 'worship' | 'community' | 'creative' | 'events'>('all');
   const [modalIndex, setModalIndex] = useState<number | null>(null);
@@ -442,6 +619,7 @@ export default function Home() {
   ];
 
   // Insights dashboard stats config
+  /*
   const attendanceStats = [
     { label: "Worship", percentage: 85, value: "1,200" },
     { label: "Groups", percentage: 65, value: "650" },
@@ -457,12 +635,7 @@ export default function Home() {
     { label: "Housing", percentage: 55, value: "$5.1K" },
     { label: "Schools", percentage: 35, value: "$4.0K" }
   ];
-
-  const activeStats = dashboardView === 'attendance' ? attendanceStats : generosityStats;
-  const activeMetric = dashboardView === 'attendance' ? 2840 : 45.8;
-  const activeSuffix = dashboardView === 'attendance' ? "" : "K";
-  const activePrefix = dashboardView === 'attendance' ? "" : "$";
-  const activeTrend = dashboardView === 'attendance' ? "12% vs last year" : "18% vs last quarter";
+  */
 
   return (
     <div className={styles.container}>
@@ -1164,6 +1337,144 @@ export default function Home() {
                     </div>
                   )}
                 </BentoCard>
+              );
+            })}
+          </div>
+        </div>
+      </ViewportSection>
+
+      {/* Testimonies Section */}
+      <ViewportSection as="section" className={styles.testimoniesSection} id="testimonies">
+        <div 
+          className={styles.ambientGlow}
+          style={{
+            backgroundColor: testimoniesData[activeTestimony].accentColor
+          }}
+        />
+
+        <div className={styles.testimoniesContainer}>
+          <div className={styles.testimoniesHeader}>
+            <span className={styles.testimoniesTag}>
+              <SplitText text="/Stories" delayOffset={0.0} />
+            </span>
+            <h2 className={styles.testimoniesTitle}>
+              <SplitText text="Shining Their Light" delayOffset={0.1} />
+              <br />
+              <span className={styles.gradientText}>
+                <SplitText text="Stories of Hope & Purpose" delayOffset={0.6} />
+              </span>
+            </h2>
+          </div>
+
+          <div className={styles.testimoniesCinematicGrid}>
+            {/* Left Column: Interactive Portrait spotlight card */}
+            <div className={styles.portraitColumn}>
+              <div
+                ref={portraitRef}
+                onMouseMove={handlePortraitMouseMove}
+                className={`${styles.cinematicPortraitWrapper} ${testimonyFade ? styles.fadeExit : styles.fadeEntry}`}
+                style={{
+                  position: 'relative',
+                  '--accent-glow': testimoniesData[activeTestimony].accentColor
+                } as React.CSSProperties}
+              >
+                <div className={styles.portraitGlowOverlay} />
+                <Image
+                  src={testimoniesData[activeTestimony].portrait}
+                  alt={testimoniesData[activeTestimony].author}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                  className={styles.portraitImage}
+                />
+                <div className={styles.portraitOverlayText}>
+                  <span className={styles.portraitPathway}>/{testimoniesData[activeTestimony].pathway}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Giant Quote Block & Pagination */}
+            <div className={styles.copyColumn}>
+              <div className={`${styles.quoteBlock} ${testimonyFade ? styles.fadeExit : styles.fadeEntry}`}>
+                <span className={styles.largeQuoteMark}>“</span>
+                <blockquote className={styles.cinematicQuoteText}>
+                  {testimoniesData[activeTestimony].quote}
+                </blockquote>
+                
+                <div className={styles.cinematicAuthorMeta}>
+                  <h4 className={styles.cinematicAuthorName}>{testimoniesData[activeTestimony].author}</h4>
+                  <span className={styles.cinematicAuthorRole}>{testimoniesData[activeTestimony].role}</span>
+                </div>
+              </div>
+
+              {/* Custom horizontal pagination menu */}
+              <div className={styles.cinematicNavWrapper}>
+                <div className={styles.cinematicNavMenu} ref={navMenuRef}>
+                  {testimoniesData.map((item, idx) => (
+                    <button
+                      key={item.id}
+                      className={`${styles.navItem} ${activeTestimony === idx ? styles.navItemActive : ""}`}
+                      onClick={() => handleTestimonyChange(idx)}
+                      aria-label={`Show testimony from ${item.author}`}
+                    >
+                      <span className={styles.navIndex}>{String(idx + 1).padStart(2, '0')}</span>
+                      <span className={styles.navDivider}>/</span>
+                      <span className={styles.navName}>{item.author.split(' ')[0]}</span>
+                    </button>
+                  ))}
+                  <div 
+                    className={styles.navIndicator} 
+                    style={indicatorStyle}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ViewportSection>
+
+      {/* Services Section */}
+      <ViewportSection as="section" className={styles.servicesSection} id="services">
+        <div className={styles.servicesContainer}>
+          <div className={styles.servicesHeader}>
+            <span className={styles.servicesTag}>
+              <SplitText text="/Ministries" delayOffset={0.0} />
+            </span>
+            <h2 className={styles.servicesTitle}>
+              <SplitText text="Where You Belong" delayOffset={0.1} />
+              <br />
+              <span className={styles.gradientText}>
+                <SplitText text="Services & Gatherings" delayOffset={0.6} />
+              </span>
+            </h2>
+          </div>
+
+          <div className={styles.servicesGrid}>
+            {servicesData.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.id} className={styles.serviceCard}>
+                  <div 
+                    className={styles.serviceGlow} 
+                    style={{ '--accent-gradient': item.gradient } as React.CSSProperties}
+                  />
+                  <div className={styles.serviceCardContent}>
+                    <div className={styles.serviceIcon}>
+                      <Icon className={styles.serviceIconSvg} />
+                    </div>
+                    <span className={styles.servicePathway}>/{item.pathway}</span>
+                    <h3 className={styles.serviceCardTitle}>{item.title}</h3>
+                    <span className={styles.serviceCardSchedule}>{item.schedule}</span>
+                    <p className={styles.serviceCardDescription}>{item.description}</p>
+                    <div className={styles.serviceAction}>
+                      <span className={styles.actionText}>Learn More</span>
+                      <svg className={styles.actionArrow} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               );
             })}
           </div>
