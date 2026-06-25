@@ -1343,8 +1343,8 @@ export default function Home() {
         </div>
       </ViewportSection>
 
-      {/* Testimonies Section */}
-      <ViewportSection as="section" className={styles.testimoniesSection} id="testimonies">
+      {/* Combined Stories & Ministries Section (Figma UI Redesign) */}
+      <ViewportSection as="section" className={styles.combinedSection} id="stories-ministries">
         <div 
           className={styles.ambientGlow}
           style={{
@@ -1352,58 +1352,54 @@ export default function Home() {
           }}
         />
 
-        <div className={styles.testimoniesContainer}>
-          <div className={styles.testimoniesHeader}>
-            <span className={styles.testimoniesTag}>
-              <SplitText text="/Stories" delayOffset={0.0} />
-            </span>
-            <h2 className={styles.testimoniesTitle}>
-              <SplitText text="Shining Their Light" delayOffset={0.1} />
-              <br />
-              <span className={styles.gradientText}>
-                <SplitText text="Stories of Hope & Purpose" delayOffset={0.6} />
+        <div className={styles.combinedContainer}>
+          {/* Left Column: Stories / Testimonies */}
+          <div className={styles.leftColumn}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionTag}>
+                <SplitText text="/Stories" delayOffset={0.0} />
               </span>
-            </h2>
-          </div>
+              <h2 className={styles.sectionTitle}>
+                <SplitText text="Shining Their Light" delayOffset={0.1} />
+                <br />
+                <span className={styles.gradientText}>
+                  <SplitText text="Stories of Hope" delayOffset={0.5} />
+                </span>
+              </h2>
+            </div>
 
-          <div className={styles.testimoniesCinematicGrid}>
-            {/* Left Column: Interactive Portrait spotlight card */}
-            <div className={styles.portraitColumn}>
-              <div
-                ref={portraitRef}
-                onMouseMove={handlePortraitMouseMove}
-                className={`${styles.cinematicPortraitWrapper} ${testimonyFade ? styles.fadeExit : styles.fadeEntry}`}
-                style={{
-                  position: 'relative',
-                  '--accent-glow': testimoniesData[activeTestimony].accentColor
-                } as React.CSSProperties}
-              >
-                <div className={styles.portraitGlowOverlay} />
+            {/* Testimony Spotlight Card */}
+            <div
+              ref={portraitRef}
+              onMouseMove={handlePortraitMouseMove}
+              className={`${styles.testimonyCard} ${testimonyFade ? styles.fadeExit : styles.fadeEntry}`}
+              style={{
+                position: 'relative',
+                '--accent-glow': testimoniesData[activeTestimony].accentColor
+              } as React.CSSProperties}
+            >
+              <div className={styles.testimonyPortraitWrapper}>
                 <Image
                   src={testimoniesData[activeTestimony].portrait}
                   alt={testimoniesData[activeTestimony].author}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 1024px) 100vw, 500px"
                   priority
-                  className={styles.portraitImage}
+                  className={styles.testimonyPortrait}
                 />
-                <div className={styles.portraitOverlayText}>
-                  <span className={styles.portraitPathway}>/{testimoniesData[activeTestimony].pathway}</span>
+                <div className={styles.testimonyPathwayBadge}>
+                  /{testimoniesData[activeTestimony].pathway}
                 </div>
               </div>
-            </div>
 
-            {/* Right Column: Giant Quote Block & Pagination */}
-            <div className={styles.copyColumn}>
-              <div className={`${styles.quoteBlock} ${testimonyFade ? styles.fadeExit : styles.fadeEntry}`}>
-                <span className={styles.largeQuoteMark}>“</span>
-                <blockquote className={styles.cinematicQuoteText}>
-                  {testimoniesData[activeTestimony].quote}
+              <div className={styles.testimonyCardBody}>
+                <blockquote className={styles.testimonyQuote}>
+                  &ldquo;{testimoniesData[activeTestimony].quote}&rdquo;
                 </blockquote>
                 
-                <div className={styles.cinematicAuthorMeta}>
-                  <h4 className={styles.cinematicAuthorName}>{testimoniesData[activeTestimony].author}</h4>
-                  <span className={styles.cinematicAuthorRole}>{testimoniesData[activeTestimony].role}</span>
+                <div className={styles.testimonyAuthorMeta}>
+                  <h4 className={styles.testimonyAuthorName}>{testimoniesData[activeTestimony].author}</h4>
+                  <span className={styles.testimonyAuthorRole}>{testimoniesData[activeTestimony].role}</span>
                 </div>
               </div>
 
@@ -1430,53 +1426,63 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
-      </ViewportSection>
 
-      {/* Services Section */}
-      <ViewportSection as="section" className={styles.servicesSection} id="services">
-        <div className={styles.servicesContainer}>
-          <div className={styles.servicesHeader}>
-            <span className={styles.servicesTag}>
-              <SplitText text="/Ministries" delayOffset={0.0} />
-            </span>
-            <h2 className={styles.servicesTitle}>
-              <SplitText text="Where You Belong" delayOffset={0.1} />
-              <br />
-              <span className={styles.gradientText}>
-                <SplitText text="Services & Gatherings" delayOffset={0.6} />
+          {/* Right Column: Ministries / Services */}
+          <div className={styles.rightColumn}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionTag}>
+                <SplitText text="/Ministries" delayOffset={0.0} />
               </span>
-            </h2>
-          </div>
+              <h2 className={styles.sectionTitle}>
+                <SplitText text="Where You Belong" delayOffset={0.1} />
+                <br />
+                <span className={styles.gradientText}>
+                  <SplitText text="Services & Gatherings" delayOffset={0.5} />
+                </span>
+              </h2>
+            </div>
 
-          <div className={styles.servicesGrid}>
-            {servicesData.map((item) => {
-              const Icon = item.icon;
-              return (
-                <div key={item.id} className={styles.serviceCard}>
+            <div className={styles.ministriesGrid2x2}>
+              {servicesData.map((item, idx) => {
+                const Icon = item.icon;
+                const isDarkCard = idx === 1;
+                return (
                   <div 
-                    className={styles.serviceGlow} 
-                    style={{ '--accent-gradient': item.gradient } as React.CSSProperties}
-                  />
-                  <div className={styles.serviceCardContent}>
-                    <div className={styles.serviceIcon}>
-                      <Icon className={styles.serviceIconSvg} />
-                    </div>
-                    <span className={styles.servicePathway}>/{item.pathway}</span>
-                    <h3 className={styles.serviceCardTitle}>{item.title}</h3>
-                    <span className={styles.serviceCardSchedule}>{item.schedule}</span>
-                    <p className={styles.serviceCardDescription}>{item.description}</p>
-                    <div className={styles.serviceAction}>
-                      <span className={styles.actionText}>Learn More</span>
-                      <svg className={styles.actionArrow} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                      </svg>
+                    key={item.id} 
+                    className={`${styles.ministryCard} ${isDarkCard ? styles.ministryCardDark : styles.ministryCardLight}`}
+                  >
+                    {!isDarkCard && (
+                      <div 
+                        className={styles.ministryGlow} 
+                        style={{ '--accent-gradient': item.gradient } as React.CSSProperties}
+                      />
+                    )}
+                    <div className={styles.ministryCardContent}>
+                      <div className={styles.ministryIconWrapper}>
+                        <div className={styles.ministryIconContainer}>
+                          <Icon className={styles.ministryIcon} />
+                        </div>
+                      </div>
+                      
+                      <div className={styles.ministryMeta}>
+                        <span className={styles.ministryPathway}>/{item.pathway}</span>
+                        <h3 className={styles.ministryTitle}>{item.title}</h3>
+                        <span className={styles.ministrySchedule}>{item.schedule}</span>
+                        <p className={styles.ministryDescription}>{item.description}</p>
+                      </div>
+
+                      <div className={styles.ministryAction}>
+                        <span className={styles.actionText}>Learn More</span>
+                        <svg className={styles.actionArrow} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                          <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </ViewportSection>
