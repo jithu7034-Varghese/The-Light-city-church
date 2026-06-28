@@ -1959,7 +1959,7 @@
 .servicesTitle {
   font-family: var(--font-heading);
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-primary);
   letter-spacing: -0.02em;
 }
@@ -2324,7 +2324,7 @@
 .testimoniesTitle {
   font-family: var(--font-heading);
   font-size: 3.5rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--text-primary);
@@ -3064,7 +3064,7 @@
 .blogHeadline {
   font-family: var(--font-heading);
   font-size: 3.2rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.15;
   color: var(--text-primary);
   letter-spacing: -0.03em;
@@ -3072,10 +3072,10 @@
 }
 
 .italicSerif {
-  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  font-family: inherit;
   font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-weight: inherit;
+  letter-spacing: inherit;
 }
 
 /* Featured Split Card */
