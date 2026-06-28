@@ -105,46 +105,6 @@ function SplitText({ text, className, delayOffset = 0, by = 'letters' }: SplitTe
   );
 }
 
-// Progressive count-up timer component triggered on viewport entrance
-function CountUp({ end, duration = 1200, suffix = "" }: { end: number; duration?: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  const [isInView, setIsInView] = useState(false);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!isInView) return;
-    let startTimestamp: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      setCount(progress * end);
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
-    };
-    window.requestAnimationFrame(step);
-  }, [isInView, end, duration]);
-
-  const displayCount = Number.isInteger(end) ? Math.floor(count) : count.toFixed(1);
-
-  return <span ref={ref}>{displayCount}{suffix}</span>;
-}
 
 // Viewport tracking wrapper section
 interface ViewportSectionProps {
@@ -194,142 +154,30 @@ function ViewportSection({ children, className = "", id, as: Component = 'sectio
   );
 }
 
-interface BentoGalleryItem {
-  id: string;
-  type: 'featured' | 'audio' | 'widget-countdown' | 'widget-stats' | 'typography' | 'standard';
-  category: 'worship' | 'community' | 'creative' | 'events';
-  title: string;
-  subtitle: string;
-  image?: string;
-  badge?: string;
-  content: string;
-  targetDate?: string;
-  statValue?: number;
-  statSuffix?: string;
-  audioUrl?: string;
-  gradient?: string;
-}
+// Bento Gallery elements removed.
 
-const bentoGalleryItems: BentoGalleryItem[] = [
-  {
-    id: "worship-live",
-    type: "featured",
-    category: "worship",
-    title: "Sunday Live Worship",
-    subtitle: "Experience the presence & passion",
-    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000&auto=format&fit=crop",
-    badge: "LATEST SERVICE",
-    content: "A capture of our Sunday morning worship experience. Join us every Sunday at 9 AM and 11 AM as we lift up the name of Jesus together in spirit and in truth."
-  },
-  {
-    id: "audio-track",
-    type: "audio",
-    category: "creative",
-    title: "Light City Worship — 'Shine'",
-    subtitle: "Listen to our new live single",
-    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=600&auto=format&fit=crop",
-    badge: "NEW RELEASE",
-    content: "Stream our latest worship single 'Shine' recorded live during Creative Night. Now available on all streaming platforms.",
-    audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-  },
-  {
-    id: "event-countdown",
-    type: "widget-countdown",
-    category: "events",
-    title: "Creative Night",
-    subtitle: "June 28 • 7:00 PM",
-    targetDate: "2026-06-28T19:00:00",
-    content: "A gathering for all musicians, designers, writers, and technical artists. Come collaborate, worship, and dream together."
-  },
-  {
-    id: "community-groups",
-    type: "standard",
-    category: "community",
-    title: "Life Groups",
-    subtitle: "Grow in community",
-    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=600&auto=format&fit=crop",
-    badge: "CONNECT",
-    content: "Discipleship is lived out in circles, not just rows. Join one of our 50+ Life Groups meeting weekly in homes across the city to share life, study, and grow."
-  },
-  {
-    id: "creative-typography",
-    type: "typography",
-    category: "creative",
-    title: "CREATE. INVOLVE. INSPIRE.",
-    subtitle: "Creative Ethos",
-    content: "We believe that beauty and excellence honor God and inspire people. Through art, design, media, and technology, we shape the culture.",
-    gradient: "linear-gradient(135deg, #FF007A 0%, #7928CA 50%, #FF007A 100%)"
-  },
-  {
-    id: "ministry-stats",
-    type: "widget-stats",
-    category: "community",
-    title: "Impact Hours",
-    statValue: 15400,
-    statSuffix: "+",
-    subtitle: "Hours spent serving our city",
-    content: "Through local food banks, school tutoring, and community cleanup projects, our serving teams are showing the love of Christ in practical ways."
-  },
-  {
-    id: "youth-exhibit",
-    type: "standard",
-    category: "community",
-    title: "Light City Youth",
-    subtitle: "Friday Nights at 7 PM",
-    image: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=600&auto=format&fit=crop",
-    badge: "YOUTH",
-    content: "Every Friday night, high school students gather for powerful messages, high-energy games, worship, and small groups."
-  },
-  {
-    id: "outreach-project",
-    type: "standard",
-    category: "events",
-    title: "Love Your City Day",
-    subtitle: "Next Outreach: July 12",
-    image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=600&auto=format&fit=crop",
-    badge: "OUTREACH",
-    content: "A city-wide volunteer day where we partner with local charities to paint schools, feed the homeless, and bless families in need."
-  },
-  {
-    id: "sermon-series",
-    type: "standard",
-    category: "worship",
-    title: "Current Series: 'Grace & Truth'",
-    subtitle: "Watch current & past sermons online",
-    image: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=600&auto=format&fit=crop",
-    badge: "SERMON SERIES",
-    content: "Walk through our current journey into the Gospel of John, exploring the deep intersection of grace and truth in everyday life."
-  }
+const waveformBars = [
+  { height: 12, active: true },
+  { height: 18, active: true },
+  { height: 8, active: true },
+  { height: 24, active: true },
+  { height: 14, active: true },
+  { height: 20, active: true },
+  { height: 28, active: true },
+  { height: 16, active: true },
+  { height: 22, active: true },
+  { height: 10, active: true },
+  { height: 18, active: false },
+  { height: 8, active: false },
+  { height: 14, active: false },
+  { height: 24, active: false },
+  { height: 12, active: false },
+  { height: 20, active: false },
+  { height: 8, active: false },
+  { height: 16, active: false },
+  { height: 10, active: false },
+  { height: 14, active: false },
 ];
-
-interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-  className?: string;
-}
-
-function BentoCard({ children, className = "", ...props }: BentoCardProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    ref.current.style.setProperty("--mouse-x", `${x}px`);
-    ref.current.style.setProperty("--mouse-y", `${y}px`);
-  };
-
-  return (
-    <div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      className={`${styles.bentoCard} ${className}`}
-      {...props}
-    >
-      <div className={styles.glowOverlay} />
-      {children}
-    </div>
-  );
-}
 
 interface TestimonyItem {
   id: string;
@@ -374,8 +222,6 @@ const testimoniesData: TestimonyItem[] = [
     accentColor: "rgba(121, 40, 202, 0.35)"
   }
 ];
-
-
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'story' | 'vision' | 'connect'>('story');
@@ -434,122 +280,7 @@ export default function Home() {
     };
   }, [activeTestimony]);
 
-  // Bento states
-  const [galleryFilter, setGalleryFilter] = useState<'all' | 'worship' | 'community' | 'creative' | 'events'>('all');
-  const [modalIndex, setModalIndex] = useState<number | null>(null);
-  const [audioPlaying, setAudioPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  // Countdown timer hook (target 10 days out from current local time)
-  useEffect(() => {
-    const target = new Date("2026-06-28T19:00:00").getTime();
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const difference = target - now;
-      if (difference <= 0) {
-        clearInterval(interval);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      } else {
-        const d = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((difference % (1000 * 60)) / 1000);
-        setTimeLeft({ days: d, hours: h, minutes: m, seconds: s });
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const toggleAudio = (e: React.MouseEvent, url: string) => {
-    e.stopPropagation();
-    if (!audioRef.current) {
-      audioRef.current = new Audio(url);
-      audioRef.current.loop = true;
-      audioRef.current.addEventListener('ended', () => setAudioPlaying(false));
-    }
-    
-    if (audioPlaying) {
-      audioRef.current.pause();
-      setAudioPlaying(false);
-    } else {
-      audioRef.current.play().catch(err => console.log("Audio play blocked", err));
-      setAudioPlaying(true);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-    };
-  }, []);
-
-  const filteredItems = bentoGalleryItems.filter(item => 
-    galleryFilter === 'all' || item.category === galleryFilter
-  );
-
-  const openModal = (id: string) => {
-    const idx = filteredItems.findIndex(item => item.id === id);
-    if (idx !== -1) {
-      setModalIndex(idx);
-    }
-  };
-
-  const closeModal = () => {
-    setModalIndex(null);
-  };
-
-  const prevModalItem = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (modalIndex !== null) {
-      setModalIndex(prev => (prev === 0 ? filteredItems.length - 1 : prev! - 1));
-    }
-  };
-
-  const nextModalItem = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (modalIndex !== null) {
-      setModalIndex(prev => (prev === filteredItems.length - 1 ? 0 : prev! + 1));
-    }
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (modalIndex === null) return;
-      if (e.key === "Escape") closeModal();
-      if (e.key === "ArrowLeft") setModalIndex(prev => (prev === 0 ? filteredItems.length - 1 : prev! - 1));
-      if (e.key === "ArrowRight") setModalIndex(prev => (prev === filteredItems.length - 1 ? 0 : prev! + 1));
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [modalIndex, filteredItems]);
-
-  
-  // Waveform bars configuration
-  const waveformBars = [
-    { height: 12, active: true },
-    { height: 18, active: true },
-    { height: 8, active: true },
-    { height: 24, active: true },
-    { height: 14, active: true },
-    { height: 20, active: true },
-    { height: 28, active: true },
-    { height: 16, active: true },
-    { height: 22, active: true },
-    { height: 10, active: true },
-    { height: 18, active: false },
-    { height: 8, active: false },
-    { height: 14, active: false },
-    { height: 24, active: false },
-    { height: 12, active: false },
-    { height: 20, active: false },
-    { height: 8, active: false },
-    { height: 16, active: false },
-    { height: 10, active: false },
-    { height: 14, active: false },
-  ];
+  // Old Bento states and waveform configs removed.
 
   // Insights dashboard stats config
   /*
@@ -1055,224 +786,149 @@ export default function Home() {
         </div>
       </ViewportSection>
 
-      {/* Gallery Section */}
-      <ViewportSection as="section" className={styles.gallerySection} id="gallery">
-        <div className={styles.galleryHeader}>
-          <h2 className={styles.galleryTitle}>EXHIBITS</h2>
-          <nav className={styles.submenuNav}>
-            <ul className={styles.submenuUl}>
-              <li>
-                <button
-                  className={galleryFilter === 'all' ? styles.activeSubmenuLink : styles.submenuLink}
-                  onClick={() => setGalleryFilter('all')}
-                >
-                  All
-                </button>
-              </li>
-              <li>
-                <button
-                  className={galleryFilter === 'worship' ? styles.activeSubmenuLink : styles.submenuLink}
-                  onClick={() => setGalleryFilter('worship')}
-                >
-                  Worship
-                </button>
-              </li>
-              <li>
-                <button
-                  className={galleryFilter === 'community' ? styles.activeSubmenuLink : styles.submenuLink}
-                  onClick={() => setGalleryFilter('community')}
-                >
-                  Community
-                </button>
-              </li>
-              <li>
-                <button
-                  className={galleryFilter === 'creative' ? styles.activeSubmenuLink : styles.submenuLink}
-                  onClick={() => setGalleryFilter('creative')}
-                >
-                  Creative
-                </button>
-              </li>
-              <li>
-                <button
-                  className={galleryFilter === 'events' ? styles.activeSubmenuLink : styles.submenuLink}
-                  onClick={() => setGalleryFilter('events')}
-                >
-                  Events
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-        {/* Bento Grid Wrapper */}
-        <div className={`${styles.bentoGridWrapper} animate-fade-in-up`} style={{ animationDelay: '0.4s' }}>
-          <div className={styles.bentoGrid}>
-            {filteredItems.map((item) => {
-              const cardClass = `${styles.bentoGridCell} ${
-                item.type === 'featured' ? styles.cardFeatured :
-                item.type === 'audio' ? styles.cardWide :
-                item.type === 'typography' ? styles.cardWide :
-                item.type === 'widget-countdown' ? styles.cardStandard :
-                item.type === 'widget-stats' ? styles.cardStandard :
-                item.type === 'standard' && item.id === 'community-groups' ? styles.cardTall :
-                styles.cardStandard
-              }`;
-
-              if (item.type === 'typography') {
-                return (
-                  <BentoCard key={item.id} className={`${cardClass} ${styles.typographyCell}`}>
-                    <div className={styles.typographyContent}>
-                      <span className={styles.cardTag}>{item.subtitle}</span>
-                      <h3 className={styles.typographyTitle}>{item.title}</h3>
-                      <p className={styles.typographyText}>{item.content}</p>
-                    </div>
-                  </BentoCard>
-                );
-              }
-
-              if (item.type === 'widget-countdown') {
-                return (
-                  <BentoCard key={item.id} className={`${cardClass} ${styles.countdownCell}`} onClick={() => openModal(item.id)}>
-                    <div className={styles.widgetHeader}>
-                      <span className={styles.widgetTag}>{item.category}</span>
-                      <span className={styles.pulseDot} />
-                    </div>
-                    <div className={styles.countdownTitle}>{item.title}</div>
-                    <div className={styles.countdownTimer}>
-                      <div className={styles.timeBlock}>
-                        <span className={styles.timeNumber}>{timeLeft.days}</span>
-                        <span className={styles.timeLabel}>d</span>
-                      </div>
-                      <div className={styles.timeBlock}>
-                        <span className={styles.timeNumber}>{timeLeft.hours}</span>
-                        <span className={styles.timeLabel}>h</span>
-                      </div>
-                      <div className={styles.timeBlock}>
-                        <span className={styles.timeNumber}>{timeLeft.minutes}</span>
-                        <span className={styles.timeLabel}>m</span>
-                      </div>
-                      <div className={styles.timeBlock}>
-                        <span className={styles.timeNumber}>{timeLeft.seconds}</span>
-                        <span className={styles.timeLabel}>s</span>
-                      </div>
-                    </div>
-                    <p className={styles.countdownSubtitle}>{item.subtitle}</p>
-                  </BentoCard>
-                );
-              }
-
-              if (item.type === 'widget-stats') {
-                return (
-                  <BentoCard key={item.id} className={`${cardClass} ${styles.statsCell}`} onClick={() => openModal(item.id)}>
-                    <div className={styles.widgetHeader}>
-                      <span className={styles.widgetTag}>{item.category}</span>
-                    </div>
-                    <div className={styles.statsValueContainer}>
-                      <span className={styles.statsValue}>
-                        <CountUp end={item.statValue || 0} />
-                        {item.statSuffix}
-                      </span>
-                    </div>
-                    <div className={styles.statsTitle}>{item.title}</div>
-                    <p className={styles.statsSubtitle}>{item.subtitle}</p>
-                  </BentoCard>
-                );
-              }
-
-              if (item.type === 'audio') {
-                return (
-                  <BentoCard key={item.id} className={`${cardClass} ${styles.audioCell}`} onClick={() => openModal(item.id)}>
-                    {item.image && (
-                      <div className={styles.audioImageWrapper}>
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 600px"
-                          className={styles.bentoPhoto}
-                        />
-                        <div className={styles.audioDarken} />
-                      </div>
-                    )}
-                    <div className={styles.audioCardContent}>
-                      <div className={styles.audioHeader}>
-                        <span className={styles.audioTag}>{item.badge}</span>
-                        <div className={`${styles.waveVisualizer} ${audioPlaying ? styles.wavePlaying : ""}`}>
-                          <span className={styles.waveBar} />
-                          <span className={styles.waveBar} />
-                          <span className={styles.waveBar} />
-                          <span className={styles.waveBar} />
-                          <span className={styles.waveBar} />
-                        </div>
-                      </div>
-                      
-                      <div className={styles.audioBody}>
-                        <h3 className={styles.audioTitleText}>{item.title}</h3>
-                        <p className={styles.audioSubtitleText}>{item.subtitle}</p>
-                      </div>
-
-                      <div className={styles.audioFooter}>
-                        <button
-                          className={`${styles.playPauseBtn} ${audioPlaying ? styles.playing : ""}`}
-                          onClick={(e) => toggleAudio(e, item.audioUrl || "")}
-                          aria-label={audioPlaying ? "Pause preview" : "Play preview"}
-                        >
-                          {audioPlaying ? (
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                              <rect x="4" y="4" width="4" height="16" stroke="none" />
-                              <rect x="16" y="4" width="4" height="16" stroke="none" />
-                            </svg>
-                          ) : (
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                              <polygon points="5,3 19,12 5,21" stroke="none" />
-                            </svg>
-                          )}
-                          <span>{audioPlaying ? "PAUSE PREVIEW" : "PLAY PREVIEW"}</span>
-                        </button>
-                      </div>
-                    </div>
-                  </BentoCard>
-                );
-              }
-
-              // Image Cells
-              return (
-                <BentoCard
-                  key={item.id}
-                  className={`${cardClass} ${styles.mediaCell}`}
-                  onClick={() => openModal(item.id)}
-                >
-                  {item.image && (
-                    <div className={styles.mediaImageWrapper}>
-                      <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        sizes={item.type === 'featured' ? "(max-width: 1024px) 100vw, 800px" : "(max-width: 1024px) 50vw, 400px"}
-                        className={styles.bentoPhoto}
-                      />
-                      <div className={styles.mediaOverlay}>
-                        <div className={styles.overlayHeader}>
-                          <span className={styles.mediaBadge}>{item.badge}</span>
-                        </div>
-                        <div className={styles.overlayFooter}>
-                          <h3 className={styles.mediaTitle}>{item.title}</h3>
-                          <p className={styles.mediaSubtitle}>{item.subtitle}</p>
-                        </div>
-                      </div>
-                      <div className={styles.revealArrow}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="5" y1="12" x2="19" y2="12"></line>
-                          <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                      </div>
-                    </div>
-                  )}
-                </BentoCard>
-              );
-            })}
+      {/* Services Section */}
+      <ViewportSection as="section" className={styles.servicesSection} id="services">
+        <div className={styles.servicesContainer}>
+          <div className={styles.servicesHeader}>
+            <h2 className={styles.servicesTitle}>Services we provide</h2>
+            <div className={styles.servicesNavArrows}>
+              <button className={styles.arrowBtn} aria-label="Previous services">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              </button>
+              <button className={`${styles.arrowBtn} ${styles.arrowBtnActive}`} aria-label="Next services">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
           </div>
+
+          <div className={styles.servicesGrid}>
+            {[
+              {
+                id: "01",
+                title: "Arch Design",
+                desc: "From initial concept development and schematic design",
+                image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=600&auto=format&fit=crop"
+              },
+              {
+                id: "02",
+                title: "Interior Design",
+                desc: "Creating cohesive interior spaces that reflect your style",
+                image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=600&auto=format&fit=crop"
+              },
+              {
+                id: "03",
+                title: "Urban Planning",
+                desc: "Designing the spaces between buildings & outdoors",
+                image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=600&auto=format&fit=crop"
+              },
+              {
+                id: "04",
+                title: "Project Manage",
+                desc: "Overseeing & control the entire construction process",
+                image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop"
+              }
+            ].map((service) => (
+              <div key={service.id} className={styles.serviceCard}>
+                <div className={styles.serviceCardImageArea}>
+                  <span className={styles.serviceCardIndex}>{service.id}</span>
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 25vw"
+                    className={styles.serviceCardImage}
+                  />
+                </div>
+                <h3 className={styles.serviceCardTitle}>{service.title}</h3>
+                <p className={styles.serviceCardText}>{service.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ViewportSection>
+
+      {/* Portfolio / Gallery Section */}
+      <ViewportSection as="section" className={styles.portfolioSection} id="gallery">
+        <div className={styles.portfolioContainer}>
+          
+          {/* Left Column */}
+          <div className={styles.portfolioColumn}>
+            <div className={styles.portfolioIntro}>
+              <h2 className={styles.portfolioIntroTitle}>Our Portfolio of Pioneering Design</h2>
+              <p className={styles.portfolioIntroText}>
+                Explore our selected works that demonstrate our commitment to design excellence, innovation, and client satisfaction.
+              </p>
+            </div>
+            
+            <div className={`${styles.portfolioCard} ${styles.stretchCard}`}>
+              <div className={`${styles.portfolioImageWrapper} ${styles.stretchImage}`}>
+                <Image
+                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=600&auto=format&fit=crop"
+                  alt="New York Office"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  className={styles.portfolioCardImage}
+                />
+                <span className={styles.portfolioCardTextBadge}>New York Office</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Middle Column */}
+          <div className={styles.portfolioColumn}>
+            <div className={`${styles.portfolioCard} ${styles.middleCard}`}>
+              <div className={styles.portfolioImageWrapper}>
+                <Image
+                  src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=600&auto=format&fit=crop"
+                  alt="Commercial Restaurant"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  className={styles.portfolioCardImage}
+                />
+                <span className={styles.portfolioCardTextBadge}>Commercial Restaurant</span>
+              </div>
+            </div>
+
+            <div className={`${styles.portfolioCard} ${styles.middleCard}`}>
+              <div className={styles.portfolioImageWrapper}>
+                <Image
+                  src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?q=80&w=600&auto=format&fit=crop"
+                  alt="Hotel Rooms"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  className={styles.portfolioCardImage}
+                />
+                <span className={styles.portfolioCardTextBadge}>Hotel Rooms</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className={styles.portfolioColumn}>
+            <div className={`${styles.portfolioCard} ${styles.tallCard} ${styles.stretchCard}`}>
+              <div className={`${styles.portfolioImageWrapper} ${styles.stretchImage}`}>
+                <Image
+                  src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=600&auto=format&fit=crop"
+                  alt="Private House"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  className={styles.portfolioCardImage}
+                />
+                <span className={styles.portfolioCardTextBadge}>Private House</span>
+              </div>
+            </div>
+
+            <div className={styles.portfolioCta}>
+              <button className={styles.portfolioBtn}>See More Projects</button>
+            </div>
+          </div>
+
         </div>
       </ViewportSection>
 
@@ -1366,250 +1022,172 @@ export default function Home() {
         </div>
       </ViewportSection>
 
-      {/* Services (Ministries) Section (Mockup Redesign 3-Column Grid) */}
-      <ViewportSection as="section" className={styles.servicesSection} id="services">
-        <div className={styles.servicesGridContainer}>
-          
-          {/* Column 1, Row 1: Heading */}
-          <div className={styles.servicesHeadingCard}>
-            <h2 className={styles.mockupTitleText}>
-              Wecatty<br />
-              Meat Børke<br />
-              Balman
+      {/* Blog/Insights Section */}
+      <ViewportSection as="section" className={styles.blogSection} id="blog">
+        <div className={styles.blogContainer}>
+          <div className={styles.blogHeader}>
+            <span className={styles.blogLabel}>Blog</span>
+            <h2 className={styles.blogHeadline}>
+              Visual insights to sell homes <span className={styles.italicSerif}>faster</span>
             </h2>
           </div>
 
-          {/* Column 2, Row 1: Services Card */}
-          <div className={`${styles.mockupCard} ${styles.mockupCardLight}`}>
-            <div className={styles.mockupCardContent}>
-              <div className={styles.mockupIconWrapper}>
-                <div className={`${styles.mockupIconContainer} ${styles.iconContainerYellow}`}>
-                  <svg className={styles.mockupIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                  </svg>
+          {/* Featured Post Card (Split layout: Image Left, Content Right) */}
+          <div className={`${styles.featuredCard} animate-fade-in-up`} style={{ animationDelay: '0.2s' }}>
+            <div className={styles.featuredImageArea}>
+              <Image
+                src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1000&auto=format&fit=crop"
+                alt="How video tours boost property sales"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className={styles.blogCardImage}
+                priority
+              />
+            </div>
+            <div className={styles.featuredTextArea}>
+              <div className={styles.badgeRow}>
+                <span className={styles.blogPillBadge}>Marketing</span>
+              </div>
+              <h3 className={styles.featuredTitle}>How video tours boost property sales</h3>
+              <p className={styles.featuredExcerpt}>
+                Short-form video and cinematic tours aren&apos;t just content — they&apos;re conversion tools. Here&apos;s how real estate teams can turn views into inquiries.
+              </p>
+              
+              <div className={styles.featuredFooter}>
+                <div className={styles.authorGroup}>
+                  <div className={styles.authorAvatarWrapper}>
+                    <Image
+                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop"
+                      alt="Sophia Martinez"
+                      width={32}
+                      height={32}
+                      className={styles.authorAvatar}
+                    />
+                  </div>
+                  <span className={styles.authorName}>Sophia Martinez</span>
+                </div>
+                <span className={styles.postDate}>September 8, 2025</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Grid: 3 columns */}
+          <div className={styles.blogGrid}>
+            {[
+              {
+                id: "grid-1",
+                category: "Strategy",
+                title: "Why listings with video sell 30% faster",
+                image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=600&auto=format&fit=crop"
+              },
+              {
+                id: "grid-2",
+                category: "Luxury",
+                title: "The power of drone videos in marketing",
+                image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=600&auto=format&fit=crop"
+              },
+              {
+                id: "grid-3",
+                category: "Social Media",
+                title: "Why Instagram Reels drive property inquiries",
+                image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=600&auto=format&fit=crop"
+              }
+            ].map((article, idx) => (
+              <div
+                key={article.id}
+                className={`${styles.blogCard} animate-fade-in-up`}
+                style={{ animationDelay: `${0.3 + idx * 0.1}s` }}
+              >
+                <div className={styles.blogCardImageWrapper}>
+                  <Image
+                    src={article.image}
+                    alt={article.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className={styles.blogCardImage}
+                  />
+                </div>
+                <div className={styles.blogCardContent}>
+                  <div className={styles.badgeRow}>
+                    <span className={styles.blogPillBadge}>{article.category}</span>
+                  </div>
+                  <h3 className={styles.blogCardTitle}>{article.title}</h3>
                 </div>
               </div>
-              <h3 className={styles.mockupCardTitle}>Services</h3>
-              <p className={styles.mockupCardDescription}>
-                Weekly gather and worship. Experience life-changing messages, powerful worship, and welcoming community for all ages.
-              </p>
-            </div>
+            ))}
           </div>
 
-          {/* Column 3, Row 1: Rocioigole Card (Dark) */}
-          <div className={`${styles.mockupCard} ${styles.mockupCardDark}`}>
-            <div className={styles.mockupCardContent}>
-              <div className={styles.mockupIconWrapper}>
-                <div className={`${styles.mockupIconContainer} ${styles.iconContainerDark}`}>
-                  <svg className={styles.mockupIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
-                    <polyline points="17 2 12 7 7 2" />
-                  </svg>
-                </div>
-              </div>
-              <h3 className={styles.mockupCardTitle}>Rocioigole</h3>
-              <p className={styles.mockupCardDescription}>
-                Connecting and engaging our virtual campus community. Streaming services live weekly to members worldwide.
-              </p>
-            </div>
+          {/* Center Load More Button CTA */}
+          <div className={styles.blogCtaContainer}>
+            <button className={styles.loadMoreBtn}>
+              Load More
+            </button>
           </div>
-
-          {/* Column 1, Row 2: Portrait Card with badge */}
-          <div className={styles.mockupPortraitCard}>
-            <Image
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop"
-              alt="Alumnes Portrait"
-              fill
-              sizes="(max-width: 768px) 100vw, 33vw"
-              priority
-              className={styles.portraitCardImage}
-            />
-            <div className={styles.portraitCardBadge}>
-              /Alumnes
-            </div>
-          </div>
-
-          {/* Column 2, Row 2: Mortes Card */}
-          <div className={`${styles.mockupCard} ${styles.mockupCardLight}`}>
-            <div className={styles.mockupCardContent}>
-              <div className={styles.mockupIconWrapper}>
-                <div className={`${styles.mockupIconContainer} ${styles.iconContainerLight}`}>
-                  <svg className={styles.mockupIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 8v8" />
-                    <path d="M8 12h8" />
-                  </svg>
-                </div>
-              </div>
-              <h3 className={styles.mockupCardTitle}>Mortes</h3>
-              <p className={styles.mockupCardDescription}>
-                Local community outreach and support programs designed to serve those in need and make a lasting impact.
-              </p>
-            </div>
-          </div>
-
-          {/* Column 3, Row 2: Martitooms Card */}
-          <div className={`${styles.mockupCard} ${styles.mockupCardLight}`}>
-            <div className={styles.mockupCardContent}>
-              <div className={styles.mockupIconWrapper}>
-                <div className={`${styles.mockupIconContainer} ${styles.iconContainerLight}`}>
-                  <svg className={styles.mockupIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </div>
-              </div>
-              <h3 className={styles.mockupCardTitle}>Martitooms</h3>
-              <p className={styles.mockupCardDescription}>
-                Tailored youth ministries, gatherings, and events empowering the next generation to lead with faith.
-              </p>
-            </div>
-          </div>
-
         </div>
       </ViewportSection>
 
-      {/* Footer Section (Figma UI Redesign Bottom Half) */}
-      <footer className={styles.footerSection} id="footer">
-        <div className={styles.footerContainer}>
-          {/* Brand Info Column */}
-          <div className={styles.footerBrandColumn}>
-            <div className={styles.footerLogoContainer}>
-              <span className={styles.footerLogoIcon}>✦</span>
-              <span className={styles.footerLogoText}>LIGHT CITY CHURCH</span>
+      {/* Combined CTA & Footer Section */}
+      <footer className={styles.ctaFooterSection} id="contact">
+        <div className={styles.ctaFooterContainer}>
+          {/* Top Half: CTA Area */}
+          <div className={styles.ctaContent}>
+            <h2 className={styles.ctaHeadline}>
+              Ready to Build Your Space as One{" "}
+              <span className={styles.ctaBadgeWrapper}>
+                <Image
+                  src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=150&auto=format&fit=crop"
+                  alt="Vision badge"
+                  width={64}
+                  height={32}
+                  className={styles.ctaInlineBadge}
+                />
+              </span>{" "}
+              Vision?
+            </h2>
+            
+            <p className={styles.ctaSubtext}>
+              Explore how our design studio helps you plan, visualize, and build modern spaces across any scale.
+            </p>
+            
+            <div className={styles.ctaButtonWrapper}>
+              <button className={styles.ctaButton}>
+                <span className={styles.ctaButtonText}>Get in Touch</span>
+                <span className={styles.ctaButtonIcon}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom Half: Glassmorphism Footer Overlay */}
+          <div className={styles.footerOverlay}>
+            <div className={styles.footerTopRow}>
+              <span className={styles.footerCopyrightText}>© Copyright 2026</span>
+              <div className={styles.footerDividerLine} />
+              <span className={styles.footerCopyrightText}>All Rights Reserved</span>
             </div>
             
-            <h2 className={styles.footerSectionHeadline}>
-              Services and Settings
-            </h2>
-
-            {/* Blue badge: BONE DRC */}
-            <div className={styles.footerBlueBadge}>
-              <span className={styles.footerBlueBadgeIcon}>🌐</span>
-              <span className={styles.footerBlueBadgeText}>BONE DRC</span>
+            <nav className={styles.footerNav}>
+              <ul className={styles.footerNavList}>
+                <li><a href="#hero" className={styles.footerNavLink}>Home</a></li>
+                <li><a href="#about" className={styles.footerNavLink}>About</a></li>
+                <li><a href="#services" className={styles.footerNavLink}>Service</a></li>
+                <li><a href="#gallery" className={styles.footerNavLink}>Portfolio</a></li>
+                <li><a href="#blog" className={styles.footerNavLink}>Blog</a></li>
+                <li><a href="#contact" className={styles.footerNavLink}>Contact</a></li>
+              </ul>
+            </nav>
+            
+            <div className={styles.giantBrandContainer}>
+              <h1 className={styles.giantBrandText}>LIGHT CITY</h1>
             </div>
-          </div>
-
-          {/* Links Column 1: Sortipy */}
-          <div className={styles.footerLinkColumn}>
-            <h4 className={styles.footerColumnTitle}>Sortipy</h4>
-            <ul className={styles.footerLinkList}>
-              <li><a href="#sermons" className={styles.footerLink}>Sermons</a></li>
-              <li><a href="#groups" className={styles.footerLink}>Life Groups</a></li>
-              <li><a href="#serve" className={styles.footerLink}>Serve Teams</a></li>
-              <li><a href="#contact" className={styles.footerLink}>Contact Us</a></li>
-            </ul>
-          </div>
-
-          {/* Links Column 2: Porlay */}
-          <div className={styles.footerLinkColumn}>
-            <h4 className={styles.footerColumnTitle}>Porlay</h4>
-            <ul className={styles.footerLinkList}>
-              <li><a href="#services" className={styles.footerLink}>Online Campus</a></li>
-              <li><a href="#giving" className={styles.footerLink}>Giving</a></li>
-              <li><a href="#gallery" className={styles.footerLink}>News & Events</a></li>
-              <li><a href="#pastor" className={styles.footerLink}>About Our Pastor</a></li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Footer Bottom Bar */}
-        <div className={styles.footerBottomBar}>
-          <p className={styles.footerCopyright}>
-            © 2026 Light City Church. All rights reserved.
-          </p>
-          <div className={styles.footerBottomLinks}>
-            <a href="#privacy" className={styles.footerBottomLink}>Privacy Policy</a>
-            <a href="#terms" className={styles.footerBottomLink}>Terms of Service</a>
           </div>
         </div>
       </footer>
-
-      {/* Lightbox Modal */}
-      {modalIndex !== null && filteredItems[modalIndex] && (
-        <div className={styles.lightboxModal} onClick={closeModal} role="dialog" aria-modal="true">
-          <div className={styles.lightboxOverlay} />
-          
-          <button className={styles.lightboxClose} onClick={closeModal} aria-label="Close modal">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-
-          <button className={styles.lightboxPrev} onClick={prevModalItem} aria-label="Previous item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-
-          <button className={styles.lightboxNext} onClick={nextModalItem} aria-label="Next item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-
-          <div className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.lightboxGrid}>
-              <div className={styles.lightboxVisual}>
-                {filteredItems[modalIndex].image ? (
-                  <div className={styles.lightboxImageWrapper}>
-                    <Image
-                      src={filteredItems[modalIndex].image || ""}
-                      alt={filteredItems[modalIndex].title}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 800px"
-                      className={styles.lightboxImage}
-                      priority
-                    />
-                  </div>
-                ) : (
-                  <div className={`${styles.lightboxPlaceholder} ${filteredItems[modalIndex].type === 'typography' ? styles.lightboxTypoBg : ''}`}>
-                    <span className={styles.placeholderLogo}>✦</span>
-                  </div>
-                )}
-              </div>
-
-              <div className={styles.lightboxMeta}>
-                <span className={styles.lightboxCategory}>/{filteredItems[modalIndex].category}</span>
-                <h2 className={styles.lightboxTitle}>{filteredItems[modalIndex].title}</h2>
-                <h3 className={styles.lightboxSubtitle}>{filteredItems[modalIndex].subtitle}</h3>
-                
-                <div className={styles.lightboxDivider} />
-                
-                <p className={styles.lightboxDescription}>{filteredItems[modalIndex].content}</p>
-                
-                {filteredItems[modalIndex].type === 'audio' && (
-                  <div className={styles.lightboxAudioAction}>
-                    <button
-                      className={`${styles.lightboxPlayBtn} ${audioPlaying ? styles.playing : ""}`}
-                      onClick={(e) => toggleAudio(e, filteredItems[modalIndex].audioUrl || "")}
-                    >
-                      {audioPlaying ? "PAUSE PREVIEW" : "PLAY PREVIEW"}
-                    </button>
-                  </div>
-                )}
-
-                {filteredItems[modalIndex].type === 'widget-countdown' && (
-                  <div className={styles.lightboxCountdown}>
-                    <span className={styles.countdownAlert}>✦ NEXT GATHERING IN:</span>
-                    <div className={styles.lightboxTimerDisplay}>
-                      {timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m : {timeLeft.seconds}s
-                    </div>
-                  </div>
-                )}
-
-                <div className={styles.lightboxFooter}>
-                  <span>Item {modalIndex + 1} of {filteredItems.length}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Lightbox Modal removed */}
 
     </div>
   );

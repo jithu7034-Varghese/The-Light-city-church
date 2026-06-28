@@ -1,19 +1,12 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  weight: ["300", "400", "500", "600"],
-  display: "swap",
-});
 
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -35,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
+    <html lang="en" className={outfit.variable}>
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
@@ -45,3 +38,4 @@ export default function RootLayout({
     </html>
   );
 }
+
