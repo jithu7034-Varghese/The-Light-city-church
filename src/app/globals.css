@@ -138,8 +138,8 @@ h1, h2, h3, h4, h5, h6 {
 @keyframes premiumBlockReveal {
   0% {
     opacity: 0;
-    transform: perspective(1200px) translateY(80px) scale(0.94) rotateX(10deg);
-    filter: blur(4px);
+    transform: perspective(1200px) translateY(40px) scale(0.97) rotateX(5deg);
+    filter: blur(2px);
   }
   100% {
     opacity: 1;
@@ -157,12 +157,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .viewport-hidden .animate-premium-block {
   opacity: 0;
-  transform: perspective(1200px) translateY(80px) scale(0.94) rotateX(10deg);
-  filter: blur(4px);
+  transform: perspective(1200px) translateY(40px) scale(0.97) rotateX(5deg);
+  filter: blur(2px);
 }
 
 .viewport-active .animate-premium-block {
-  animation: premiumBlockReveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: premiumBlockReveal 1.4s cubic-bezier(0.19, 1, 0.22, 1) both;
 }
 
 .animate-fade-in {
