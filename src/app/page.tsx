@@ -383,9 +383,9 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className={`${styles.cardsGrid} animate-fade-in-up`}>
+          <div className={styles.cardsGrid}>
             {/* Left Video Card */}
-            <div className={styles.videoCard}>
+            <div className={`${styles.videoCard} animate-premium-block`}>
               <Image
                 src="/feature_sculpture.png"
                 alt="Visionary Design Sculpture"
@@ -409,7 +409,7 @@ export default function Home() {
             </div>
 
             {/* Right Insights Audio Card */}
-            <div className={styles.audioCard}>
+            <div className={`${styles.audioCard} animate-premium-block delay-2`}>
               <div className={styles.audioHeader}>
                 <span className={styles.audioBrand}>Woodmetal</span>
                 <span className={styles.audioBrand}>insights</span>
@@ -473,7 +473,7 @@ export default function Home() {
           </div>
 
           <div className={styles.dashboardGrid}>
-            <div className={`${styles.lightCard} ${styles.engagementCard} animate-fade-in-up delay-1`}>
+            <div className={`${styles.lightCard} ${styles.engagementCard} animate-premium-block`}>
               <div className={styles.cardHeader}>
                 <span className={styles.cardSub}>/Pathways</span>
                 <h3 className={styles.cardTitle}>Active Connection</h3>
@@ -519,7 +519,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className={`${styles.lightCard} ${styles.growthCard} animate-fade-in-up delay-2`}>
+            <div className={`${styles.lightCard} ${styles.growthCard} animate-premium-block delay-1`}>
               <div className={styles.cardHeaderWithToggle}>
                 <div className={styles.cardHeader}>
                   <span className={styles.cardSub}>/{dashboardView === 'attendance' ? 'Attendance' : 'Generosity'}</span>
@@ -568,7 +568,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className={`${styles.lightCard} ${styles.trendCard} animate-fade-in-up delay-3`}>
+            <div className={`${styles.lightCard} ${styles.trendCard} animate-premium-block delay-2`}>
               <div className={styles.cardHeader}>
                 <span className={styles.cardSub}>/Trend</span>
                 <h3 className={styles.cardTitle}>Connection Trend</h3>
@@ -630,7 +630,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className={`${styles.darkCard} ${styles.hubCard} animate-fade-in-up delay-4`}>
+            <div className={`${styles.darkCard} ${styles.hubCard} animate-premium-block delay-3`}>
               <div className={styles.cardHeader}>
                 <span className={styles.cardSubDark}>/Hub</span>
                 <h3 className={styles.cardTitleDark}>Ministry Hub</h3>
@@ -665,7 +665,7 @@ export default function Home() {
           <div className={styles.pastorGrid}>
             
             {/* Left side: Visual photo with floating glass badge */}
-            <div className={`${styles.pastorImageWrapper} animate-fade-in-up`}>
+            <div className={`${styles.pastorImageWrapper} animate-premium-block`}>
               <Image
                 src="/pastor_portrait.png"
                 alt="Pastor David Cole"
@@ -833,8 +833,8 @@ export default function Home() {
                 desc: "Overseeing & control the entire construction process",
                 image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop"
               }
-            ].map((service) => (
-              <div key={service.id} className={styles.serviceCard}>
+            ].map((service, idx) => (
+              <div key={service.id} className={`${styles.serviceCard} animate-premium-block${idx > 0 ? ` delay-${idx * 2}` : ""}`}>
                 <div className={styles.serviceCardImageArea}>
                   <span className={styles.serviceCardIndex}>{service.id}</span>
                   <Image
@@ -866,7 +866,7 @@ export default function Home() {
               </p>
             </div>
             
-            <div className={`${styles.portfolioCard} ${styles.stretchCard}`}>
+            <div className={`${styles.portfolioCard} ${styles.stretchCard} animate-premium-block`}>
               <div className={`${styles.portfolioImageWrapper} ${styles.stretchImage}`}>
                 <Image
                   src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=600&auto=format&fit=crop"
@@ -882,7 +882,7 @@ export default function Home() {
 
           {/* Middle Column */}
           <div className={styles.portfolioColumn}>
-            <div className={`${styles.portfolioCard} ${styles.middleCard}`}>
+            <div className={`${styles.portfolioCard} ${styles.middleCard} animate-premium-block delay-1`}>
               <div className={styles.portfolioImageWrapper}>
                 <Image
                   src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=600&auto=format&fit=crop"
@@ -895,7 +895,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className={`${styles.portfolioCard} ${styles.middleCard}`}>
+            <div className={`${styles.portfolioCard} ${styles.middleCard} animate-premium-block delay-2`}>
               <div className={styles.portfolioImageWrapper}>
                 <Image
                   src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?q=80&w=600&auto=format&fit=crop"
@@ -911,7 +911,7 @@ export default function Home() {
 
           {/* Right Column */}
           <div className={styles.portfolioColumn}>
-            <div className={`${styles.portfolioCard} ${styles.tallCard} ${styles.stretchCard}`}>
+            <div className={`${styles.portfolioCard} ${styles.tallCard} ${styles.stretchCard} animate-premium-block delay-3`}>
               <div className={`${styles.portfolioImageWrapper} ${styles.stretchImage}`}>
                 <Image
                   src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=600&auto=format&fit=crop"
@@ -957,7 +957,7 @@ export default function Home() {
 
           <div className={styles.testimoniesCinematicGrid}>
             {/* Left Column: Interactive Portrait spotlight card */}
-            <div className={styles.portraitColumn}>
+            <div className={`${styles.portraitColumn} animate-premium-block`}>
               <div
                 ref={portraitRef}
                 onMouseMove={handlePortraitMouseMove}
@@ -983,7 +983,7 @@ export default function Home() {
             </div>
 
             {/* Right Column: Giant Quote Block & Pagination */}
-            <div className={styles.copyColumn}>
+            <div className={`${styles.copyColumn} animate-premium-block delay-2`}>
               <div className={`${styles.quoteBlock} ${testimonyFade ? styles.fadeExit : styles.fadeEntry}`}>
                 <span className={styles.largeQuoteMark}>“</span>
                 <blockquote className={styles.cinematicQuoteText}>
@@ -1033,7 +1033,7 @@ export default function Home() {
           </div>
 
           {/* Featured Post Card (Split layout: Image Left, Content Right) */}
-          <div className={`${styles.featuredCard} animate-fade-in-up`} style={{ animationDelay: '0.2s' }}>
+          <div className={`${styles.featuredCard} animate-premium-block`}>
             <div className={styles.featuredImageArea}>
               <Image
                 src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1000&auto=format&fit=crop"
@@ -1095,8 +1095,8 @@ export default function Home() {
             ].map((article, idx) => (
               <div
                 key={article.id}
-                className={`${styles.blogCard} animate-fade-in-up`}
-                style={{ animationDelay: `${0.3 + idx * 0.1}s` }}
+                className={`${styles.blogCard} animate-premium-block`}
+                style={{ animationDelay: `${0.2 + idx * 0.1}s` }}
               >
                 <div className={styles.blogCardImageWrapper}>
                   <Image
