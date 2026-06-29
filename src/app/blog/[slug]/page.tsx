@@ -66,7 +66,7 @@ export default function BlogDetailPage({ params }: PageProps) {
               <Link href="/" className={styles.navLink}>Home</Link>
             </li>
             <li>
-              <Link href="/#pastor" className={styles.navLink}>About</Link>
+              <Link href="/about" className={styles.navLink}>About</Link>
             </li>
             <li>
               <Link href="/#services" className={styles.navLink}>Ministries</Link>
@@ -242,7 +242,7 @@ export default function BlogDetailPage({ params }: PageProps) {
                 <h4 className={styles.footerLinkTitle}>Explore</h4>
                 <ul className={styles.footerLinkList}>
                   <li><Link href="/" className={styles.footerNavLink}>Home</Link></li>
-                  <li><Link href="/#pastor" className={styles.footerNavLink}>About</Link></li>
+                  <li><Link href="/about" className={styles.footerNavLink}>About</Link></li>
                   <li><Link href="/#services" className={styles.footerNavLink}>Ministries</Link></li>
                   <li><Link href="/#gallery" className={styles.footerNavLink}>Gallery</Link></li>
                   <li><Link href="/blog" className={styles.footerNavLink}>Devotionals</Link></li>

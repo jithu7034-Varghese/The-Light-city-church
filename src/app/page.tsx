@@ -319,7 +319,7 @@ export default function Home() {
               <a href="#hero" className={styles.activeNavLink}>Home</a>
             </li>
             <li>
-              <a href="#pastor" className={styles.navLink}>About</a>
+              <Link href="/about" className={styles.navLink}>About</Link>
             </li>
             <li>
               <a href="#services" className={styles.navLink}>Ministries</a>
@@ -1195,7 +1195,7 @@ export default function Home() {
             <nav className={styles.footerNav}>
               <ul className={styles.footerNavList}>
                 <li><a href="#hero" className={styles.footerNavLink}>Home</a></li>
-                <li><a href="#pastor" className={styles.footerNavLink}>About</a></li>
+                <li><Link href="/about" className={styles.footerNavLink}>About</Link></li>
                 <li><a href="#services" className={styles.footerNavLink}>Ministries</a></li>
                 <li><a href="#gallery" className={styles.footerNavLink}>Gallery</a></li>
                 <li><a href="#blog" className={styles.footerNavLink}>Devotionals</a></li>
