@@ -315,45 +315,55 @@ export default function Home() {
         <nav className={styles.nav} aria-label="Main Navigation">
           <ul className={styles.navUl}>
             <li>
-              <a href="#product" className={styles.activeNavLink}>Product</a>
+              <a href="#hero" className={styles.activeNavLink}>Home</a>
             </li>
             <li>
-              <a href="#case-study" className={styles.navLink}>Case Study</a>
+              <a href="#pastor" className={styles.navLink}>About</a>
             </li>
             <li>
-              <a href="#resources" className={styles.navLink}>Resources</a>
+              <a href="#services" className={styles.navLink}>Ministries</a>
             </li>
             <li>
-              <a href="#pricing" className={styles.navLink}>Pricing</a>
+              <a href="#gallery" className={styles.navLink}>Gallery</a>
             </li>
             <li>
-              <a href="#contact" className={styles.navLink}>Contact</a>
+              <a href="#blog" className={styles.navLink}>Devotionals</a>
+            </li>
+            <li>
+              <a href="#contact" className={styles.navLink}>Visit Us</a>
             </li>
           </ul>
         </nav>
 
-        <button className={styles.preOrderBtn} id="header-preorder-btn">
+        <button className={styles.preOrderBtn} id="header-preorder-btn" onClick={() => {
+          const el = document.getElementById('contact');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
-          Pre-Order Now
+          Get Involved
         </button>
       </header>
 
       {/* Hero Section */}
       <ViewportSection as="main" className={styles.hero} id="hero">
         <div className={styles.heroContent}>
-          <span className={`${styles.heroTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>Aero-Shield X1</span>
+          <span className={`${styles.heroTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>Welcome to The Light City Church</span>
           <h1 className={styles.heroTitle}>
-            <SplitText text="Breathe Pure in" delayOffset={0.3} />
+            <SplitText text="Live in the Fulness of" delayOffset={0.3} />
             <br />
-            <SplitText text="a Polluted World" delayOffset={0.8} />
+            <SplitText text="Your Inheritance" delayOffset={0.8} />
           </h1>
           <div className={`${styles.heroButtons} animate-fade-in-up`} style={{ animationDelay: '1.3s' }}>
-            <button className={styles.exploreBtn} id="explore-btn">Explore</button>
-            <button className={styles.demoBtn} id="demo-btn">Watch Demo</button>
+            <button className={styles.exploreBtn} id="explore-btn" onClick={() => {
+              const el = document.getElementById('pastor');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}>Get Involved</button>
+            <button className={styles.demoBtn} id="demo-btn" onClick={() => {
+              const el = document.getElementById('contact');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}>Worship With Us</button>
           </div>
         </div>
       </ViewportSection>
@@ -363,19 +373,19 @@ export default function Home() {
         <div className={styles.featuresCard}>
           <div className={styles.featuresHeader}>
             <span className={styles.featuresTag}>
-              <SplitText text="/Features" delayOffset={0.0} />
+              <SplitText text="/Our Mission" delayOffset={0.0} />
             </span>
             <h2 className={styles.featuresTitle}>
               <span className={styles.highlightText}>
                 <SplitText 
-                  text="We are a team of visionary designers, strategists, and innovators" 
+                  text="To empower every man, woman, and child to live in the fulness of their inheritance in Christ" 
                   delayOffset={0.15} 
                   by="words" 
                 />
               </span>{" "}
               <span className={styles.mutedText}>
                 <SplitText 
-                  text="dedicated to crafting exceptional digital experiences. Our mission is to bridge creativity with functionality," 
+                  text="through the accurate teaching of the Gospel. To bring light where there was once darkness and to prepare the church." 
                   delayOffset={0.75} 
                   by="words" 
                 />
@@ -388,22 +398,25 @@ export default function Home() {
             <div className={`${styles.videoCard} animate-premium-block`}>
               <Image
                 src="/feature_sculpture.png"
-                alt="Visionary Design Sculpture"
+                alt="Worship at The Light City Church"
                 fill
                 sizes="(max-width: 1024px) 100vw, 800px"
                 className={styles.videoBgImage}
               />
-              <div className={styles.playButton} role="button" aria-label="Play video">
+              <div className={styles.playButton} role="button" aria-label="Play video" onClick={() => {
+                const el = document.getElementById('contact');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}>
                 <svg width="18" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <polygon points="5 3 21 12 5 21 5 3"></polygon>
                 </svg>
               </div>
               <div className={styles.videoBadges}>
                 <div className={styles.quoteBadge}>
-                  &quot;Can&apos;t imagine without them&quot;
+                  &quot;Believe in God in you!&quot;
                 </div>
                 <div className={styles.authorBadge}>
-                  Ryhan
+                  Acts 26:18
                 </div>
               </div>
             </div>
@@ -411,12 +424,12 @@ export default function Home() {
             {/* Right Insights Audio Card */}
             <div className={`${styles.audioCard} animate-premium-block delay-2`}>
               <div className={styles.audioHeader}>
-                <span className={styles.audioBrand}>Woodmetal</span>
-                <span className={styles.audioBrand}>insights</span>
+                <span className={styles.audioBrand}>DAILY LIGHT</span>
+                <span className={styles.audioBrand}>devotional</span>
               </div>
               
               <div className={styles.audioBody}>
-                <h3 className={styles.audioTitle}>Ryan Said</h3>
+                <h3 className={styles.audioTitle}>Without miracles Christianity is reduced to philosophy.</h3>
                 <div className={styles.waveformContainer}>
                   {waveformBars.map((bar, index) => (
                     <div
@@ -430,12 +443,12 @@ export default function Home() {
 
               <div className={styles.audioFooter}>
                 <p className={styles.audioFooterText}>
-                  Global best agency Sative Digital recommended...
+                  Christ in you, the hope of glory! Believe in God in you!
                 </p>
                 <div className={styles.avatarWrapper}>
                   <Image
                     src="/avatar_ryan.png"
-                    alt="Ryan Portrait"
+                    alt="Pastor Ronnie Dube"
                     width={52}
                     height={52}
                     className={styles.avatarImage}
@@ -668,15 +681,15 @@ export default function Home() {
             <div className={`${styles.pastorImageWrapper} animate-premium-block`}>
               <Image
                 src="/pastor_portrait.png"
-                alt="Pastor David Cole"
+                alt="Pastor Ronnie & Annalene Dube"
                 fill
                 sizes="(max-width: 1024px) 100vw, 600px"
                 className={styles.pastorImage}
                 priority
               />
               <div className={styles.pastorFloatingBadge}>
-                <h4 className={styles.badgeName}>David & Sarah Cole</h4>
-                <p className={styles.badgeRole}>Lead Pastors, Light City</p>
+                <h4 className={styles.badgeName}>Ronnie & Annalene Dube</h4>
+                <p className={styles.badgeRole}>Senior Pastors, Light City</p>
               </div>
             </div>
 
@@ -725,10 +738,10 @@ export default function Home() {
                   {activeTab === 'story' && (
                     <div className={`${styles.tabContent} animate-fade-in-up`}>
                       <p>
-                        In 2018, Pastor David and Sarah Cole started Light City Church with a simple yet profound vision: to build a modern, inclusive community where people can discover grace, experience authentic relationship, and shine their light in the city.
+                        Pastor Ronnie Dube is the co-founder and senior pastor at The Light City Church. His ministry as a pastor, teacher, author, and healing minister continues to transform many lives around the world, helping people experience a victorious and purposeful life in God’s Word.
                       </p>
                       <p style={{ marginTop: '12px' }}>
-                        With backgrounds in youth leadership and community development, they have spent the last decade dedicated to fostering spaces of hope and spiritual growth.
+                        His wife, Pastor Annalene Dube, is a seasoned minister of the Word and worship leader. Her humility, warmth, and genuine love for God and people have led to her touching many lives globally through her music and teaching ministry.
                       </p>
                     </div>
                   )}
@@ -736,12 +749,12 @@ export default function Home() {
                   {activeTab === 'vision' && (
                     <div className={`${styles.tabContent} animate-fade-in-up`}>
                       <p>
-                        We believe in a church that is culturally engaging, spiritually deep, and socially active. Our core vision revolves around three main pillars:
+                        We believe in a church that is culturally engaging, spiritually deep, and socially active. Our core values reflect our dedication to the accurate teaching of the Gospel:
                       </p>
                       <ul className={styles.visionList}>
-                        <li><strong>Encounter:</strong> Experiencing God’s presence in worship and prayer.</li>
-                        <li><strong>Belong:</strong> Growing together through authentic small groups.</li>
-                        <li><strong>Impact:</strong> Serving our local community with compassion and action.</li>
+                        <li><strong>Love Above All:</strong> We demonstrate the divine nature of God by loving and valuing every person because of the price tag God put on their life, which is His own blood.</li>
+                        <li><strong>Standard of Excellence:</strong> We seek to excel in everything we do because Christ is made unto us wisdom and we have the mind of Christ.</li>
+                        <li><strong>Honour:</strong> We treat each other with respect and integrity, and we honour and submit to our leaders as unto the Lord.</li>
                       </ul>
                     </div>
                   )}
@@ -749,14 +762,14 @@ export default function Home() {
                   {activeTab === 'connect' && (
                     <div className={`${styles.tabContent} animate-fade-in-up`}>
                       <p>
-                        Pastor David and Sarah would love to meet you! Join us for a cup of coffee immediately after our Sunday services, or reach out to us online.
+                        Pastor Ronnie and Annalene would love to meet you! Join us for worship immediately after our Sunday services at Motorpoint Arena, or reach out to join our global online Light Groups.
                       </p>
                       <div className={styles.connectButtons}>
-                        <a href="mailto:david@lightcity.church" className={styles.connectMailBtn}>
-                          Email David
+                        <a href="#contact" className={styles.connectMailBtn}>
+                          Worship With Us
                         </a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.connectInstaBtn}>
-                          Follow Instagram
+                        <a href="https://instagram.com/thelovedcircle" target="_blank" rel="noopener noreferrer" className={styles.connectInstaBtn}>
+                          The Loved Circle
                         </a>
                       </div>
                     </div>
@@ -768,13 +781,13 @@ export default function Home() {
               <div className={`${styles.socialRow} animate-fade-in-up`} style={{ animationDelay: '1.5s' }}>
                 <span className={styles.socialLabel}>Follow our journey:</span>
                 <div className={styles.socialIcons}>
-                  <a href="#" aria-label="Instagram" className={styles.socialIconLink}>
+                  <a href="https://instagram.com/thelovedcircle" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className={styles.socialIconLink}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                   </a>
-                  <a href="#" aria-label="Twitter" className={styles.socialIconLink}>
+                  <a href="https://x.com/thelightcitychurch" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className={styles.socialIconLink}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
                   </a>
-                  <a href="#" aria-label="Facebook" className={styles.socialIconLink}>
+                  <a href="https://facebook.com/102820662239782" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className={styles.socialIconLink}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
                   </a>
                 </div>
@@ -791,7 +804,7 @@ export default function Home() {
         <div className={styles.servicesContainer}>
           <div className={styles.servicesHeader}>
             <h2 className={styles.servicesTitle}>
-              <SplitText text="Services we provide" delayOffset={0.1} />
+              <SplitText text="Ministries & Pathways" delayOffset={0.1} />
             </h2>
             <div className={`${styles.servicesNavArrows} animate-premium-block delay-3`}>
               <button className={styles.arrowBtn} aria-label="Previous services">
@@ -813,27 +826,27 @@ export default function Home() {
             {[
               {
                 id: "01",
-                title: "Arch Design",
-                desc: "From initial concept development and schematic design",
-                image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=600&auto=format&fit=crop"
+                title: "Sunday Worship",
+                desc: "Jesus-centred praise, worship, and an anointed message by Pastor Ronnie Dube at Nottingham Motorpoint Arena.",
+                image: "https://images.unsplash.com/photo-1461530751191-a53d31a38697?q=80&w=600&auto=format&fit=crop"
               },
               {
                 id: "02",
-                title: "Interior Design",
-                desc: "Creating cohesive interior spaces that reflect your style",
-                image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=600&auto=format&fit=crop"
+                title: "Daily Devotional",
+                desc: "Subscribe to receive our Daily Devotional, monthly newsletter, and updates about special conferences.",
+                image: "https://images.unsplash.com/photo-1504052434569-70ad58565b90?q=80&w=600&auto=format&fit=crop"
               },
               {
                 id: "03",
-                title: "Urban Planning",
-                desc: "Designing the spaces between buildings & outdoors",
-                image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=600&auto=format&fit=crop"
+                title: "Freedom from Religion",
+                desc: "Discover the good news of grace and how salvation through faith in Jesus Christ is completely free.",
+                image: "https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?q=80&w=600&auto=format&fit=crop"
               },
               {
                 id: "04",
-                title: "Project Manage",
-                desc: "Overseeing & control the entire construction process",
-                image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop"
+                title: "The Loved Circle",
+                desc: "A circle of sisterhood helping you on a journey of self-discovery, healing, wellness, and extravagant love.",
+                image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=600&auto=format&fit=crop"
               }
             ].map((service, idx) => (
               <div key={service.id} className={`${styles.serviceCard} animate-premium-block${idx > 0 ? ` delay-${idx * 2}` : ""}`}>
@@ -862,22 +875,22 @@ export default function Home() {
           {/* Left Column */}
           <div className={styles.portfolioColumn}>
             <div className={styles.portfolioIntro}>
-              <h2 className={styles.portfolioIntroTitle}>Our Portfolio of Pioneering Design</h2>
+              <h2 className={styles.portfolioIntroTitle}>Capturing Our Faith</h2>
               <p className={styles.portfolioIntroText}>
-                Explore our selected works that demonstrate our commitment to design excellence, innovation, and client satisfaction.
+                Explore key moments, ministries, and events that capture the heart of our community in action.
               </p>
             </div>
             
             <div className={`${styles.portfolioCard} ${styles.stretchCard} animate-premium-block`}>
               <div className={`${styles.portfolioImageWrapper} ${styles.stretchImage}`}>
                 <Image
-                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=600&auto=format&fit=crop"
-                  alt="New York Office"
+                  src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=600&auto=format&fit=crop"
+                  alt="Sunday Worship"
                   fill
                   sizes="(max-width: 1024px) 100vw, 33vw"
                   className={styles.portfolioCardImage}
                 />
-                <span className={styles.portfolioCardTextBadge}>New York Office</span>
+                <span className={styles.portfolioCardTextBadge}>Sunday Worship</span>
               </div>
             </div>
           </div>
@@ -887,26 +900,26 @@ export default function Home() {
             <div className={`${styles.portfolioCard} ${styles.middleCard} animate-premium-block delay-1`}>
               <div className={styles.portfolioImageWrapper}>
                 <Image
-                  src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=600&auto=format&fit=crop"
-                  alt="Commercial Restaurant"
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600&auto=format&fit=crop"
+                  alt="Light Groups"
                   fill
                   sizes="(max-width: 1024px) 100vw, 33vw"
                   className={styles.portfolioCardImage}
                 />
-                <span className={styles.portfolioCardTextBadge}>Commercial Restaurant</span>
+                <span className={styles.portfolioCardTextBadge}>Light Groups</span>
               </div>
             </div>
 
             <div className={`${styles.portfolioCard} ${styles.middleCard} animate-premium-block delay-2`}>
               <div className={styles.portfolioImageWrapper}>
                 <Image
-                  src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?q=80&w=600&auto=format&fit=crop"
-                  alt="Hotel Rooms"
+                  src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=600&auto=format&fit=crop"
+                  alt="Worship Team"
                   fill
                   sizes="(max-width: 1024px) 100vw, 33vw"
                   className={styles.portfolioCardImage}
                 />
-                <span className={styles.portfolioCardTextBadge}>Hotel Rooms</span>
+                <span className={styles.portfolioCardTextBadge}>Worship Team</span>
               </div>
             </div>
           </div>
@@ -916,18 +929,21 @@ export default function Home() {
             <div className={`${styles.portfolioCard} ${styles.tallCard} ${styles.stretchCard} animate-premium-block delay-3`}>
               <div className={`${styles.portfolioImageWrapper} ${styles.stretchImage}`}>
                 <Image
-                  src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=600&auto=format&fit=crop"
-                  alt="Private House"
+                  src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=600&auto=format&fit=crop"
+                  alt="Community Outreach"
                   fill
                   sizes="(max-width: 1024px) 100vw, 33vw"
                   className={styles.portfolioCardImage}
                 />
-                <span className={styles.portfolioCardTextBadge}>Private House</span>
+                <span className={styles.portfolioCardTextBadge}>Community Outreach</span>
               </div>
             </div>
 
             <div className={styles.portfolioCta}>
-              <button className={styles.portfolioBtn}>See More Projects</button>
+              <button className={styles.portfolioBtn} onClick={() => {
+                const el = document.getElementById('contact');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}>Connect With Us</button>
             </div>
           </div>
 
@@ -1028,9 +1044,9 @@ export default function Home() {
       <ViewportSection as="section" className={styles.blogSection} id="blog">
         <div className={styles.blogContainer}>
           <div className={styles.blogHeader}>
-            <span className={styles.blogLabel}>Blog</span>
+            <span className={styles.blogLabel}>Articles</span>
             <h2 className={styles.blogHeadline}>
-              Visual insights to sell homes <span className={styles.italicSerif}>faster</span>
+              Daily Devotionals & faith <span className={styles.italicSerif}>resources</span>
             </h2>
           </div>
 
@@ -1038,8 +1054,8 @@ export default function Home() {
           <div className={`${styles.featuredCard} animate-premium-block`}>
             <div className={styles.featuredImageArea}>
               <Image
-                src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1000&auto=format&fit=crop"
-                alt="How video tours boost property sales"
+                src="https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?q=80&w=1000&auto=format&fit=crop"
+                alt="Freedom from Religion: Why Grace Changes Everything"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className={styles.blogCardImage}
@@ -1048,27 +1064,27 @@ export default function Home() {
             </div>
             <div className={styles.featuredTextArea}>
               <div className={styles.badgeRow}>
-                <span className={styles.blogPillBadge}>Marketing</span>
+                <span className={styles.blogPillBadge}>Grace & Faith</span>
               </div>
-              <h3 className={styles.featuredTitle}>How video tours boost property sales</h3>
+              <h3 className={styles.featuredTitle}>Freedom from Religion: Why Grace Changes Everything</h3>
               <p className={styles.featuredExcerpt}>
-                Short-form video and cinematic tours aren&apos;t just content — they&apos;re conversion tools. Here&apos;s how real estate teams can turn views into inquiries.
+                Many view Christianity as a set of rules and commandments. But Jesus came to undo that religious mentality. Discover how right standing with God has nothing to do with keeping the law.
               </p>
               
               <div className={styles.featuredFooter}>
                 <div className={styles.authorGroup}>
                   <div className={styles.authorAvatarWrapper}>
                     <Image
-                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop"
-                      alt="Sophia Martinez"
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"
+                      alt="Pastor Ronnie Dube"
                       width={32}
                       height={32}
                       className={styles.authorAvatar}
                     />
                   </div>
-                  <span className={styles.authorName}>Sophia Martinez</span>
+                  <span className={styles.authorName}>Pastor Ronnie Dube</span>
                 </div>
-                <span className={styles.postDate}>September 8, 2025</span>
+                <span className={styles.postDate}>June 29, 2026</span>
               </div>
             </div>
           </div>
@@ -1078,21 +1094,21 @@ export default function Home() {
             {[
               {
                 id: "grid-1",
-                category: "Strategy",
-                title: "Why listings with video sell 30% faster",
-                image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=600&auto=format&fit=crop"
+                category: "Devotional",
+                title: "Without Miracles, Christianity is Reduced to Philosophy",
+                image: "https://images.unsplash.com/photo-1504052434569-70ad58565b90?q=80&w=600&auto=format&fit=crop"
               },
               {
                 id: "grid-2",
-                category: "Luxury",
-                title: "The power of drone videos in marketing",
-                image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=600&auto=format&fit=crop"
+                category: "The Loved Circle",
+                title: "Extravagant Love: God's Over-the-Top Emotions for You",
+                image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=600&auto=format&fit=crop"
               },
               {
                 id: "grid-3",
-                category: "Social Media",
-                title: "Why Instagram Reels drive property inquiries",
-                image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=600&auto=format&fit=crop"
+                category: "Partnership",
+                title: "Sowing Seeds: Why Partnering with Us Changes Lives Globally",
+                image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=600&auto=format&fit=crop"
               }
             ].map((article, idx) => (
               <div
@@ -1121,8 +1137,11 @@ export default function Home() {
 
           {/* Center Load More Button CTA */}
           <div className={styles.blogCtaContainer}>
-            <button className={styles.loadMoreBtn}>
-              Load More
+            <button className={styles.loadMoreBtn} onClick={() => {
+              const el = document.getElementById('contact');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}>
+              View All Articles
             </button>
           </div>
         </div>
@@ -1134,26 +1153,28 @@ export default function Home() {
           {/* Top Half: CTA Area */}
           <div className={styles.ctaContent}>
             <h2 className={styles.ctaHeadline}>
-              Ready to Build Your Space as One{" "}
+              Ready to Experience His Extravagant{" "}
               <span className={styles.ctaBadgeWrapper}>
                 <Image
-                  src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=150&auto=format&fit=crop"
-                  alt="Vision badge"
+                  src="https://images.unsplash.com/photo-1461530751191-a53d31a38697?q=80&w=150&auto=format&fit=crop"
+                  alt="Worship badge"
                   width={64}
                   height={32}
                   className={styles.ctaInlineBadge}
                 />
               </span>{" "}
-              Vision?
+              Love?
             </h2>
             
             <p className={styles.ctaSubtext}>
-              Explore how our design studio helps you plan, visualize, and build modern spaces across any scale.
+              Join us every Sunday 10:30am at The Motorpoint Arena in Nottingham. We would love to welcome you and stand in agreement with you in prayer.
             </p>
             
             <div className={styles.ctaButtonWrapper}>
-              <button className={styles.ctaButton}>
-                <span className={styles.ctaButtonText}>Get in Touch</span>
+              <button className={styles.ctaButton} onClick={() => {
+                window.location.href = 'mailto:info@thelightcitychurch.org?subject=Prayer%20Request%20/%20Contact';
+              }}>
+                <span className={styles.ctaButtonText}>Send Us a Prayer Request</span>
                 <span className={styles.ctaButtonIcon}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="7" y1="17" x2="17" y2="7"></line>
@@ -1169,17 +1190,17 @@ export default function Home() {
             <div className={styles.footerTopRow}>
               <span className={styles.footerCopyrightText}>© Copyright 2026</span>
               <div className={styles.footerDividerLine} />
-              <span className={styles.footerCopyrightText}>All Rights Reserved</span>
+              <span className={styles.footerCopyrightText}>The Light City Church. All Rights Reserved.</span>
             </div>
             
             <nav className={styles.footerNav}>
               <ul className={styles.footerNavList}>
                 <li><a href="#hero" className={styles.footerNavLink}>Home</a></li>
-                <li><a href="#about" className={styles.footerNavLink}>About</a></li>
-                <li><a href="#services" className={styles.footerNavLink}>Service</a></li>
-                <li><a href="#gallery" className={styles.footerNavLink}>Portfolio</a></li>
-                <li><a href="#blog" className={styles.footerNavLink}>Blog</a></li>
-                <li><a href="#contact" className={styles.footerNavLink}>Contact</a></li>
+                <li><a href="#pastor" className={styles.footerNavLink}>About</a></li>
+                <li><a href="#services" className={styles.footerNavLink}>Ministries</a></li>
+                <li><a href="#gallery" className={styles.footerNavLink}>Gallery</a></li>
+                <li><a href="#blog" className={styles.footerNavLink}>Devotionals</a></li>
+                <li><a href="#contact" className={styles.footerNavLink}>Visit Us</a></li>
               </ul>
             </nav>
             

@@ -11,13 +11,13 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "AERO-SHIELD X1 — Breathe Pure in a Polluted World",
-  description: "Experience the next generation of personal air purification. Aero-Shield X1 provides a clean breathing zone with state-of-the-art particulate filtering and active ventilation.",
-  keywords: ["Aero-Shield", "Air Purifier", "Wearable Tech", "Breathe Pure", "Personal Air Shield"],
-  authors: [{ name: "Aero-Shield Tech" }],
+  title: "The Light City Church — Nottingham",
+  description: "Without miracles Christianity is reduced to philosophy. Christ in you the hope of Glory! Believe in God in you! Send your prayer request, or join us in person.",
+  keywords: ["The Light City Church", "Lightcity", "Nottingham Church", "Ronnie Dube", "Annalene Dube", "Prayer for Healing", "Daily Light Devotional", "Motorpoint Arena Nottingham"],
+  authors: [{ name: "The Light City Church" }],
   openGraph: {
-    title: "AERO-SHIELD X1 — Breathe Pure in a Polluted World",
-    description: "Experience the next generation of personal air purification.",
+    title: "Welcome to The Light City Church",
+    description: "We are passionate about empowering every man, woman, and child to live in the fulness of their inheritance in Christ.",
     type: "website",
   },
 };
