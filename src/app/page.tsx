@@ -828,13 +828,13 @@ export default function Home() {
                 id: "01",
                 title: "Sunday Worship",
                 desc: "Jesus-centred praise, worship, and an anointed message by Pastor Ronnie Dube at Nottingham Motorpoint Arena.",
-                image: "https://images.unsplash.com/photo-1461530751191-a53d31a38697?q=80&w=600&auto=format&fit=crop"
+                image: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=600&auto=format&fit=crop"
               },
               {
                 id: "02",
                 title: "Daily Devotional",
                 desc: "Subscribe to receive our Daily Devotional, monthly newsletter, and updates about special conferences.",
-                image: "https://images.unsplash.com/photo-1504052434569-70ad58565b90?q=80&w=600&auto=format&fit=crop"
+                image: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?q=80&w=600&auto=format&fit=crop"
               },
               {
                 id: "03",
