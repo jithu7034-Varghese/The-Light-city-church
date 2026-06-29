@@ -1,0 +1,425 @@
+/* src/app/about/about.module.css */
+
+.aboutHeaderContainer {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 120px 24px 60px;
+  text-align: center;
+}
+
+.aboutTitle {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  letter-spacing: -0.03em;
+}
+
+.italicSerif {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  opacity: 0.95;
+}
+
+.aboutSubtitle {
+  font-size: clamp(1.1rem, 2vw, 1.25rem);
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Mission Section */
+.missionSection {
+  padding: 80px 24px;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.missionSection::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: 30%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(235, 230, 220, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.missionContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.missionTag {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+.missionHeadline {
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.missionHeadline em {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.missionText {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  text-align: justify;
+  text-align-last: center;
+}
+
+/* Values Section */
+.valuesSection {
+  padding: 100px 24px;
+}
+
+.valuesContainer {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.sectionTag {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.sectionTitle {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+}
+
+.valueCard {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 48px 40px;
+  border-radius: 24px;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.valueCard::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0;
+  transition: var(--transition-smooth);
+  pointer-events: none;
+}
+
+.valueCard:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(14, 17, 24, 0.15);
+}
+
+.valueCard:hover::after {
+  opacity: 1;
+}
+
+.valueCardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin-bottom: 32px;
+  transition: var(--transition-fast);
+}
+
+.valueCard:hover .valueCardIcon {
+  background-color: var(--text-primary);
+  color: var(--bg-secondary);
+  transform: scale(1.05);
+}
+
+.valueCardTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.valueCardText {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  flex-grow: 1;
+}
+
+/* Leadership Section */
+.leadershipSection {
+  padding: 100px 24px;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.leadershipContainer {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.leadershipGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 60px;
+  margin-top: 60px;
+}
+
+@media (min-width: 992px) {
+  .leadershipGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px;
+  }
+}
+
+.pastorCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 32px;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-sm);
+}
+
+.pastorCard:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(14, 17, 24, 0.15);
+}
+
+.pastorImageArea {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background-color: var(--bg-secondary);
+}
+
+.pastorImage {
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pastorCard:hover .pastorImage {
+  transform: scale(1.03);
+}
+
+.pastorDetails {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.pastorHeader {
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
+}
+
+.pastorName {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.pastorRole {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+.pastorBio {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  flex-grow: 1;
+}
+
+.pastorQuote {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  padding-left: 20px;
+  border-left: 3px solid var(--text-primary);
+  margin-top: auto;
+  opacity: 0.9;
+}
+
+/* Visit / Nottingham Info Section */
+.visitSection {
+  padding: 100px 24px;
+  position: relative;
+}
+
+.visitContainer {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.visitCard {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 32px;
+  padding: 60px 48px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: var(--transition-smooth);
+}
+
+.visitCard:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.visitTitle {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+
+.visitText {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.visitDetails {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 40px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .visitDetails {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.visitItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--bg-primary);
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.visitItemIcon {
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.visitItemLabel {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.visitItemValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.visitCtaContainer {
+  margin-top: 40px;
+}
+
+.visitCtaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--text-primary);
+  color: var(--bg-secondary);
+  padding: 16px 32px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--transition-fast);
+}
+
+.visitCtaBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
