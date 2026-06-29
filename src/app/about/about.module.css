@@ -478,12 +478,26 @@
 
 /* Nottingham Location Section */
 .visitSection {
-  padding: 120px 24px;
+  padding: 120px 80px;
   background-color: var(--bg-secondary);
   border-top: 1px solid var(--border-color);
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .visitSection {
+    padding: 80px 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .visitSection {
+    padding: 60px 24px;
+  }
 }
 
 .visitContainer {
+  width: 100%;
   max-width: var(--container-max);
   margin: 0 auto;
 }
@@ -496,6 +510,7 @@
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-lg);
   background: var(--bg-primary);
+  width: 100%;
 }
 
 @media (min-width: 992px) {
@@ -527,6 +542,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
 }
 
 @media (min-width: 1200px) {
@@ -555,6 +571,7 @@
   flex-direction: column;
   gap: 28px;
   margin-bottom: 48px;
+  width: 100%;
 }
 
 .visitRow {
