@@ -1,0 +1,287 @@
+// src/app/blog/[slug]/page.tsx
+"use client";
+
+import { use } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import styles from "../../page.module.css";
+import blogStyles from "../blog.module.css";
+import blogsData from "../../../data/blogs.json";
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default function BlogDetailPage({ params }: PageProps) {
+  const resolvedParams = use(params);
+  const { slug } = resolvedParams;
+
+  // Find the current article
+  const article = blogsData.find(b => b.slug === slug);
+
+  if (!article) {
+    return (
+      <div className={styles.container}>
+        <div style={{ textAlign: "center", padding: "180px 0" }}>
+          <h1 style={{ fontSize: "2rem", marginBottom: "16px" }}>Article Not Found</h1>
+          <p style={{ color: "var(--text-secondary)", marginBottom: "32px" }}>The article you are looking for does not exist.</p>
+          <Link href="/blog" className={blogStyles.backButton}>
+            ← Back to Devotionals
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Get related articles (same category or others, excluding current)
+  const relatedArticles = blogsData
+    .filter(b => b.slug !== slug)
+    .filter(b => b.category === article.category)
+    .slice(0, 3);
+
+  // If we don't have enough matching category, fill with others
+  if (relatedArticles.length < 3) {
+    const remaining = blogsData
+      .filter(b => b.slug !== slug && !relatedArticles.some(r => r.slug === b.slug))
+      .slice(0, 3 - relatedArticles.length);
+    relatedArticles.push(...remaining);
+  }
+
+  return (
+    <div className={styles.container} style={{ background: "var(--bg-secondary)" }}>
+      {/* Header */}
+      <header className={`${styles.header} animate-fade-in`} style={{ animationDelay: '0.1s', background: "var(--glass-bg)" }}>
+        <div className={styles.logoContainer}>
+          <Link href="/">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.logoSvg}>
+              <circle cx="11" cy="11" r="7.5" stroke="currentColor" strokeWidth="2.5"/>
+              <circle cx="19" cy="19" r="1.5" fill="currentColor"/>
+            </svg>
+          </Link>
+        </div>
+
+        <nav className={styles.nav} aria-label="Main Navigation">
+          <ul className={styles.navUl}>
+            <li>
+              <Link href="/" className={styles.navLink}>Home</Link>
+            </li>
+            <li>
+              <Link href="/#pastor" className={styles.navLink}>About</Link>
+            </li>
+            <li>
+              <Link href="/#services" className={styles.navLink}>Ministries</Link>
+            </li>
+            <li>
+              <Link href="/#gallery" className={styles.navLink}>Gallery</Link>
+            </li>
+            <li>
+              <Link href="/blog" className={styles.activeNavLink}>Devotionals</Link>
+            </li>
+            <li>
+              <Link href="/#contact" className={styles.navLink}>Visit Us</Link>
+            </li>
+          </ul>
+        </nav>
+
+        <button className={styles.preOrderBtn} id="header-preorder-btn" onClick={() => {
+          window.location.href = '/#contact';
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          Get Involved
+        </button>
+      </header>
+
+      {/* Article Detail */}
+      <article className={blogStyles.articleWrapper}>
+        <Link href="/blog" className={blogStyles.backButton}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to Devotionals
+        </Link>
+
+        <header className={blogStyles.articleHeader}>
+          <span className={blogStyles.articleCategory}>{article.category}</span>
+          <h1 className={blogStyles.articleTitle}>{article.title}</h1>
+          
+          <div className={blogStyles.metaRow}>
+            <div className={blogStyles.authorMeta}>
+              <div className={styles.authorAvatarWrapper} style={{ width: "36px", height: "36px" }}>
+                <Image
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"
+                  alt="Pastor Ronnie Dube"
+                  width={36}
+                  height={36}
+                  className={blogStyles.authorAvatar}
+                />
+              </div>
+              <span className={blogStyles.authorName}>{article.author}</span>
+            </div>
+            <span>•</span>
+            <span>{new Date(article.pubDate).toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "long",
+              year: "numeric"
+            })}</span>
+          </div>
+        </header>
+
+        <div className={blogStyles.heroImageContainer}>
+          <Image
+            src={article.image}
+            alt={article.title}
+            fill
+            sizes="(max-width: 1024px) 100vw, 720px"
+            className={styles.blogCardImage}
+            priority
+          />
+        </div>
+
+        {/* Dynamic Body Content Parser */}
+        <div className={blogStyles.articleBody}>
+          {article.content.map((block, idx) => {
+            switch (block.tag) {
+              case "h2":
+                return <h2 key={idx}>{block.text}</h2>;
+              case "h3":
+                return <h3 key={idx}>{block.text}</h3>;
+              case "h4":
+                return <h4 key={idx}>{block.text}</h4>;
+              case "blockquote":
+                return <blockquote key={idx}>“{block.text}”</blockquote>;
+              case "li":
+                return <li key={idx}>{block.text}</li>;
+              default:
+                return <p key={idx}>{block.text}</p>;
+            }
+          })}
+        </div>
+      </article>
+
+      {/* Related Posts Section */}
+      <section className={blogStyles.relatedSection}>
+        <div className={blogStyles.relatedContainer}>
+          <h2 className={blogStyles.relatedTitle}>Related Articles</h2>
+          <div className={blogStyles.relatedGrid}>
+            {relatedArticles.map((rel, idx) => (
+              <Link
+                href={`/blog/${rel.slug}`}
+                key={rel.slug}
+                className={`${styles.blogCard} animate-premium-block`}
+                style={{ animationDelay: `${0.1 + idx * 0.1}s`, background: "var(--bg-primary)" }}
+              >
+                <div className={styles.blogCardImageWrapper}>
+                  <Image
+                    src={rel.image}
+                    alt={rel.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className={styles.blogCardImage}
+                  />
+                </div>
+                <div className={styles.blogCardContent}>
+                  <div className={styles.badgeRow}>
+                    <span className={styles.blogPillBadge}>{rel.category}</span>
+                  </div>
+                  <h3 className={blogStyles.blogCardTitle} style={{ fontSize: "1.2rem", fontWeight: "600" }}>{rel.title}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className={styles.ctaFooterSection}>
+        <div className={styles.ctaFooterContainer}>
+          {/* Top Half: CTA Area */}
+          <div className={styles.ctaContent}>
+            <h2 className={styles.ctaHeadline}>
+              Ready to Experience His Extravagant{" "}
+              <span className={styles.ctaBadgeWrapper}>
+                <Image
+                  src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=150&auto=format&fit=crop"
+                  alt="Worship badge"
+                  width={64}
+                  height={32}
+                  className={styles.ctaInlineBadge}
+                />
+              </span>{" "}
+              Love?
+            </h2>
+            
+            <p className={styles.ctaSubtext}>
+              Join us every Sunday 10:30am at The Motorpoint Arena in Nottingham. We would love to welcome you and stand in agreement with you in prayer.
+            </p>
+            
+            <div className={styles.ctaButtonWrapper}>
+              <button className={styles.ctaButton} onClick={() => {
+                window.location.href = 'mailto:info@thelightcitychurch.org?subject=Prayer%20Request%20/%20Contact';
+              }}>
+                Send Us a Prayer Request
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          {/* Bottom Half: Footer Links & Details */}
+          <div className={styles.footerBottom}>
+            <div className={styles.footerBrand}>
+              <h3 className={styles.footerLogo}>TLCC</h3>
+              <p className={styles.footerTagline}>The Light City Church</p>
+            </div>
+            
+            <div className={styles.footerLinksGrid}>
+              <div>
+                <h4 className={styles.footerLinkTitle}>Explore</h4>
+                <ul className={styles.footerLinkList}>
+                  <li><Link href="/" className={styles.footerNavLink}>Home</Link></li>
+                  <li><Link href="/#pastor" className={styles.footerNavLink}>About</Link></li>
+                  <li><Link href="/#services" className={styles.footerNavLink}>Ministries</Link></li>
+                  <li><Link href="/#gallery" className={styles.footerNavLink}>Gallery</Link></li>
+                  <li><Link href="/blog" className={styles.footerNavLink}>Devotionals</Link></li>
+                  <li><Link href="/#contact" className={styles.footerNavLink}>Visit Us</Link></li>
+                </ul>
+              </div>
+              
+              <div>
+                <h4 className={styles.footerLinkTitle}>Connect</h4>
+                <ul className={styles.footerLinkList}>
+                  <li>
+                    <a href="https://instagram.com/thelovedcircle" target="_blank" rel="noopener noreferrer" className={styles.footerSocialLink}>
+                      Instagram
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://x.com/thelightcitychurch" target="_blank" rel="noopener noreferrer" className={styles.footerSocialLink}>
+                      Twitter
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://facebook.com/102820662239782" target="_blank" rel="noopener noreferrer" className={styles.footerSocialLink}>
+                      Facebook
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div className={styles.footerDivider}></div>
+          
+          <div className={styles.footerCopyrightRow}>
+            <p className={styles.copyrightText}>
+              © Copyright 2026 The Light City Church. All Rights Reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

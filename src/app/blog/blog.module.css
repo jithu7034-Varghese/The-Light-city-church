@@ -1,0 +1,230 @@
+/* src/app/blog/blog.module.css */
+
+.blogHeaderContainer {
+  padding-top: 140px;
+  padding-bottom: 40px;
+  text-align: center;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  width: 90%;
+}
+
+.blogTitle {
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+
+.italicSerif {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.blogSubtitle {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 32px auto;
+}
+
+/* Category Filters */
+.categoryFilters {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.filterPill {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.filterPill:hover {
+  background: var(--accent-light);
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.filterPillActive {
+  background: var(--accent);
+  color: var(--bg-secondary);
+  border-color: var(--accent);
+}
+
+/* Single Blog Page */
+.articleWrapper {
+  padding-top: 140px;
+  padding-bottom: 80px;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  transition: var(--transition-fast);
+}
+
+.backButton:hover {
+  color: var(--text-primary);
+  transform: translateX(-4px);
+}
+
+.articleHeader {
+  margin-bottom: 32px;
+}
+
+.articleCategory {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.articleTitle {
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 24px;
+}
+
+.authorMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.authorAvatar {
+  border-radius: 50%;
+}
+
+.authorName {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.heroImageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 40px;
+  box-shadow: var(--shadow-md);
+}
+
+.articleBody {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+}
+
+.articleBody p {
+  margin-bottom: 24px;
+}
+
+.articleBody h2 {
+  font-size: 1.75rem;
+  margin-top: 40px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.articleBody h3 {
+  font-size: 1.4rem;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.articleBody blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 20px;
+  margin: 32px 0;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.articleBody li {
+  margin-left: 20px;
+  margin-bottom: 12px;
+}
+
+/* Related articles */
+.relatedSection {
+  background: var(--accent-light);
+  border-top: 1px solid var(--border-color);
+  padding: 80px 0;
+}
+
+.relatedContainer {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  width: 90%;
+}
+
+.relatedTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  letter-spacing: -0.02em;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+@media (max-width: 1024px) {
+  .relatedGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .blogTitle {
+    font-size: 2.75rem;
+  }
+  .articleTitle {
+    font-size: 2.25rem;
+  }
+  .relatedGrid {
+    grid-template-columns: 1fr;
+  }
+}

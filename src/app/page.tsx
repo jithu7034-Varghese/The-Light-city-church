@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./page.module.css";
 
 interface SplitTextProps {
@@ -1051,11 +1052,11 @@ export default function Home() {
           </div>
 
           {/* Featured Post Card (Split layout: Image Left, Content Right) */}
-          <div className={`${styles.featuredCard} animate-premium-block`}>
+          <Link href="/blog/how-to-live-victoriously" className={`${styles.featuredCard} animate-premium-block`} style={{ display: 'flex' }}>
             <div className={styles.featuredImageArea}>
               <Image
-                src="https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?q=80&w=1000&auto=format&fit=crop"
-                alt="Freedom from Religion: Why Grace Changes Everything"
+                src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?q=80&w=1000&auto=format&fit=crop"
+                alt="How to live victoriously"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className={styles.blogCardImage}
@@ -1064,11 +1065,11 @@ export default function Home() {
             </div>
             <div className={styles.featuredTextArea}>
               <div className={styles.badgeRow}>
-                <span className={styles.blogPillBadge}>Grace & Faith</span>
+                <span className={styles.blogPillBadge}>Devotional</span>
               </div>
-              <h3 className={styles.featuredTitle}>Freedom from Religion: Why Grace Changes Everything</h3>
+              <h3 className={styles.featuredTitle}>How to live victoriously</h3>
               <p className={styles.featuredExcerpt}>
-                Many view Christianity as a set of rules and commandments. But Jesus came to undo that religious mentality. Discover how right standing with God has nothing to do with keeping the law.
+                The Word of God is building material for your life you cannot afford to treat it casually, esteem the God.s word highly in your life and watch the changes.
               </p>
               
               <div className={styles.featuredFooter}>
@@ -1084,35 +1085,36 @@ export default function Home() {
                   </div>
                   <span className={styles.authorName}>Pastor Ronnie Dube</span>
                 </div>
-                <span className={styles.postDate}>June 29, 2026</span>
+                <span className={styles.postDate}>Feb 5, 2025</span>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Bottom Grid: 3 columns */}
           <div className={styles.blogGrid}>
             {[
               {
-                id: "grid-1",
+                slug: "partakers-of-the-heavenly-calling",
+                category: "Faith",
+                title: "Partakers of the Heavenly Calling",
+                image: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=600&auto=format&fit=crop"
+              },
+              {
+                slug: "stay-connected",
                 category: "Devotional",
-                title: "Without Miracles, Christianity is Reduced to Philosophy",
-                image: "https://images.unsplash.com/photo-1504052434569-70ad58565b90?q=80&w=600&auto=format&fit=crop"
+                title: "Stay connected!",
+                image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop"
               },
               {
-                id: "grid-2",
-                category: "The Loved Circle",
-                title: "Extravagant Love: God's Over-the-Top Emotions for You",
-                image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=600&auto=format&fit=crop"
-              },
-              {
-                id: "grid-3",
-                category: "Partnership",
-                title: "Sowing Seeds: Why Partnering with Us Changes Lives Globally",
-                image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=600&auto=format&fit=crop"
+                slug: "divine-authority",
+                category: "Divine Authority",
+                title: "Divine Authority",
+                image: "https://images.unsplash.com/photo-1515162305285-0293e4767cc2?q=80&w=600&auto=format&fit=crop"
               }
             ].map((article, idx) => (
-              <div
-                key={article.id}
+              <Link
+                href={`/blog/${article.slug}`}
+                key={article.slug}
                 className={`${styles.blogCard} animate-premium-block`}
                 style={{ animationDelay: `${0.2 + idx * 0.1}s` }}
               >
@@ -1131,18 +1133,15 @@ export default function Home() {
                   </div>
                   <h3 className={styles.blogCardTitle}>{article.title}</h3>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
           {/* Center Load More Button CTA */}
           <div className={styles.blogCtaContainer}>
-            <button className={styles.loadMoreBtn} onClick={() => {
-              const el = document.getElementById('contact');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}>
+            <Link href="/blog" className={styles.loadMoreBtn} style={{ display: 'inline-block', textAlign: 'center' }}>
               View All Articles
-            </button>
+            </Link>
           </div>
         </div>
       </ViewportSection>
