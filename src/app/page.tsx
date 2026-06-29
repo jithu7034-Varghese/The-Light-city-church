@@ -1156,7 +1156,7 @@ export default function Home() {
               Ready to Experience His Extravagant{" "}
               <span className={styles.ctaBadgeWrapper}>
                 <Image
-                  src="https://images.unsplash.com/photo-1461530751191-a53d31a38697?q=80&w=150&auto=format&fit=crop"
+                  src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=150&auto=format&fit=crop"
                   alt="Worship badge"
                   width={64}
                   height={32}
