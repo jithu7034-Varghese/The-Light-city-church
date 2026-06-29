@@ -156,6 +156,27 @@ function ViewportSection({ children, className = "", id, as: Component = 'sectio
 }
 
 export default function AboutUsPage() {
+  const [activePastor, setActivePastor] = useState<"ronnie" | "annalene">("ronnie");
+
+  const pastorsData = {
+    ronnie: {
+      name: "Pastor Ronnie Dube",
+      role: "Co-Founder & Senior Pastor",
+      image: "/avatar_ryan.png",
+      bio: "Pastor Ronnie is co-founder and senior pastor at The Light City Church. His ministry as a pastor, teacher, author, and healing minister continues to transform many lives around the world, helping them to experience a victorious and purposeful life in God’s Word. He is passionate about explaining the clear realities of right standing with God through faith in Christ Jesus.",
+      quote: "The Word of God is building material for your life; you cannot afford to treat it casually. Esteem the Word highly in your life and watch the changes."
+    },
+    annalene: {
+      name: "Pastor Annalene Dube",
+      role: "Co-Founder & Worship Leader",
+      image: "/pastor_portrait.png",
+      bio: "A devoted wife to Pastor Ronnie and a loving mother to Ronnie Jnr, Ariel, and Christian, Pastor Annalene is a seasoned minister of the Word and an anointed worship leader. Her humility, warmth, and genuine love for God and people have led to her touching many lives around the world through her music and teaching ministry.",
+      quote: "The love of God is shed abroad in our hearts, and it is when we love that we demonstrate the divine nature of God in our lives."
+    }
+  };
+
+  const currentPastor = pastorsData[activePastor];
+
   return (
     <div className={styles.container}>
       {/* Header */}
@@ -202,181 +223,222 @@ export default function AboutUsPage() {
         </button>
       </header>
 
-      {/* Hero Banner */}
-      <section className={aboutStyles.aboutHeaderContainer}>
-        <h1 className={aboutStyles.aboutTitle}>
-          About <span className={aboutStyles.italicSerif}>Our House</span>
-        </h1>
-        <p className={aboutStyles.aboutSubtitle}>
-          We are passionate about empowering every man, woman, and child to live in the fulness of their inheritance in Christ.
-        </p>
+      {/* Hero Parallax Section */}
+      <section className={aboutStyles.hero}>
+        <div className={aboutStyles.heroBackground}>
+          <Image
+            src="/thecitylight.webp"
+            alt="The Light City Church"
+            fill
+            priority
+            className={aboutStyles.heroImage}
+          />
+          <div className={aboutStyles.heroOverlay} />
+        </div>
+
+        <div className={aboutStyles.heroContent}>
+          <span className={`${aboutStyles.heroTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>Welcome to Our House</span>
+          <h1 className={aboutStyles.heroTitle}>
+            <SplitText text="Our Story & Vision" delayOffset={0.3} />
+          </h1>
+          <p className={`${aboutStyles.heroSubtitle} animate-fade-in-up`} style={{ animationDelay: '0.8s' }}>
+            To empower every man, woman, and child to live in the fulness of their inheritance in Christ.
+          </p>
+        </div>
       </section>
 
-      {/* Mission Section */}
-      <ViewportSection className={aboutStyles.missionSection}>
-        <div className={aboutStyles.missionContainer}>
-          <span className={`${aboutStyles.missionTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>Our Mission</span>
-          <h2 className={`${aboutStyles.missionHeadline} animate-fade-in-up`} style={{ animationDelay: '0.3s' }}>
-            Empowering Lives Through the <em>Gospel of Grace</em>
-          </h2>
-          <p className={`${aboutStyles.missionText} animate-fade-in-up`} style={{ animationDelay: '0.5s' }}>
-            To empower every man, woman, and child to live in the fulness of their inheritance in Christ through the accurate teaching of the Gospel. To bring light where there was once darkness and to prepare the church for the coming of our Lord and Saviour.
-          </p>
+      {/* Split Story / Mission Section */}
+      <ViewportSection className={aboutStyles.storySection} id="story">
+        <div className={aboutStyles.storyContainer}>
+          <div className={aboutStyles.storyGrid}>
+            <div className={`${aboutStyles.storyImageWrapper} animate-premium-block`}>
+              <Image
+                src="/feature_sculpture.png"
+                alt="Worship Atmosphere"
+                fill
+                className={aboutStyles.storyImage}
+              />
+              <div className={aboutStyles.storyFloatingBadge}>
+                <h4 className={aboutStyles.storyBadgeTitle}>"Christ in you"</h4>
+                <p className={aboutStyles.storyBadgeSub}>The Hope of Glory — Colossians 1:27</p>
+              </div>
+            </div>
+
+            <div className={aboutStyles.storyTextContent}>
+              <span className={`${aboutStyles.sectionTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>Our Mission</span>
+              <h2 className={`${aboutStyles.storyTitle} animate-fade-in-up`} style={{ animationDelay: '0.2s' }}>
+                Bringing Light Where There Was <span className={aboutStyles.italicSerif}>Darkness</span>
+              </h2>
+              <p className={`${aboutStyles.storyParagraph} animate-fade-in-up`} style={{ animationDelay: '0.4s' }}>
+                At The Light City Church, our mission is to empower every man, woman, and child to live in the fulness of their inheritance in Christ through the accurate teaching of the Gospel. We believe that when grace is revealed, lives are fundamentally transformed.
+              </p>
+              <p className={`${aboutStyles.storyParagraph} animate-fade-in-up`} style={{ animationDelay: '0.6s' }}>
+                We are dedicated to preparing the church for the coming of our Lord and Saviour, cultivating a community where faith flourishes, healing is realized, and the love of God is felt tangibly.
+              </p>
+            </div>
+          </div>
         </div>
       </ViewportSection>
 
-      {/* Core Values Section */}
-      <ViewportSection className={aboutStyles.valuesSection}>
+      {/* Core Values Bento Grid */}
+      <ViewportSection className={aboutStyles.valuesSection} id="values">
         <div className={aboutStyles.valuesContainer}>
-          <div className={aboutStyles.sectionHeader}>
-            <span className={`${aboutStyles.sectionTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>Guiding Pillars</span>
-            <h2 className={`${aboutStyles.sectionTitle} animate-fade-in-up`} style={{ animationDelay: '0.2s' }}>Our Core Values</h2>
+          <div className={aboutStyles.valuesHeader}>
+            <span className={`${aboutStyles.sectionTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>What We Stand For</span>
+            <h2 className={`${aboutStyles.valuesTitle} animate-fade-in-up`} style={{ animationDelay: '0.2s' }}>Our Core Values</h2>
           </div>
 
-          <div className={aboutStyles.valuesGrid}>
-            {/* Value 1: Love above all */}
-            <div className={`${aboutStyles.valueCard} animate-premium-block`} style={{ animationDelay: '0.3s' }}>
-              <div className={aboutStyles.valueCardIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
+          <div className={aboutStyles.bentoGrid}>
+            {/* Card 1: Large Double Grid for Love Above All */}
+            <div className={`${aboutStyles.bentoCard} ${aboutStyles.bentoCardLarge} animate-premium-block`} style={{ animationDelay: '0.3s' }}>
+              <div className={aboutStyles.cardBgImage}>
+                <Image
+                  src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=800&auto=format&fit=crop"
+                  alt="Community Fellowship"
+                  fill
+                  className={aboutStyles.cardImage}
+                />
+                <div className={aboutStyles.heroOverlay} />
               </div>
-              <h3 className={aboutStyles.valueCardTitle}>Love above all</h3>
-              <p className={aboutStyles.valueCardText}>
-                The love of God is shed abroad in our hearts and it is when we love that we demonstrate the divine nature of God in our lives. We love and value every person because of the price tag God put on their life, which is His own blood.
-              </p>
+              <div className={aboutStyles.cardContentOverlay}>
+                <div className={`${aboutStyles.valueIcon} ${aboutStyles.largeIcon}`}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </div>
+                <h3 className={`${aboutStyles.valueTitle} ${aboutStyles.largeTitle}`}>Love above all</h3>
+                <p className={`${aboutStyles.valueText} ${aboutStyles.largeText}`}>
+                  The love of God is shed abroad in our hearts and it is when we love that we demonstrate the divine nature of God in our lives. We love and value every person because of the price tag God put on their life, which is His own blood.
+                </p>
+              </div>
             </div>
 
-            {/* Value 2: Standard of excellence */}
-            <div className={`${aboutStyles.valueCard} animate-premium-block`} style={{ animationDelay: '0.5s' }}>
-              <div className={aboutStyles.valueCardIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {/* Card 2: Standard Bento Card for Excellence */}
+            <div className={`${aboutStyles.bentoCard} animate-premium-block`} style={{ animationDelay: '0.5s' }}>
+              <div className={aboutStyles.valueIcon}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                 </svg>
               </div>
-              <h3 className={aboutStyles.valueCardTitle}>Standard of excellence</h3>
-              <p className={aboutStyles.valueCardText}>
-                We seek to excel in everything we do because Christ is made unto us wisdom and we have the mind of Christ.
+              <h3 className={aboutStyles.valueTitle}>Standard of excellence</h3>
+              <p className={aboutStyles.valueText}>
+                We seek to excel in everything we do because Christ is made unto us wisdom and we have the mind of Christ. We believe in offering our best as an expression of worship.
               </p>
             </div>
 
-            {/* Value 3: Honour */}
-            <div className={`${aboutStyles.valueCard} animate-premium-block`} style={{ animationDelay: '0.7s' }}>
-              <div className={aboutStyles.valueCardIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {/* Card 3: Standard Bento Card for Honour */}
+            <div className={`${aboutStyles.bentoCard} animate-premium-block`} style={{ animationDelay: '0.7s' }}>
+              <div className={aboutStyles.valueIcon}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
               </div>
-              <h3 className={aboutStyles.valueCardTitle}>Honour</h3>
-              <p className={aboutStyles.valueCardText}>
-                We treat each other with respect and integrity, we honour and submit to our leaders as unto the Lord.
+              <h3 className={aboutStyles.valueTitle}>Honour</h3>
+              <p className={aboutStyles.valueText}>
+                We treat each other with respect and integrity. We honour and submit to our leaders as unto the Lord, establishing a culture of mutual uplift and support.
               </p>
             </div>
           </div>
         </div>
       </ViewportSection>
 
-      {/* Leadership Section */}
-      <ViewportSection className={aboutStyles.leadershipSection}>
+      {/* Interactive Leadership Magazine Layout */}
+      <ViewportSection className={aboutStyles.leadershipSection} id="leadership">
         <div className={aboutStyles.leadershipContainer}>
-          <div className={aboutStyles.sectionHeader}>
-            <span className={`${aboutStyles.sectionTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>Our Leadership</span>
-            <h2 className={`${aboutStyles.sectionTitle} animate-fade-in-up`} style={{ animationDelay: '0.2s' }}>Pastoral Team</h2>
+          <div className={aboutStyles.leadershipHeader}>
+            <span className={aboutStyles.sectionTag}>Our Leadership</span>
+            <h2 className={aboutStyles.valuesTitle}>Pastoral Oversight</h2>
+            
+            <div className={aboutStyles.tabSwitcher}>
+              <button
+                className={`${aboutStyles.tabBtn} ${activePastor === "ronnie" ? aboutStyles.tabBtnActive : ""}`}
+                onClick={() => setActivePastor("ronnie")}
+              >
+                Pastor Ronnie
+              </button>
+              <button
+                className={`${aboutStyles.tabBtn} ${activePastor === "annalene" ? aboutStyles.tabBtnActive : ""}`}
+                onClick={() => setActivePastor("annalene")}
+              >
+                Pastor Annalene
+              </button>
+            </div>
           </div>
 
-          <div className={aboutStyles.leadershipGrid}>
-            {/* Pastor 1: Ronnie Dube */}
-            <div className={`${aboutStyles.pastorCard} animate-premium-block`} style={{ animationDelay: '0.3s' }}>
-              <div className={aboutStyles.pastorImageArea}>
-                <Image
-                  src="/avatar_ryan.png"
-                  alt="Pastor Ronnie Dube"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 500px"
-                  className={aboutStyles.pastorImage}
-                  priority
-                />
-              </div>
-              <div className={aboutStyles.pastorDetails}>
-                <div className={aboutStyles.pastorHeader}>
-                  <h3 className={aboutStyles.pastorName}>Pastor Ronnie Dube</h3>
-                  <span className={aboutStyles.pastorRole}>Co-Founder & Senior Pastor</span>
-                </div>
-                <p className={aboutStyles.pastorBio}>
-                  Pastor Ronnie is the co-founder and senior pastor at The Light City Church. His ministry as a pastor, teacher, author, and healing minister continues to transform many lives around the world, helping people to experience a victorious and purposeful life in God’s Word.
-                </p>
-                <blockquote className={aboutStyles.pastorQuote}>
-                  "The Word of God is building material for your life; you cannot afford to treat it casually."
-                </blockquote>
-              </div>
+          <div className={aboutStyles.magazineGrid}>
+            <div className={`${aboutStyles.pastorImageWrapper} animate-premium-block`}>
+              <Image
+                src={currentPastor.image}
+                alt={currentPastor.name}
+                fill
+                className={aboutStyles.pastorImage}
+                key={activePastor} // Force re-render to trigger smooth animation/fade
+              />
             </div>
 
-            {/* Pastor 2: Annalene Dube */}
-            <div className={`${aboutStyles.pastorCard} animate-premium-block`} style={{ animationDelay: '0.5s' }}>
-              <div className={aboutStyles.pastorImageArea}>
-                <Image
-                  src="/pastor_portrait.png"
-                  alt="Pastor Annalene Dube"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 500px"
-                  className={aboutStyles.pastorImage}
-                />
-              </div>
-              <div className={aboutStyles.pastorDetails}>
-                <div className={aboutStyles.pastorHeader}>
-                  <h3 className={aboutStyles.pastorName}>Pastor Annalene Dube</h3>
-                  <span className={aboutStyles.pastorRole}>Co-Founder & Worship Leader</span>
-                </div>
-                <p className={aboutStyles.pastorBio}>
-                  A devoted wife to Pastor Ronnie and a loving mother to Ronnie Jnr, Ariel, and Christian, Pastor Annalene is a seasoned minister of the Word and an anointed worship leader. Her humility, warmth, and genuine love for God and people have led to her touching many lives globally through her music and teaching ministry.
-                </p>
-                <blockquote className={aboutStyles.pastorQuote}>
-                  "When we love, we demonstrate the divine nature of God in our lives."
-                </blockquote>
-              </div>
+            <div className={aboutStyles.pastorDetailsArea} key={`details-${activePastor}`}>
+              <h3 className={aboutStyles.pastorName}>{currentPastor.name}</h3>
+              <span className={aboutStyles.pastorRole}>{currentPastor.role}</span>
+              <p className={aboutStyles.pastorBio}>{currentPastor.bio}</p>
+              <blockquote className={aboutStyles.pastorQuote}>
+                {currentPastor.quote}
+              </blockquote>
             </div>
           </div>
         </div>
       </ViewportSection>
 
-      {/* Visit Section */}
-      <ViewportSection className={aboutStyles.visitSection}>
+      {/* Nottingham Visit Bento Card Section */}
+      <ViewportSection className={aboutStyles.visitSection} id="visit">
         <div className={aboutStyles.visitContainer}>
-          <div className={`${aboutStyles.visitCard} animate-premium-block`}>
-            <h2 className={aboutStyles.visitTitle}>Visit Us in Nottingham</h2>
-            <p className={aboutStyles.visitText}>
-              The Light City Church is located in the metropolitan city of Nottingham in the United Kingdom. Join our vibrant community in person or online.
-            </p>
-
-            <div className={aboutStyles.visitDetails}>
-              <div className={aboutStyles.visitItem}>
-                <div className={aboutStyles.visitItemIcon}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
-                </div>
-                <span className={aboutStyles.visitItemLabel}>Service Time</span>
-                <span className={aboutStyles.visitItemValue}>Every Sunday at 10:30 AM</span>
-              </div>
-
-              <div className={aboutStyles.visitItem}>
-                <div className={aboutStyles.visitItemIcon}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                </div>
-                <span className={aboutStyles.visitItemLabel}>Location</span>
-                <span className={aboutStyles.visitItemValue}>Motorpoint Arena<br/>Nottingham City Centre</span>
-              </div>
+          <div className={aboutStyles.visitBento}>
+            <div className={aboutStyles.visitImageWrapper}>
+              <Image
+                src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop"
+                alt="Worship Gathering"
+                fill
+                className={aboutStyles.visitImage}
+              />
             </div>
 
-            <div className={aboutStyles.visitCtaContainer}>
+            <div className={aboutStyles.visitContent}>
+              <h2 className={aboutStyles.visitTitle}>Our Gathering Place</h2>
+              <p className={aboutStyles.visitText}>
+                We gather in the heart of Nottingham, welcoming anyone seeking to grow in faith, hear the Gospel, and experience true community.
+              </p>
+
+              <div className={aboutStyles.visitDetailsList}>
+                <div className={aboutStyles.visitRow}>
+                  <div className={aboutStyles.visitRowIcon}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className={aboutStyles.visitRowTitle}>Worship Service</h4>
+                    <span className={aboutStyles.visitRowValue}>Every Sunday at 10:30 AM</span>
+                  </div>
+                </div>
+
+                <div className={aboutStyles.visitRow}>
+                  <div className={aboutStyles.visitRowIcon}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className={aboutStyles.visitRowTitle}>Location</h4>
+                    <span className={aboutStyles.visitRowValue}>Motorpoint Arena, Nottingham</span>
+                  </div>
+                </div>
+              </div>
+
               <button className={aboutStyles.visitCtaBtn} onClick={() => {
                 window.location.href = '/#contact';
               }}>
-                Find Out More
+                Plan Your Visit
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
