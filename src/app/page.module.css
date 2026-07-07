@@ -232,6 +232,7 @@
 
   .header {
     padding: 24px 32px;
+    z-index: 150;
   }
 
   .hero {
