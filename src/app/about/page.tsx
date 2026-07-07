@@ -170,7 +170,7 @@ export default function AboutUsPage() {
     annalene: {
       name: "Pastor Annalene Dube",
       role: "Co-Founder & Worship Leader",
-      image: "/pastor_portrait.png",
+      image: "/ronnyandanna.jpeg",
       bio: "A devoted wife to Pastor Ronnie and a loving mother to Ronnie Jnr, Ariel, and Christian, Pastor Annalene is a seasoned minister of the Word and an anointed worship leader. Her humility, warmth, and genuine love for God and people have led to her touching many lives around the world through her music and teaching ministry.",
       quote: "The love of God is shed abroad in our hearts, and it is when we love that we demonstrate the divine nature of God in our lives."
     }

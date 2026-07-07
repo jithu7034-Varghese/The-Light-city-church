@@ -730,7 +730,7 @@ export default function Home() {
             {/* Left side: Visual photo with floating glass badge */}
             <div className={`${styles.pastorImageWrapper} animate-premium-block`}>
               <Image
-                src="/pastor_portrait.png"
+                src="/ronnyandanna.jpeg"
                 alt="Pastor Ronnie & Annalene Dube"
                 fill
                 sizes="(max-width: 1024px) 100vw, 600px"
