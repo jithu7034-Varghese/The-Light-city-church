@@ -295,7 +295,7 @@ export default function AboutUsPage() {
           <div className={aboutStyles.storyGrid}>
             <div className={`${aboutStyles.storyImageWrapper} animate-premium-block`}>
               <Image
-                src="/feature_sculpture.png"
+                src="/church/e0c03b29-977e-47fb-b410-0a752cc3f171.jpeg"
                 alt="Worship Atmosphere"
                 fill
                 className={aboutStyles.storyImage}
@@ -436,7 +436,7 @@ export default function AboutUsPage() {
           <div className={aboutStyles.visitBento}>
             <div className={aboutStyles.visitImageWrapper}>
               <Image
-                src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop"
+                src="/church/bc9c651c-7cc3-4d0a-916f-1390d02b5c01.jpeg"
                 alt="Worship Gathering"
                 fill
                 className={aboutStyles.visitImage}

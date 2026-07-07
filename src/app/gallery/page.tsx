@@ -166,52 +166,52 @@ export default function GalleryPage() {
 
   const galleryItems = [
     {
-      image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800&auto=format&fit=crop",
+      image: "/church/bc9c651c-7cc3-4d0a-916f-1390d02b5c01.jpeg",
       tag: "Sunday Worship",
       title: "Praise & Celebration",
-      desc: "Joyful atmosphere during Sunday service at the Motorpoint Arena Nottingham."
+      desc: "Joyful atmosphere and Jesus-centred worship during our Sunday services."
     },
     {
-      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop",
+      image: "/church/4f231d85-4120-4689-8ae3-cb10792f21f8.jpeg",
       tag: "Light Groups",
       title: "Midweek Fellowship",
-      desc: "Small groups meeting in homes for discussion, prayer, and community building."
+      desc: "Small groups meeting for fellowship, sharing, and community building."
     },
     {
-      image: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=800&auto=format&fit=crop",
-      tag: "Worship Team",
-      title: "Anointed Praise",
-      desc: "Our worship team leading the congregation in extravagant praise."
+      image: "/ronny/IMG_8047.jpeg",
+      tag: "Teaching",
+      title: "The Word of Grace",
+      desc: "Pastor Ronnie Dube teaching the clear realities of right standing with God."
     },
     {
-      image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=800&auto=format&fit=crop",
-      tag: "Community Outreach",
-      title: "Sharing the Grace",
-      desc: "Serving the local community in Nottingham and expressing the love of Christ."
+      image: "/church/e0c03b29-977e-47fb-b410-0a752cc3f171.jpeg",
+      tag: "Community",
+      title: "Sharing the Light",
+      desc: "Warm connections and community life within The Light City Church."
     },
     {
-      image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=800&auto=format&fit=crop",
-      tag: "Youth Ministry",
-      title: "Next Gen Gathering",
-      desc: "Empowering young people to live in the fullness of their inheritance."
+      image: "/ronny/IMG_8436.jpeg",
+      tag: "Leadership",
+      title: "Anointed Ministry",
+      desc: "Pastor Ronnie ministering the Word of God with clarity and power."
     },
     {
-      image: "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?q=80&w=800&auto=format&fit=crop",
-      tag: "Prayer Circle",
-      title: "Moment of Prayer",
-      desc: "Standing in agreement during intercessory prayer and faith declarations."
+      image: "/ronny/PHOTO-2022-02-17-12-59-53.jpeg",
+      tag: "Worship",
+      title: "Extravagant Praise",
+      desc: "Leading the congregation in anointed praise and faith declarations."
     },
     {
-      image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=800&auto=format&fit=crop",
-      tag: "Sisterhood Gatherings",
-      title: "The Loved Circle",
-      desc: "Warm and inviting moments from our monthly women's breakfast and study."
+      image: "/ronny/cc3c7cf1-c332-47da-9a76-113690e217c4.jpeg",
+      tag: "Grace Conferences",
+      title: "Faith & Power",
+      desc: "Pastor Ronnie preaching the unadulterated message of the gospel of grace."
     },
     {
-      image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=800&auto=format&fit=crop",
-      tag: "Special Conferences",
-      title: "Grace Conference 2026",
-      desc: "Highlights from our annual theological conference with Pastor Ronnie Dube."
+      image: "/ronny/e4c3ffab-0ef8-4da7-b2ee-2e97f16eab3a.jpeg",
+      tag: "Seminars",
+      title: "Freedom From Religion",
+      desc: "Teaching sessions focused on stripping away religious legalism."
     }
   ];
 
