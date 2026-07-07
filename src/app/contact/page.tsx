@@ -166,6 +166,7 @@ export default function ContactPage() {
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -255,7 +256,51 @@ export default function ContactPage() {
           </svg>
           Get Involved
         </button>
+
+        <button
+          className={`${styles.hamburgerButton} ${isMobileMenuOpen ? styles.hamburgerActive : ""}`}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle Navigation Menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </header>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`${styles.mobileMenuOverlay} ${isMobileMenuOpen ? styles.mobileMenuOpen : ""}`}>
+        <nav className={styles.mobileNav} aria-label="Mobile Navigation">
+          <ul className={styles.mobileNavUl}>
+            <li>
+              <Link href="/" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+            </li>
+            <li>
+              <Link href="/about" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>About</Link>
+            </li>
+            <li>
+              <Link href="/ministries" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Ministries</Link>
+            </li>
+            <li>
+              <Link href="/gallery" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Gallery</Link>
+            </li>
+            <li>
+              <Link href="/blog" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Blog</Link>
+            </li>
+            <li>
+              <Link href="/contact" className={styles.mobileActiveNavLink} onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+            </li>
+            <li>
+              <button className={styles.mobileMenuBtn} onClick={() => {
+                setIsMobileMenuOpen(false);
+                window.location.href = '/contact';
+              }}>
+                Get Involved
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
 
       {/* Hero Map Section (BrickWise Style) */}
       <section className={contactStyles.hero}>

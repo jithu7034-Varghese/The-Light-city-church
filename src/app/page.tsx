@@ -226,6 +226,7 @@ const testimoniesData: TestimonyItem[] = [
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'story' | 'vision' | 'connect'>('story');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // const [dashboardView, setDashboardView] = useState<'attendance' | 'generosity'>('attendance');
   
   // Testimony Cinematic states
@@ -344,7 +345,52 @@ export default function Home() {
           </svg>
           Get Involved
         </button>
+
+        <button
+          className={`${styles.hamburgerButton} ${isMobileMenuOpen ? styles.hamburgerActive : ""}`}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle Navigation Menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </header>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`${styles.mobileMenuOverlay} ${isMobileMenuOpen ? styles.mobileMenuOpen : ""}`}>
+        <nav className={styles.mobileNav} aria-label="Mobile Navigation">
+          <ul className={styles.mobileNavUl}>
+            <li>
+              <a href="#hero" className={styles.mobileActiveNavLink} onClick={() => setIsMobileMenuOpen(false)}>Home</a>
+            </li>
+            <li>
+              <Link href="/about" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>About</Link>
+            </li>
+            <li>
+              <Link href="/ministries" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Ministries</Link>
+            </li>
+            <li>
+              <Link href="/gallery" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Gallery</Link>
+            </li>
+            <li>
+              <Link href="/blog" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Blog</Link>
+            </li>
+            <li>
+              <Link href="/contact" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+            </li>
+            <li>
+              <button className={styles.mobileMenuBtn} onClick={() => {
+                setIsMobileMenuOpen(false);
+                const el = document.getElementById('contact');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}>
+                Get Involved
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
 
       {/* Hero Section */}
       <ViewportSection as="main" className={styles.hero} id="hero">

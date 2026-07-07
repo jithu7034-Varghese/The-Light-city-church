@@ -3537,6 +3537,152 @@
   /* old footer bottom bar override removed */
 }
 
+/* Modern Hamburger Button & Mobile Menu Overlay */
+.hamburgerButton {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hamburgerButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 26px;
+    height: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 200;
+  }
+  
+  .hamburgerButton span {
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-primary);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: left center;
+  }
+  
+  .hamburgerActive span:nth-child(1) {
+    transform: rotate(45deg) translate(1px, -1px);
+    background-color: var(--text-primary);
+  }
+  
+  .hamburgerActive span:nth-child(2) {
+    width: 0%;
+    opacity: 0;
+  }
+  
+  .hamburgerActive span:nth-child(3) {
+    transform: rotate(-45deg) translate(1px, 1px);
+    background-color: var(--text-primary);
+  }
+  
+  .preOrderBtn {
+    display: none !important; /* Hide CTA in header on mobile */
+  }
+}
+
+.mobileMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(246, 245, 242, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-100%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] .mobileMenuOverlay {
+  background-color: rgba(11, 12, 14, 0.97);
+}
+
+.mobileMenuOpen {
+  transform: translateY(0);
+}
+
+.mobileNav {
+  width: 100%;
+  text-align: center;
+}
+
+.mobileNavUl {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.mobileNavLink {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: block;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.mobileNavLink:hover, .mobileActiveNavLink {
+  color: var(--accent);
+}
+
+.mobileMenuBtn {
+  margin-top: 20px;
+  opacity: 0;
+  transform: translateY(30px);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 9999px;
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  border: 1px solid var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobileMenuBtn:hover {
+  background-color: transparent;
+  color: var(--text-primary);
+}
+
+.mobileMenuOpen .mobileNavLink {
+  animation: slideInLink 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.mobileMenuOpen .mobileMenuBtn {
+  animation: slideInLink 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.mobileMenuOpen li:nth-child(1) .mobileNavLink { animation-delay: 0.1s; }
+.mobileMenuOpen li:nth-child(2) .mobileNavLink { animation-delay: 0.16s; }
+.mobileMenuOpen li:nth-child(3) .mobileNavLink { animation-delay: 0.22s; }
+.mobileMenuOpen li:nth-child(4) .mobileNavLink { animation-delay: 0.28s; }
+.mobileMenuOpen li:nth-child(5) .mobileNavLink { animation-delay: 0.34s; }
+.mobileMenuOpen li:nth-child(6) .mobileNavLink { animation-delay: 0.40s; }
+.mobileMenuOpen .mobileMenuBtn { animation-delay: 0.46s; }
+
+@keyframes slideInLink {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* MANDATORY copy-paste safety for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .portraitCardImage, .mockupCard, .mockupIconContainer, .footerBlueBadge, .blogCard, .blogCardImage, .blogCardArrow {
