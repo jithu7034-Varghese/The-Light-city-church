@@ -208,7 +208,7 @@ export default function AboutUsPage() {
               <Link href="/blog" className={styles.navLink}>Blog</Link>
             </li>
             <li>
-              <Link href="/visit-us" className={styles.navLink}>Visit Us</Link>
+              <Link href="/contact" className={styles.navLink}>Contact</Link>
             </li>
           </ul>
         </nav>
@@ -501,7 +501,7 @@ export default function AboutUsPage() {
                   <li><Link href="/ministries" className={styles.footerNavLink}>Ministries</Link></li>
                   <li><Link href="/gallery" className={styles.footerNavLink}>Gallery</Link></li>
                   <li><Link href="/blog" className={styles.footerNavLink}>Blog</Link></li>
-                  <li><Link href="/visit-us" className={styles.footerNavLink}>Visit Us</Link></li>
+                  <li><Link href="/contact" className={styles.footerNavLink}>Contact</Link></li>
                 </ul>
               </div>
               

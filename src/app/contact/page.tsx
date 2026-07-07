@@ -1,11 +1,11 @@
-// src/app/visit-us/page.tsx
+// src/app/contact/page.tsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "../page.module.css";
-import visitStyles from "./visit-us.module.css";
+import contactStyles from "./contact.module.css";
 
 interface SplitTextProps {
   text: string;
@@ -155,7 +155,7 @@ function ViewportSection({ children, className = "", id, as: Component = 'sectio
   );
 }
 
-export default function VisitUsPage() {
+export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -166,6 +166,17 @@ export default function VisitUsPage() {
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    cardRef.current.style.setProperty("--mouse-x", `${x}px`);
+    cardRef.current.style.setProperty("--mouse-y", `${y}px`);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -290,13 +301,13 @@ export default function VisitUsPage() {
               <Link href="/blog" className={styles.navLink}>Blog</Link>
             </li>
             <li>
-              <Link href="/visit-us" className={styles.activeNavLink}>Visit Us</Link>
+              <Link href="/contact" className={styles.activeNavLink}>Contact</Link>
             </li>
           </ul>
         </nav>
 
         <button className={styles.preOrderBtn} id="header-preorder-btn" onClick={() => {
-          window.location.href = '/visit-us';
+          window.location.href = '/contact';
         }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -306,47 +317,47 @@ export default function VisitUsPage() {
       </header>
 
       {/* Hero Section */}
-      <section className={visitStyles.hero}>
-        <div className={visitStyles.heroBackground}>
+      <section className={contactStyles.hero}>
+        <div className={contactStyles.heroBackground}>
           <Image
             src="/thecitylight.webp"
             alt="The Light City Church Location"
             fill
             priority
-            className={visitStyles.heroImage}
+            className={contactStyles.heroImage}
           />
-          <div className={visitStyles.heroOverlay} />
+          <div className={contactStyles.heroOverlay} />
         </div>
 
-        <div className={visitStyles.heroContent}>
-          <span className={`${visitStyles.heroTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>Join Us in Nottingham</span>
-          <h1 className={visitStyles.heroTitle}>
-            <SplitText text="Plan Your Visit" delayOffset={0.3} />
+        <div className={contactStyles.heroContent}>
+          <span className={`${contactStyles.heroTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>Join Us in Nottingham</span>
+          <h1 className={contactStyles.heroTitle}>
+            <SplitText text="Contact Our Church" delayOffset={0.3} />
           </h1>
-          <p className={`${visitStyles.heroSubtitle} animate-fade-in-up`} style={{ animationDelay: '0.8s' }}>
+          <p className={`${contactStyles.heroSubtitle} animate-fade-in-up`} style={{ animationDelay: '0.8s' }}>
             We gather in person every Sunday. Whether you have questions or want to request prayer, we would love to connect.
           </p>
         </div>
       </section>
 
       {/* Form and Map Grid */}
-      <ViewportSection as="section" className={visitStyles.visitSection}>
-        <div className={visitStyles.container}>
-          <div className={visitStyles.grid}>
+      <ViewportSection as="section" className={contactStyles.visitSection}>
+        <div className={contactStyles.container}>
+          <div className={contactStyles.grid}>
             
             {/* Left Column: Form & Info */}
-            <div className={visitStyles.contactArea}>
+            <div className={contactStyles.contactArea}>
               <div>
-                <h2 className={visitStyles.sectionTitle}>Get In Touch</h2>
-                <p className={visitStyles.sectionSubtitle}>
+                <h2 className={contactStyles.sectionTitle}>Get In Touch</h2>
+                <p className={contactStyles.sectionSubtitle}>
                   Have a question about our services, ministries, or need prayer agreement? Reach out using the form below or standard details.
                 </p>
               </div>
 
               {/* Detail Rows */}
-              <div className={visitStyles.infoGrid}>
-                <div className={visitStyles.infoItem}>
-                  <div className={visitStyles.infoIconWrapper}>
+              <div className={contactStyles.infoGrid}>
+                <div className={contactStyles.infoItem}>
+                  <div className={contactStyles.infoIconWrapper}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                       <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -354,130 +365,139 @@ export default function VisitUsPage() {
                       <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
                   </div>
-                  <div className={visitStyles.infoContent}>
-                    <span className={visitStyles.infoTitle}>Service Time</span>
-                    <span className={visitStyles.infoText}>Sundays at 10:30 AM</span>
+                  <div className={contactStyles.infoContent}>
+                    <span className={contactStyles.infoTitle}>Service Time</span>
+                    <span className={contactStyles.infoText}>Sundays at 10:30 AM</span>
                   </div>
                 </div>
 
-                <div className={visitStyles.infoItem}>
-                  <div className={visitStyles.infoIconWrapper}>
+                <div className={contactStyles.infoItem}>
+                  <div className={contactStyles.infoIconWrapper}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                       <circle cx="12" cy="10" r="3"></circle>
                     </svg>
                   </div>
-                  <div className={visitStyles.infoContent}>
-                    <span className={visitStyles.infoTitle}>Location</span>
-                    <span className={visitStyles.infoText}>Motorpoint Arena,<br />Nottingham, NG1 1LA</span>
+                  <div className={contactStyles.infoContent}>
+                    <span className={contactStyles.infoTitle}>Location</span>
+                    <span className={contactStyles.infoText}>Motorpoint Arena,<br />Nottingham, NG1 1LA</span>
                   </div>
                 </div>
 
-                <div className={visitStyles.infoItem}>
-                  <div className={visitStyles.infoIconWrapper}>
+                <div className={contactStyles.infoItem}>
+                  <div className={contactStyles.infoIconWrapper}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                       <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
                   </div>
-                  <div className={visitStyles.infoContent}>
-                    <span className={visitStyles.infoTitle}>Email</span>
-                    <span className={visitStyles.infoText}>
+                  <div className={contactStyles.infoContent}>
+                    <span className={contactStyles.infoTitle}>Email</span>
+                    <span className={contactStyles.infoText}>
                       <a href="mailto:info@thelightcitychurch.org">info@thelightcitychurch.org</a>
                     </span>
                   </div>
                 </div>
 
-                <div className={visitStyles.infoItem}>
-                  <div className={visitStyles.infoIconWrapper}>
+                <div className={contactStyles.infoItem}>
+                  <div className={contactStyles.infoIconWrapper}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                     </svg>
                   </div>
-                  <div className={visitStyles.infoContent}>
-                    <span className={visitStyles.infoTitle}>Office</span>
-                    <span className={visitStyles.infoText}>+44 (0) 115 900 0000</span>
+                  <div className={contactStyles.infoContent}>
+                    <span className={contactStyles.infoTitle}>Office</span>
+                    <span className={contactStyles.infoText}>+44 (0) 115 900 0000</span>
                   </div>
                 </div>
               </div>
 
-              {/* Form Card (Glassmorphic Container) */}
-              <div className={visitStyles.formCard}>
-                <form onSubmit={handleSubmit} className={visitStyles.form}>
-                  <div className={visitStyles.formRow}>
-                    <div className={visitStyles.formGroup}>
+              {/* Form Card (Glassmorphic Container with Mouse Move Glow) */}
+              <div
+                ref={cardRef}
+                onMouseMove={handleMouseMove}
+                className={contactStyles.formCard}
+              >
+                <form onSubmit={handleSubmit} className={contactStyles.form}>
+                  <div className={contactStyles.formRow}>
+                    <div className={contactStyles.formGroup}>
                       <input
                         type="text"
                         id="name"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className={visitStyles.input}
+                        className={contactStyles.input}
                         style={errors.name ? { borderColor: "#dc2626" } : undefined}
                         placeholder=" "
                         required
                       />
-                      <label htmlFor="name" className={visitStyles.label}>Full Name *</label>
+                      <label htmlFor="name" className={contactStyles.label}>Full Name *</label>
+                      <div className={contactStyles.focusBorder}></div>
                     </div>
-                    <div className={visitStyles.formGroup}>
+                    <div className={contactStyles.formGroup}>
                       <input
                         type="email"
                         id="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className={visitStyles.input}
+                        className={contactStyles.input}
                         style={errors.email ? { borderColor: "#dc2626" } : undefined}
                         placeholder=" "
                         required
                       />
-                      <label htmlFor="email" className={visitStyles.label}>Email Address *</label>
+                      <label htmlFor="email" className={contactStyles.label}>Email Address *</label>
+                      <div className={contactStyles.focusBorder}></div>
                     </div>
                   </div>
 
-                  <div className={visitStyles.formRow}>
-                    <div className={visitStyles.formGroup}>
+                  <div className={contactStyles.formRow}>
+                    <div className={contactStyles.formGroup}>
                       <input
                         type="tel"
                         id="phone"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className={visitStyles.input}
+                        className={contactStyles.input}
                         placeholder=" "
                       />
-                      <label htmlFor="phone" className={visitStyles.label}>Phone Number</label>
+                      <label htmlFor="phone" className={contactStyles.label}>Phone Number</label>
+                      <div className={contactStyles.focusBorder}></div>
                     </div>
-                    <div className={visitStyles.formGroup}>
+                    <div className={contactStyles.formGroup}>
                       <input
                         type="text"
                         id="subject"
                         name="subject"
                         value={formData.subject}
                         onChange={handleChange}
-                        className={visitStyles.input}
+                        className={contactStyles.input}
                         placeholder=" "
                       />
-                      <label htmlFor="subject" className={visitStyles.label}>Subject</label>
+                      <label htmlFor="subject" className={contactStyles.label}>Subject</label>
+                      <div className={contactStyles.focusBorder}></div>
                     </div>
                   </div>
 
-                  <div className={visitStyles.formGroup}>
+                  <div className={contactStyles.formGroup}>
                     <textarea
                       id="message"
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
-                      className={visitStyles.textarea}
+                      className={contactStyles.textarea}
                       style={errors.message ? { borderColor: "#dc2626" } : undefined}
                       placeholder=" "
                       required
                     />
-                    <label htmlFor="message" className={visitStyles.label}>Message *</label>
+                    <label htmlFor="message" className={contactStyles.label}>Message *</label>
+                    <div className={contactStyles.focusBorder}></div>
                   </div>
 
                   {submitStatus === "success" && (
-                    <div className={visitStyles.successMsg}>
+                    <div className={contactStyles.successMsg}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
@@ -491,7 +511,7 @@ export default function VisitUsPage() {
                   )}
 
                   {submitStatus === "error" && (
-                    <div className={visitStyles.errorMsg}>
+                    <div className={contactStyles.errorMsg}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -509,7 +529,7 @@ export default function VisitUsPage() {
                   <button
                     type="submit"
                     disabled={submitStatus === "submitting"}
-                    className={visitStyles.submitBtn}
+                    className={contactStyles.submitBtn}
                   >
                     {submitStatus === "submitting" ? (
                       <>Sending Message...</>
@@ -528,16 +548,41 @@ export default function VisitUsPage() {
             </div>
 
             {/* Right Column: Google Map Embed */}
-            <div className={visitStyles.mapArea}>
-              <div className={visitStyles.mapWrapper}>
+            <div className={contactStyles.mapArea}>
+              <div className={contactStyles.mapWrapper}>
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2402.730303649666!2d-1.1448831230006277!3d52.9531818722421!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4879c3d4abfca783%3A0xb3515cf8bfa00cb3!2sMotorpoint%20Arena%20Nottingham!5e0!3m2!1sen!2suk!4v1710000000000!5m2!1sen!2suk"
-                  className={visitStyles.mapIframe}
+                  className={contactStyles.mapIframe}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   title="Motorpoint Arena Nottingham Location"
                 ></iframe>
+                
+                {/* Floating Glass overlay card on map */}
+                <div className={contactStyles.mapOverlayCard}>
+                  <div className={contactStyles.mapOverlayHeader}>
+                    <span className={contactStyles.mapOverlayBadge}>Main Campus</span>
+                  </div>
+                  <div>
+                    <h3 className={contactStyles.mapOverlayTitle}>Motorpoint Arena</h3>
+                    <p className={contactStyles.mapOverlayAddress}>Bolero Square, Nottingham, NG1 1LA</p>
+                    <p className={contactStyles.mapOverlayAddress} style={{ fontSize: "0.85rem", marginTop: "4px" }}>
+                      <strong>Service Time:</strong> Sundays at 10:30 AM
+                    </p>
+                  </div>
+                  <a
+                    href="https://maps.google.com/?q=Motorpoint+Arena+Nottingham"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={contactStyles.mapOverlayDirectionsBtn}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                    </svg>
+                    Get Directions
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -546,29 +591,29 @@ export default function VisitUsPage() {
       </ViewportSection>
 
       {/* What to Expect Section */}
-      <ViewportSection as="section" className={visitStyles.expectSection}>
-        <div className={visitStyles.container}>
-          <div className={visitStyles.expectHeader}>
-            <h2 className={visitStyles.expectTitle}>
-              What to <span className={visitStyles.italicSerif}>Expect</span>
+      <ViewportSection as="section" className={contactStyles.expectSection}>
+        <div className={contactStyles.container}>
+          <div className={contactStyles.expectHeader}>
+            <h2 className={contactStyles.expectTitle}>
+              What to <span className={contactStyles.italicSerif}>Expect</span>
             </h2>
-            <p className={visitStyles.expectSubtitle}>
+            <p className={contactStyles.expectSubtitle}>
               Visiting a new church can be intimidating. Here is what you can look forward to when you join us this Sunday.
             </p>
           </div>
 
-          <div className={visitStyles.expectGrid}>
+          <div className={contactStyles.expectGrid}>
             {expectData.map((item, idx) => (
               <div
                 key={idx}
-                className={`${visitStyles.expectCard} animate-premium-block`}
+                className={`${contactStyles.expectCard} animate-premium-block`}
                 style={{ animationDelay: `${0.2 + idx * 0.08}s` }}
               >
-                <div className={visitStyles.expectCardIconWrapper}>
+                <div className={contactStyles.expectCardIconWrapper}>
                   {item.icon}
                 </div>
-                <h3 className={visitStyles.expectCardTitle}>{item.title}</h3>
-                <p className={visitStyles.expectCardText}>{item.desc}</p>
+                <h3 className={contactStyles.expectCardTitle}>{item.title}</h3>
+                <p className={contactStyles.expectCardText}>{item.desc}</p>
               </div>
             ))}
           </div>
@@ -627,7 +672,7 @@ export default function VisitUsPage() {
                   <li><Link href="/ministries" className={styles.footerNavLink}>Ministries</Link></li>
                   <li><Link href="/gallery" className={styles.footerNavLink}>Gallery</Link></li>
                   <li><Link href="/blog" className={styles.footerNavLink}>Blog</Link></li>
-                  <li><Link href="/visit-us" className={styles.footerNavLink}>Visit Us</Link></li>
+                  <li><Link href="/contact" className={styles.footerNavLink}>Contact</Link></li>
                 </ul>
               </div>
               
