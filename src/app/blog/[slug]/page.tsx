@@ -26,7 +26,7 @@ export default function BlogDetailPage({ params }: PageProps) {
           <h1 style={{ fontSize: "2rem", marginBottom: "16px" }}>Article Not Found</h1>
           <p style={{ color: "var(--text-secondary)", marginBottom: "32px" }}>The article you are looking for does not exist.</p>
           <Link href="/blog" className={blogStyles.backButton}>
-            ← Back to Devotionals
+            ← Back to Blog
           </Link>
         </div>
       </div>
@@ -69,13 +69,13 @@ export default function BlogDetailPage({ params }: PageProps) {
               <Link href="/about" className={styles.navLink}>About</Link>
             </li>
             <li>
-              <Link href="/#services" className={styles.navLink}>Ministries</Link>
+              <Link href="/ministries" className={styles.navLink}>Ministries</Link>
             </li>
             <li>
-              <Link href="/#gallery" className={styles.navLink}>Gallery</Link>
+              <Link href="/gallery" className={styles.navLink}>Gallery</Link>
             </li>
             <li>
-              <Link href="/blog" className={styles.activeNavLink}>Devotionals</Link>
+              <Link href="/blog" className={styles.activeNavLink}>Blog</Link>
             </li>
             <li>
               <Link href="/#contact" className={styles.navLink}>Visit Us</Link>
@@ -100,7 +100,7 @@ export default function BlogDetailPage({ params }: PageProps) {
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
-          Back to Devotionals
+          Back to Blog
         </Link>
 
         <header className={blogStyles.articleHeader}>
@@ -243,9 +243,9 @@ export default function BlogDetailPage({ params }: PageProps) {
                 <ul className={styles.footerLinkList}>
                   <li><Link href="/" className={styles.footerNavLink}>Home</Link></li>
                   <li><Link href="/about" className={styles.footerNavLink}>About</Link></li>
-                  <li><Link href="/#services" className={styles.footerNavLink}>Ministries</Link></li>
-                  <li><Link href="/#gallery" className={styles.footerNavLink}>Gallery</Link></li>
-                  <li><Link href="/blog" className={styles.footerNavLink}>Devotionals</Link></li>
+                  <li><Link href="/ministries" className={styles.footerNavLink}>Ministries</Link></li>
+                  <li><Link href="/gallery" className={styles.footerNavLink}>Gallery</Link></li>
+                  <li><Link href="/blog" className={styles.footerNavLink}>Blog</Link></li>
                   <li><Link href="/#contact" className={styles.footerNavLink}>Visit Us</Link></li>
                 </ul>
               </div>

@@ -322,13 +322,13 @@ export default function Home() {
               <Link href="/about" className={styles.navLink}>About</Link>
             </li>
             <li>
-              <a href="#services" className={styles.navLink}>Ministries</a>
+              <Link href="/ministries" className={styles.navLink}>Ministries</Link>
             </li>
             <li>
-              <a href="#gallery" className={styles.navLink}>Gallery</a>
+              <Link href="/gallery" className={styles.navLink}>Gallery</Link>
             </li>
             <li>
-              <a href="#blog" className={styles.navLink}>Devotionals</a>
+              <Link href="/blog" className={styles.navLink}>Blog</Link>
             </li>
             <li>
               <a href="#contact" className={styles.navLink}>Visit Us</a>
@@ -1196,9 +1196,9 @@ export default function Home() {
               <ul className={styles.footerNavList}>
                 <li><a href="#hero" className={styles.footerNavLink}>Home</a></li>
                 <li><Link href="/about" className={styles.footerNavLink}>About</Link></li>
-                <li><a href="#services" className={styles.footerNavLink}>Ministries</a></li>
-                <li><a href="#gallery" className={styles.footerNavLink}>Gallery</a></li>
-                <li><a href="#blog" className={styles.footerNavLink}>Devotionals</a></li>
+                <li><Link href="/ministries" className={styles.footerNavLink}>Ministries</Link></li>
+                <li><Link href="/gallery" className={styles.footerNavLink}>Gallery</Link></li>
+                <li><Link href="/blog" className={styles.footerNavLink}>Blog</Link></li>
                 <li><a href="#contact" className={styles.footerNavLink}>Visit Us</a></li>
               </ul>
             </nav>

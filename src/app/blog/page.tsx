@@ -41,13 +41,13 @@ export default function BlogListingPage() {
               <Link href="/about" className={styles.navLink}>About</Link>
             </li>
             <li>
-              <Link href="/#services" className={styles.navLink}>Ministries</Link>
+              <Link href="/ministries" className={styles.navLink}>Ministries</Link>
             </li>
             <li>
-              <Link href="/#gallery" className={styles.navLink}>Gallery</Link>
+              <Link href="/gallery" className={styles.navLink}>Gallery</Link>
             </li>
             <li>
-              <Link href="/blog" className={styles.activeNavLink}>Devotionals</Link>
+              <Link href="/blog" className={styles.activeNavLink}>Blog</Link>
             </li>
             <li>
               <Link href="/#contact" className={styles.navLink}>Visit Us</Link>
@@ -68,7 +68,7 @@ export default function BlogListingPage() {
       {/* Main Banner */}
       <section className={blogStyles.blogHeaderContainer}>
         <h1 className={blogStyles.blogTitle}>
-          Daily Devotionals & <span className={blogStyles.italicSerif}>Resources</span>
+          Daily Blog & <span className={blogStyles.italicSerif}>Resources</span>
         </h1>
         <p className={blogStyles.blogSubtitle}>
           Grow in the accurate teaching of the Gospel of grace. Explore faith articles, spiritual revelations, and study resources from Pastor Ronnie Dube.
@@ -200,9 +200,9 @@ export default function BlogListingPage() {
                 <ul className={styles.footerLinkList}>
                   <li><Link href="/" className={styles.footerNavLink}>Home</Link></li>
                   <li><Link href="/about" className={styles.footerNavLink}>About</Link></li>
-                  <li><Link href="/#services" className={styles.footerNavLink}>Ministries</Link></li>
-                  <li><Link href="/#gallery" className={styles.footerNavLink}>Gallery</Link></li>
-                  <li><Link href="/blog" className={styles.footerNavLink}>Devotionals</Link></li>
+                  <li><Link href="/ministries" className={styles.footerNavLink}>Ministries</Link></li>
+                  <li><Link href="/gallery" className={styles.footerNavLink}>Gallery</Link></li>
+                  <li><Link href="/blog" className={styles.footerNavLink}>Blog</Link></li>
                   <li><Link href="/#contact" className={styles.footerNavLink}>Visit Us</Link></li>
                 </ul>
               </div>

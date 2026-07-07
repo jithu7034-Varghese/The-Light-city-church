@@ -199,13 +199,13 @@ export default function AboutUsPage() {
               <Link href="/about" className={styles.activeNavLink}>About</Link>
             </li>
             <li>
-              <Link href="/#services" className={styles.navLink}>Ministries</Link>
+              <Link href="/ministries" className={styles.navLink}>Ministries</Link>
             </li>
             <li>
-              <Link href="/#gallery" className={styles.navLink}>Gallery</Link>
+              <Link href="/gallery" className={styles.navLink}>Gallery</Link>
             </li>
             <li>
-              <Link href="/blog" className={styles.navLink}>Devotionals</Link>
+              <Link href="/blog" className={styles.navLink}>Blog</Link>
             </li>
             <li>
               <Link href="/#contact" className={styles.navLink}>Visit Us</Link>
@@ -498,9 +498,9 @@ export default function AboutUsPage() {
                 <ul className={styles.footerLinkList}>
                   <li><Link href="/" className={styles.footerNavLink}>Home</Link></li>
                   <li><Link href="/about" className={styles.footerNavLink}>About</Link></li>
-                  <li><Link href="/#services" className={styles.footerNavLink}>Ministries</Link></li>
-                  <li><Link href="/#gallery" className={styles.footerNavLink}>Gallery</Link></li>
-                  <li><Link href="/blog" className={styles.footerNavLink}>Devotionals</Link></li>
+                  <li><Link href="/ministries" className={styles.footerNavLink}>Ministries</Link></li>
+                  <li><Link href="/gallery" className={styles.footerNavLink}>Gallery</Link></li>
+                  <li><Link href="/blog" className={styles.footerNavLink}>Blog</Link></li>
                   <li><Link href="/#contact" className={styles.footerNavLink}>Visit Us</Link></li>
                 </ul>
               </div>
