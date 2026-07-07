@@ -236,6 +236,7 @@
 
   .hero {
     padding: 40px 24px 0 24px;
+    background-image: url('/citylights.jpeg');
   }
 
   .heroTitle {
