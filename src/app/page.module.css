@@ -31,6 +31,22 @@
   cursor: pointer;
 }
 
+.textLogo {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  text-decoration: none;
+}
+
+.textLogoLight {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
 .logoSvg {
   display: block;
 }

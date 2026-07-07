@@ -200,8 +200,8 @@ export default function MinistriesPage() {
       {/* Header */}
       <header className={`${styles.header} animate-fade-in`} style={{ animationDelay: '0.1s' }}>
         <div className={styles.logoContainer}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
-            <Image src="/logo1.png" alt="TLCC Logo" width={54} height={54} />
+          <Link href="/" className={styles.textLogo}>
+            City<span className={styles.textLogoLight}>Light</span>
           </Link>
         </div>
 
@@ -382,12 +382,11 @@ export default function MinistriesPage() {
           
           {/* Bottom Half: Footer Links & Details */}
           <div className={styles.footerBottom}>
-            <div className={styles.footerBrand} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Image src="/logo1.png" alt="TLCC Logo" width={54} height={54} />
-              <div>
-                <h3 className={styles.footerLogo} style={{ margin: 0 }}>TLCC</h3>
-                <p className={styles.footerTagline} style={{ margin: 0 }}>The Light City Church</p>
-              </div>
+            <div className={styles.footerBrand}>
+              <h3 className={styles.footerLogo}>
+                City <span style={{ fontWeight: 400, opacity: 0.85 }}>Light</span>
+              </h3>
+              <p className={styles.footerTagline}>The Light City Church</p>
             </div>
             
             <div className={styles.footerLinksGrid}>
