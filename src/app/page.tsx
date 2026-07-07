@@ -397,7 +397,7 @@ export default function Home() {
             {/* Left Video Card */}
             <div className={`${styles.videoCard} animate-premium-block`}>
               <Image
-                src="https://img.youtube.com/vi/QiJN-zZk-hI/maxresdefault.jpg"
+                src="https://img.youtube.com/vi/QiJN-zZk-hI/hqdefault.jpg"
                 alt="Worship at The Light City Church"
                 fill
                 sizes="(max-width: 1024px) 100vw, 800px"
