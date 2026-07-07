@@ -307,10 +307,9 @@ export default function Home() {
       {/* Header */}
       <header className={`${styles.header} animate-fade-in`} style={{ animationDelay: '0.1s' }}>
         <div className={styles.logoContainer}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.logoSvg}>
-            <circle cx="11" cy="11" r="7.5" stroke="currentColor" strokeWidth="2.5"/>
-            <circle cx="19" cy="19" r="1.5" fill="currentColor"/>
-          </svg>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+            <Image src="/logo1.png" alt="TLCC Logo" width={32} height={32} />
+          </Link>
         </div>
 
         <nav className={styles.nav} aria-label="Main Navigation">

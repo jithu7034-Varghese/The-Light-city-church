@@ -24,11 +24,8 @@ export default function BlogListingPage() {
       {/* Header */}
       <header className={`${styles.header} animate-fade-in`} style={{ animationDelay: '0.1s' }}>
         <div className={styles.logoContainer}>
-          <Link href="/">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.logoSvg}>
-              <circle cx="11" cy="11" r="7.5" stroke="currentColor" strokeWidth="2.5"/>
-              <circle cx="19" cy="19" r="1.5" fill="currentColor"/>
-            </svg>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+            <Image src="/logo1.png" alt="TLCC Logo" width={32} height={32} />
           </Link>
         </div>
 
@@ -189,9 +186,12 @@ export default function BlogListingPage() {
           
           {/* Bottom Half: Footer Links & Details */}
           <div className={styles.footerBottom}>
-            <div className={styles.footerBrand}>
-              <h3 className={styles.footerLogo}>TLCC</h3>
-              <p className={styles.footerTagline}>The Light City Church</p>
+            <div className={styles.footerBrand} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Image src="/logo1.png" alt="TLCC Logo" width={40} height={40} />
+              <div>
+                <h3 className={styles.footerLogo} style={{ margin: 0 }}>TLCC</h3>
+                <p className={styles.footerTagline} style={{ margin: 0 }}>The Light City Church</p>
+              </div>
             </div>
             
             <div className={styles.footerLinksGrid}>
