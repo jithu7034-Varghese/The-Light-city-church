@@ -226,13 +226,13 @@ export default function MinistriesPage() {
               <Link href="/blog" className={styles.navLink}>Blog</Link>
             </li>
             <li>
-              <Link href="/#contact" className={styles.navLink}>Visit Us</Link>
+              <Link href="/visit-us" className={styles.navLink}>Visit Us</Link>
             </li>
           </ul>
         </nav>
 
         <button className={styles.preOrderBtn} id="header-preorder-btn" onClick={() => {
-          window.location.href = '/#contact';
+          window.location.href = '/visit-us';
         }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -336,7 +336,7 @@ export default function MinistriesPage() {
             Whether you want to serve, connect in fellowship, or grow through Pastor Ronnie’s teaching resources, there is a path designed for you.
           </p>
           <button className={ministryStyles.ctaButton} onClick={() => {
-            window.location.href = '/#contact';
+            window.location.href = '/visit-us';
           }}>
             Connect With Us
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -399,7 +399,7 @@ export default function MinistriesPage() {
                   <li><Link href="/ministries" className={styles.footerNavLink}>Ministries</Link></li>
                   <li><Link href="/gallery" className={styles.footerNavLink}>Gallery</Link></li>
                   <li><Link href="/blog" className={styles.footerNavLink}>Blog</Link></li>
-                  <li><Link href="/#contact" className={styles.footerNavLink}>Visit Us</Link></li>
+                  <li><Link href="/visit-us" className={styles.footerNavLink}>Visit Us</Link></li>
                 </ul>
               </div>
               
