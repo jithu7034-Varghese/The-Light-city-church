@@ -2,8 +2,8 @@
 
 .hero {
   position: relative;
-  height: 65vh;
-  min-height: 480px;
+  height: 90vh;
+  min-height: 620px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -12,234 +12,352 @@
   background-color: var(--bg-primary);
 }
 
-.heroBackground {
+.heroMap {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  border: 0;
   z-index: 1;
+  filter: grayscale(0.25) contrast(1.02) brightness(0.98);
 }
 
-.heroImage {
-  object-fit: cover;
-  filter: brightness(0.6) contrast(1.02);
+[data-theme="dark"] .heroMap {
+  filter: grayscale(0.65) invert(0.9) contrast(1.1) brightness(0.85);
 }
 
-.heroOverlay {
+/* Faded header white overlay at the top of the map */
+.heroHeaderBg {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  height: 380px;
   background: linear-gradient(
     to bottom,
-    rgba(14, 17, 24, 0.45) 0%,
-    rgba(14, 17, 24, 0.8) 100%
+    var(--bg-primary) 10%,
+    rgba(246, 245, 242, 0.8) 60%,
+    transparent 100%
   );
   z-index: 2;
+  pointer-events: none;
 }
 
-.heroContent {
-  position: relative;
+[data-theme="dark"] .heroHeaderBg {
+  background: linear-gradient(
+    to bottom,
+    var(--bg-primary) 10%,
+    rgba(11, 12, 14, 0.85) 60%,
+    transparent 100%
+  );
+}
+
+.heroHeader {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 3;
-  max-width: 800px;
-  padding: 0 24px;
   text-align: center;
-  color: #ffffff;
+  color: var(--text-primary);
+  max-width: 800px;
+  width: 100%;
+  padding: 0 24px;
 }
 
 .heroTag {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: rgba(255, 255, 255, 0.8);
-  display: inline-block;
-  margin-bottom: 20px;
+  letter-spacing: 0.15em;
+  color: #dc2626;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.heroTagIcon {
+  display: inline-flex;
+  color: #dc2626;
+  animation: pulseSoft 2s infinite;
 }
 
 .heroTitle {
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
+  font-size: clamp(2.4rem, 5.5vw, 3.8rem);
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.03em;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .heroSubtitle {
-  font-size: clamp(1.1rem, 2vw, 1.3rem);
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.85);
-  max-width: 600px;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 580px;
   margin: 0 auto;
+  line-height: 1.5;
 }
 
-/* Split Main Section */
-.visitSection {
+/* Floating Sunday Service Invite Card */
+.floatingCard {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 380px;
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow: 0 32px 72px rgba(14, 17, 24, 0.1);
+  border: 1px solid rgba(14, 17, 24, 0.04);
+  overflow: hidden;
+  margin-top: 240px;
+  transition: var(--transition-smooth);
+}
+
+[data-theme="dark"] .floatingCard {
+  background: var(--bg-secondary);
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 32px 72px rgba(0, 0, 0, 0.5);
+}
+
+.floatingCard:hover {
+  transform: translateY(-4px);
+}
+
+.cardImageWrapper {
+  position: relative;
+  height: 180px;
+  width: 100%;
+}
+
+.cardImage {
+  object-fit: cover;
+}
+
+.cardBadge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: #ffffff;
+  color: #0e1118;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 6px 12px;
+  border-radius: 100px;
+  box-shadow: var(--shadow-sm);
+  z-index: 2;
+}
+
+.cardContent {
+  padding: 24px;
+}
+
+.cardHeader {
+  margin-bottom: 14px;
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.cardSubtitle {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardSubtitleIcon {
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.cardStats {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 14px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.cardStatItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 16px;
+}
+
+.cardLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  display: block;
+}
+
+.cardVal {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+.cardBtn {
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-fast);
+}
+
+.cardBtn:hover {
+  background-color: var(--text-secondary);
+  transform: translateY(-1px);
+}
+
+/* Stats Divider Bar */
+.statsBar {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 40px 24px;
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  .statsBar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 0;
+  }
+}
+
+@media (min-width: 992px) {
+  .statsBar {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 16px;
+}
+
+@media (min-width: 992px) {
+  .statColumn {
+    border-right: 1px solid var(--border-color);
+  }
+  .statColumn:last-child {
+    border-right: none;
+  }
+}
+
+.statVal {
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* Split Form/Bento Details Section */
+.splitSection {
   padding: 120px 24px;
   background-color: var(--bg-primary);
 }
 
-.container {
+.splitGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 80px;
+  align-items: start;
   max-width: var(--container-max);
   margin: 0 auto;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 64px;
-  align-items: start;
-}
-
 @media (min-width: 992px) {
-  .grid {
+  .splitGrid {
     grid-template-columns: 1.05fr 0.95fr;
   }
 }
 
-.contactArea {
+/* Form Area Styles */
+.formArea {
   display: flex;
   flex-direction: column;
-  gap: 48px;
 }
 
-.sectionTitle {
+.formTag {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #dc2626;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.formTitle {
   font-size: clamp(2rem, 3.5vw, 2.6rem);
   font-weight: 800;
   color: var(--text-primary);
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
-.sectionSubtitle {
-  font-size: 1.1rem;
+.formParagraph {
+  font-size: 1.05rem;
   color: var(--text-secondary);
   line-height: 1.65;
-  margin-bottom: 0;
-}
-
-/* Info Details Row */
-.infoGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 48px;
-}
-
-@media (min-width: 576px) {
-  .infoGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.infoItem {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-}
-
-.infoIconWrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-primary);
-  flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-fast);
-}
-
-.infoItem:hover .infoIconWrapper {
-  transform: translateY(-2px);
-  border-color: rgba(14, 17, 24, 0.15);
-}
-
-[data-theme="dark"] .infoItem:hover .infoIconWrapper {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.infoContent {
-  display: flex;
-  flex-direction: column;
-}
-
-.infoTitle {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-secondary);
-  margin-bottom: 4px;
-}
-
-.infoText {
-  font-size: 0.98rem;
-  color: var(--text-primary);
-  line-height: 1.45;
-  font-weight: 500;
-}
-
-.infoText a:hover {
-  text-decoration: underline;
-}
-
-/* Contact Form Card with Interactive Mouse Tracker Glow */
-.formCard {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  padding: 48px;
-  border-radius: 32px;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-  overflow: hidden;
-  transition: var(--transition-smooth);
-}
-
-/* Mouse cursor follower light effect */
-.formCard::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(
-    600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-    rgba(14, 17, 24, 0.03),
-    transparent 60%
-  );
-  z-index: 1;
-  pointer-events: none;
-}
-
-[data-theme="dark"] .formCard::before {
-  background: radial-gradient(
-    600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-    rgba(255, 255, 255, 0.05),
-    transparent 60%
-  );
+  margin-bottom: 40px;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  position: relative;
-  z-index: 2;
+  gap: 24px;
 }
 
 .formRow {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 32px;
+  gap: 24px;
 }
 
 @media (min-width: 576px) {
@@ -248,375 +366,286 @@
   }
 }
 
-/* Minimalist Underline Input Form Group */
 .formGroup {
-  position: relative;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
-.input, .textarea {
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid var(--border-color);
-  padding: 24px 0 10px 0;
+.formLabel {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.formInput, .formTextarea {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 15px 20px;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.98rem;
   color: var(--text-primary);
   outline: none;
-  transition: border-color 0.4s ease;
-  width: 100%;
+  transition: var(--transition-fast);
 }
 
-.textarea {
+.formTextarea {
   resize: vertical;
-  min-height: 120px;
-  padding-top: 28px;
+  min-height: 150px;
 }
 
-.label {
-  position: absolute;
-  left: 0;
-  top: 22px;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  pointer-events: none;
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-  transform-origin: left top;
+.formInput:focus, .formTextarea:focus {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 4px rgba(14, 17, 24, 0.05);
 }
 
-/* Expanding Underline focus Border */
-.focusBorder {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
+[data-theme="dark"] .formInput:focus, 
+[data-theme="dark"] .formTextarea:focus {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
+}
+
+.formBtn {
   background-color: var(--text-primary);
-  transform: scaleX(0);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  transform-origin: center;
-  z-index: 3;
-}
-
-/* Trigger Animations on Focus or Content Presence */
-.input:focus ~ .label,
-.input:not(:placeholder-shown) ~ .label,
-.textarea:focus ~ .label,
-.textarea:not(:placeholder-shown) ~ .label {
-  transform: translateY(-22px) scale(0.75);
-  color: var(--text-primary);
-  font-weight: 700;
-}
-
-.input:focus ~ .focusBorder,
-.textarea:focus ~ .focusBorder {
-  transform: scaleX(1);
-}
-
-/* Submit Button */
-.submitBtn {
-  background: var(--accent);
-  color: var(--bg-secondary);
+  color: var(--bg-primary);
   font-weight: 600;
-  font-size: 1.02rem;
-  padding: 18px 40px;
+  font-size: 0.98rem;
+  padding: 16px 36px;
   border-radius: 100px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
   align-self: flex-start;
   transition: var(--transition-fast);
   border: none;
-  box-shadow: var(--shadow-sm);
 }
 
-.submitBtn:hover:not(:disabled) {
-  background-color: var(--accent-hover);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: var(--shadow-md);
+.formBtn:hover:not(:disabled) {
+  background-color: var(--text-secondary);
+  transform: translateY(-2px);
 }
 
-.submitBtn:active:not(:disabled) {
-  transform: translateY(0) scale(1);
-}
-
-.submitBtn:disabled {
+.formBtn:disabled {
   opacity: 0.65;
   cursor: not-allowed;
 }
 
-/* Feedback Messages */
-.successMsg {
+/* Feedback Alerts */
+.successAlert {
   background-color: rgba(34, 197, 94, 0.08);
   border: 1px solid rgba(34, 197, 94, 0.15);
   color: #15803d;
-  padding: 20px 24px;
-  border-radius: 20px;
-  font-size: 0.98rem;
+  padding: 18px 24px;
+  border-radius: 16px;
+  font-size: 0.95rem;
   line-height: 1.5;
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  animation: slideInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-.errorMsg {
+.errorAlert {
   background-color: rgba(239, 68, 68, 0.08);
   border: 1px solid rgba(239, 68, 68, 0.15);
   color: #b91c1c;
-  padding: 20px 24px;
-  border-radius: 20px;
-  font-size: 0.98rem;
+  padding: 18px 24px;
+  border-radius: 16px;
+  font-size: 0.95rem;
   line-height: 1.5;
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  animation: slideInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-@keyframes slideInUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Bento Grid */
+.bentoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
 }
 
-/* Google Map Embed Area */
-.mapArea {
-  position: sticky;
-  top: 110px;
+@media (min-width: 640px) {
+  .bentoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.mapWrapper {
-  position: relative;
-  width: 100%;
-  height: 580px;
-  border-radius: 32px;
-  overflow: hidden;
+.bentoCard {
+  background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-lg);
-  background-color: var(--bg-secondary);
-}
-
-.mapIframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  filter: grayscale(0.1) contrast(1.02);
-}
-
-[data-theme="dark"] .mapIframe {
-  filter: grayscale(0.6) invert(0.9) contrast(1.1) brightness(0.9);
-}
-
-/* Floating Glass Map Card Overlay */
-.mapOverlayCard {
-  position: absolute;
-  bottom: 24px;
-  left: 24px;
-  right: 24px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  padding: 24px;
-  z-index: 10;
-  box-shadow: var(--shadow-lg);
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   gap: 16px;
   transition: var(--transition-smooth);
 }
 
-.mapOverlayCard:hover {
-  transform: translateY(-2px);
+.bentoCard:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(14, 17, 24, 0.12);
 }
 
-.mapOverlayHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+[data-theme="dark"] .bentoCard:hover {
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
-.mapOverlayBadge {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  background-color: var(--accent);
-  color: var(--bg-secondary);
-  padding: 4px 10px;
-  border-radius: 100px;
-}
-
-.mapOverlayTitle {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-top: 6px;
-}
-
-.mapOverlayAddress {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.mapOverlayDirectionsBtn {
-  background-color: var(--text-primary);
-  color: var(--bg-primary);
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 10px 18px;
-  border-radius: 100px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: center;
-  transition: var(--transition-fast);
-}
-
-.mapOverlayDirectionsBtn:hover {
-  background-color: var(--text-secondary);
-  color: var(--bg-secondary);
-}
-
-/* What to Expect Section */
-.expectSection {
-  padding: 120px 24px;
-  background-color: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
-}
-
-.expectHeader {
-  text-align: center;
-  max-width: 660px;
-  margin: 0 auto 72px;
-}
-
-.expectTitle {
-  font-size: clamp(2.2rem, 3.8vw, 3rem);
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 18px;
-  letter-spacing: -0.02em;
-}
-
-.expectSubtitle {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
-  line-height: 1.65;
-}
-
-.expectGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 32px;
-}
-
-@media (min-width: 768px) {
-  .expectGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .expectGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.expectCard {
+.bentoIconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  border-radius: 28px;
-  padding: 40px;
-  transition: var(--transition-smooth);
-  box-shadow: var(--shadow-sm);
   display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  box-shadow: var(--shadow-sm);
 }
 
-.expectCard::before {
-  content: '';
+.bentoCardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.bentoCardText {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Wide Bento Card matching the stacked layout */
+.bentoCardWide {
+  grid-column: span 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .bentoCardWide {
+    grid-column: span 2;
+  }
+}
+
+/* Overlapping stacked image layout matching the BrickWise map trace card */
+.bentoStackContainer {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  margin-top: 10px;
+  background-color: var(--bg-primary);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bentoGridPattern {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 80%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
+  opacity: 0.15;
+  background-image: radial-gradient(var(--text-secondary) 1px, transparent 1px);
+  background-size: 16px 16px;
+  z-index: 1;
 }
 
-[data-theme="dark"] .expectCard::before {
-  background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 80%);
-}
-
-.expectCard:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-md);
-  border-color: rgba(14, 17, 24, 0.15);
-}
-
-.expectCard:hover::before {
-  opacity: 1;
-}
-
-[data-theme="dark"] .expectCard:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.expectCardIconWrapper {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-primary);
-  margin-bottom: 28px;
-  box-shadow: var(--shadow-sm);
-  position: relative;
+/* Red marker and dotted line like the reference map trace */
+.bentoTraceMarker {
+  position: absolute;
+  top: 40%;
+  left: 20%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #dc2626;
+  box-shadow: 0 0 0 6px rgba(220, 38, 38, 0.15);
   z-index: 2;
-  transition: var(--transition-fast);
 }
 
-.expectCard:hover .expectCardIconWrapper {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-md);
-}
-
-.expectCardTitle {
-  font-size: 1.3rem;
+.bentoTraceBadge {
+  position: absolute;
+  top: 22%;
+  left: 17%;
+  background-color: #dc2626;
+  color: #ffffff;
+  font-size: 0.7rem;
   font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  z-index: 2;
+  box-shadow: var(--shadow-sm);
+}
+
+.bentoTraceLine {
+  position: absolute;
+  top: 42%;
+  left: 21%;
+  width: 140px;
+  height: 40px;
+  border-bottom: 2px dashed rgba(220, 38, 38, 0.4);
+  border-right: 2px dashed rgba(220, 38, 38, 0.4);
+  border-bottom-right-radius: 40px;
+  z-index: 2;
+}
+
+.stackedPhotoCard {
+  position: absolute;
+  right: 15%;
+  bottom: -20px;
+  width: 240px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.03);
+  padding: 10px;
+  z-index: 3;
+  transform: rotate(2deg);
+  transition: var(--transition-smooth);
+}
+
+[data-theme="dark"] .stackedPhotoCard {
+  background: var(--bg-secondary);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.bentoCardWide:hover .stackedPhotoCard {
+  transform: rotate(0deg) translateY(-8px);
+}
+
+.stackedPhoto {
+  position: relative;
+  height: 120px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.stackedPhotoTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-top: 10px;
   color: var(--text-primary);
-  margin-bottom: 14px;
-  letter-spacing: -0.01em;
-  position: relative;
-  z-index: 2;
 }
 
-.expectCardText {
-  font-size: 0.96rem;
+.stackedPhotoMeta {
+  font-size: 0.72rem;
   color: var(--text-secondary);
-  line-height: 1.65;
-  position: relative;
-  z-index: 2;
-}
-
-.italicSerif {
-  font-family: Georgia, serif;
-  font-style: italic;
-  font-weight: 400;
+  margin-top: 2px;
 }

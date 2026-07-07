@@ -166,17 +166,6 @@ export default function ContactPage() {
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    cardRef.current.style.setProperty("--mouse-x", `${x}px`);
-    cardRef.current.style.setProperty("--mouse-y", `${y}px`);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -225,51 +214,6 @@ export default function ContactPage() {
     }
   };
 
-  const expectData = [
-    {
-      title: "Free Parking",
-      desc: "Convenient free parking is available close to the venue for all visitors. Follow signs on arrival.",
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-          <rect x="1" y="3" width="22" height="18" rx="2" ry="2"></rect>
-          <line x1="12" y1="8" x2="12" y2="16"></line>
-          <path d="M12 8h2.5a2.5 2.5 0 0 1 0 5H12"></path>
-        </svg>
-      )
-    },
-    {
-      title: "Welcome Team",
-      desc: "Our friendly welcome hosts will meet you at the doors, help you find a seat, and answer any questions.",
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-      )
-    },
-    {
-      title: "TLCC Kids",
-      desc: "A fun, safe, and engaging children's ministry is provided during the service for ages 2 to 11.",
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-          <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-          <line x1="4" y1="22" x2="4" y2="15"></line>
-        </svg>
-      )
-    },
-    {
-      title: "Come As You Are",
-      desc: "We are a diverse community with no formal dress code. Wear whatever makes you comfortable.",
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-        </svg>
-      )
-    }
-  ];
-
   return (
     <div className={styles.container}>
       {/* Header */}
@@ -316,306 +260,328 @@ export default function ContactPage() {
         </button>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Map Section (BrickWise Style) */}
       <section className={contactStyles.hero}>
-        <div className={contactStyles.heroBackground}>
-          <Image
-            src="/thecitylight.webp"
-            alt="The Light City Church Location"
-            fill
-            priority
-            className={contactStyles.heroImage}
-          />
-          <div className={contactStyles.heroOverlay} />
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2402.730303649666!2d-1.1448831230006277!3d52.9531818722421!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4879c3d4abfca783%3A0xb3515cf8bfa00cb3!2sMotorpoint%20Arena%20Nottingham!5e0!3m2!1sen!2suk!4v1710000000000!5m2!1sen!2suk"
+          className={contactStyles.heroMap}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          title="Motorpoint Arena Nottingham Location Map"
+        ></iframe>
+
+        <div className={contactStyles.heroHeaderBg} />
+
+        <div className={contactStyles.heroHeader}>
+          <span className={`${contactStyles.heroTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>
+            <span className={contactStyles.heroTagIcon}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+              </svg>
+            </span>
+            Our Weekly Sunday Services
+          </span>
+          
+          <h1 className={contactStyles.heroTitle}>
+            <SplitText text="Easily Join Our Sunday" delayOffset={0.3} />
+            <br />
+            <SplitText text="Service to Grow Your Faith" delayOffset={0.8} />
+          </h1>
+          
+          <p className={`${contactStyles.heroSubtitle} animate-fade-in-up`} style={{ animationDelay: '1.2s' }}>
+            Empowering every man, woman, and child to live in the fullness of their inheritance in Christ. Join us in Nottingham.
+          </p>
         </div>
 
-        <div className={contactStyles.heroContent}>
-          <span className={`${contactStyles.heroTag} animate-fade-in-up`} style={{ animationDelay: '0.1s' }}>Join Us in Nottingham</span>
-          <h1 className={contactStyles.heroTitle}>
-            <SplitText text="Contact Our Church" delayOffset={0.3} />
-          </h1>
-          <p className={`${contactStyles.heroSubtitle} animate-fade-in-up`} style={{ animationDelay: '0.8s' }}>
-            We gather in person every Sunday. Whether you have questions or want to request prayer, we would love to connect.
-          </p>
+        {/* Floating Service invitation Card in Center */}
+        <div className={`${contactStyles.floatingCard} animate-fade-in-up`} style={{ animationDelay: '1.4s' }}>
+          <div className={contactStyles.cardImageWrapper}>
+            <span className={contactStyles.cardBadge}>Next Service</span>
+            <Image
+              src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=600&auto=format&fit=crop"
+              alt="Sunday Worship Service"
+              fill
+              sizes="380px"
+              priority
+              className={contactStyles.cardImage}
+            />
+          </div>
+          
+          <div className={contactStyles.cardContent}>
+            <div className={contactStyles.cardHeader}>
+              <h3 className={contactStyles.cardTitle}>Motorpoint Arena Nottingham</h3>
+              <p className={contactStyles.cardSubtitle}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className={contactStyles.cardSubtitleIcon}>
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Bolero Square, Nottingham, NG1 1LA
+              </p>
+            </div>
+
+            <div className={contactStyles.cardStats}>
+              <div className={contactStyles.cardStatItem}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>Sundays 10:30 AM</span>
+              </div>
+              <div className={contactStyles.cardStatItem}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>All Welcomed</span>
+              </div>
+            </div>
+
+            <div className={contactStyles.cardFooter}>
+              <div>
+                <span className={contactStyles.cardLabel}>Co-Founder</span>
+                <span className={contactStyles.cardVal}>Ronnie Dube</span>
+              </div>
+              <a
+                href="https://maps.google.com/?q=Motorpoint+Arena+Nottingham"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={contactStyles.cardBtn}
+              >
+                Get Directions
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Form and Map Grid */}
-      <ViewportSection as="section" className={contactStyles.visitSection}>
-        <div className={contactStyles.container}>
-          <div className={contactStyles.grid}>
+      {/* Stats Divider Bar (BrickWise Style) */}
+      <section className={contactStyles.statsBar}>
+        <div className={contactStyles.statColumn}>
+          <span className={contactStyles.statVal}>10:30 AM</span>
+          <span className={contactStyles.statLabel}>Sunday Worship</span>
+        </div>
+        <div className={contactStyles.statColumn}>
+          <span className={contactStyles.statVal}>Arena</span>
+          <span className={contactStyles.statLabel}>Location Venue</span>
+        </div>
+        <div className={contactStyles.statColumn} style={{ cursor: "pointer" }} onClick={() => window.location.href = 'mailto:info@thelightcitychurch.org'}>
+          <span className={contactStyles.statVal} style={{ fontSize: "1.2rem", fontWeight: "800", height: "40px", display: "flex", alignItems: "center" }}>info@thelightcitychurch.org</span>
+          <span className={contactStyles.statLabel}>Email Contact</span>
+        </div>
+        <div className={contactStyles.statColumn}>
+          <span className={contactStyles.statVal}>+44 115</span>
+          <span className={contactStyles.statLabel}>Office Line</span>
+        </div>
+      </section>
+
+      {/* Split Form / Bento expectations Section (BrickWise Style) */}
+      <ViewportSection as="section" className={contactStyles.splitSection}>
+        <div className={contactStyles.splitGrid}>
+          
+          {/* Left Column: Contact Form */}
+          <div className={contactStyles.formArea}>
+            <span className={contactStyles.formTag}>- Write to Us</span>
             
-            {/* Left Column: Form & Info */}
-            <div className={contactStyles.contactArea}>
-              <div>
-                <h2 className={contactStyles.sectionTitle}>Get In Touch</h2>
-                <p className={contactStyles.sectionSubtitle}>
-                  Have a question about our services, ministries, or need prayer agreement? Reach out using the form below or standard details.
-                </p>
-              </div>
+            <h2 className={contactStyles.formTitle}>
+              Discover the value behind fellowship & community
+            </h2>
+            
+            <p className={contactStyles.formParagraph}>
+              We handle the heavy lifting by standing in agreement with you in prayer, answering your theological questions, and helping you find a home group in Nottingham.
+            </p>
 
-              {/* Detail Rows */}
-              <div className={contactStyles.infoGrid}>
-                <div className={contactStyles.infoItem}>
-                  <div className={contactStyles.infoIconWrapper}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                  </div>
-                  <div className={contactStyles.infoContent}>
-                    <span className={contactStyles.infoTitle}>Service Time</span>
-                    <span className={contactStyles.infoText}>Sundays at 10:30 AM</span>
-                  </div>
-                </div>
-
-                <div className={contactStyles.infoItem}>
-                  <div className={contactStyles.infoIconWrapper}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                      <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                  </div>
-                  <div className={contactStyles.infoContent}>
-                    <span className={contactStyles.infoTitle}>Location</span>
-                    <span className={contactStyles.infoText}>Motorpoint Arena,<br />Nottingham, NG1 1LA</span>
-                  </div>
-                </div>
-
-                <div className={contactStyles.infoItem}>
-                  <div className={contactStyles.infoIconWrapper}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                      <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                  </div>
-                  <div className={contactStyles.infoContent}>
-                    <span className={contactStyles.infoTitle}>Email</span>
-                    <span className={contactStyles.infoText}>
-                      <a href="mailto:info@thelightcitychurch.org">info@thelightcitychurch.org</a>
-                    </span>
-                  </div>
-                </div>
-
-                <div className={contactStyles.infoItem}>
-                  <div className={contactStyles.infoIconWrapper}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                    </svg>
-                  </div>
-                  <div className={contactStyles.infoContent}>
-                    <span className={contactStyles.infoTitle}>Office</span>
-                    <span className={contactStyles.infoText}>+44 (0) 115 900 0000</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Form Card (Glassmorphic Container with Mouse Move Glow) */}
-              <div
-                ref={cardRef}
-                onMouseMove={handleMouseMove}
-                className={contactStyles.formCard}
-              >
-                <form onSubmit={handleSubmit} className={contactStyles.form}>
-                  <div className={contactStyles.formRow}>
-                    <div className={contactStyles.formGroup}>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className={contactStyles.input}
-                        style={errors.name ? { borderColor: "#dc2626" } : undefined}
-                        placeholder=" "
-                        required
-                      />
-                      <label htmlFor="name" className={contactStyles.label}>Full Name *</label>
-                      <div className={contactStyles.focusBorder}></div>
-                    </div>
-                    <div className={contactStyles.formGroup}>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className={contactStyles.input}
-                        style={errors.email ? { borderColor: "#dc2626" } : undefined}
-                        placeholder=" "
-                        required
-                      />
-                      <label htmlFor="email" className={contactStyles.label}>Email Address *</label>
-                      <div className={contactStyles.focusBorder}></div>
-                    </div>
-                  </div>
-
-                  <div className={contactStyles.formRow}>
-                    <div className={contactStyles.formGroup}>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className={contactStyles.input}
-                        placeholder=" "
-                      />
-                      <label htmlFor="phone" className={contactStyles.label}>Phone Number</label>
-                      <div className={contactStyles.focusBorder}></div>
-                    </div>
-                    <div className={contactStyles.formGroup}>
-                      <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        className={contactStyles.input}
-                        placeholder=" "
-                      />
-                      <label htmlFor="subject" className={contactStyles.label}>Subject</label>
-                      <div className={contactStyles.focusBorder}></div>
-                    </div>
-                  </div>
-
-                  <div className={contactStyles.formGroup}>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      className={contactStyles.textarea}
-                      style={errors.message ? { borderColor: "#dc2626" } : undefined}
-                      placeholder=" "
-                      required
-                    />
-                    <label htmlFor="message" className={contactStyles.label}>Message *</label>
-                    <div className={contactStyles.focusBorder}></div>
-                  </div>
-
-                  {submitStatus === "success" && (
-                    <div className={contactStyles.successMsg}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                      <div>
-                        <strong>Message sent successfully!</strong>
-                        <p style={{ marginTop: "4px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>
-                          Thank you for reaching out. A member of our welcome or pastoral team will get back to you shortly.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {submitStatus === "error" && (
-                    <div className={contactStyles.errorMsg}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                      </svg>
-                      <div>
-                        <strong>Failed to send message.</strong>
-                        <p style={{ marginTop: "4px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>
-                          There was an error processing your request. Please try again or email us directly at info@thelightcitychurch.org.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={submitStatus === "submitting"}
-                    className={contactStyles.submitBtn}
-                  >
-                    {submitStatus === "submitting" ? (
-                      <>Sending Message...</>
-                    ) : (
-                      <>
-                        Send Message
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <line x1="22" y1="2" x2="11" y2="13"></line>
-                          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                      </>
-                    )}
-                  </button>
-                </form>
-              </div>
-            </div>
-
-            {/* Right Column: Google Map Embed */}
-            <div className={contactStyles.mapArea}>
-              <div className={contactStyles.mapWrapper}>
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2402.730303649666!2d-1.1448831230006277!3d52.9531818722421!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4879c3d4abfca783%3A0xb3515cf8bfa00cb3!2sMotorpoint%20Arena%20Nottingham!5e0!3m2!1sen!2suk!4v1710000000000!5m2!1sen!2suk"
-                  className={contactStyles.mapIframe}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Motorpoint Arena Nottingham Location"
-                ></iframe>
-                
-                {/* Floating Glass overlay card on map */}
-                <div className={contactStyles.mapOverlayCard}>
-                  <div className={contactStyles.mapOverlayHeader}>
-                    <span className={contactStyles.mapOverlayBadge}>Main Campus</span>
-                  </div>
+            <form onSubmit={handleSubmit} className={contactStyles.form}>
+              {submitStatus === "success" && (
+                <div className={contactStyles.successAlert}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
                   <div>
-                    <h3 className={contactStyles.mapOverlayTitle}>Motorpoint Arena</h3>
-                    <p className={contactStyles.mapOverlayAddress}>Bolero Square, Nottingham, NG1 1LA</p>
-                    <p className={contactStyles.mapOverlayAddress} style={{ fontSize: "0.85rem", marginTop: "4px" }}>
-                      <strong>Service Time:</strong> Sundays at 10:30 AM
+                    <strong>Message sent successfully!</strong>
+                    <p style={{ marginTop: "2px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>
+                      Thank you. A member of our welcome or pastoral team will get back to you shortly.
                     </p>
                   </div>
-                  <a
-                    href="https://maps.google.com/?q=Motorpoint+Arena+Nottingham"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={contactStyles.mapOverlayDirectionsBtn}
-                  >
+                </div>
+              )}
+
+              {submitStatus === "error" && (
+                <div className={contactStyles.errorAlert}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <div>
+                    <strong>Failed to send message.</strong>
+                    <p style={{ marginTop: "2px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>
+                      There was a problem submitting your request. Please try again.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className={contactStyles.formRow}>
+                <div className={contactStyles.formGroup}>
+                  <label htmlFor="name" className={contactStyles.formLabel}>Full Name *</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={contactStyles.formInput}
+                    style={errors.name ? { borderColor: "#dc2626" } : undefined}
+                    placeholder="John Doe"
+                    required
+                  />
+                </div>
+                
+                <div className={contactStyles.formGroup}>
+                  <label htmlFor="email" className={contactStyles.formLabel}>Email Address *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={contactStyles.formInput}
+                    style={errors.email ? { borderColor: "#dc2626" } : undefined}
+                    placeholder="john@example.com"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className={contactStyles.formRow}>
+                <div className={contactStyles.formGroup}>
+                  <label htmlFor="phone" className={contactStyles.formLabel}>Phone Number</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className={contactStyles.formInput}
+                    placeholder="+44 7123 456789"
+                  />
+                </div>
+                
+                <div className={contactStyles.formGroup}>
+                  <label htmlFor="subject" className={contactStyles.formLabel}>Subject</label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    className={contactStyles.formInput}
+                    placeholder="How can we help?"
+                  />
+                </div>
+              </div>
+
+              <div className={contactStyles.formGroup}>
+                <label htmlFor="message" className={contactStyles.formLabel}>Message *</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  className={contactStyles.formTextarea}
+                  style={errors.message ? { borderColor: "#dc2626" } : undefined}
+                  placeholder="Write your message or prayer request here..."
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitStatus === "submitting"}
+                className={contactStyles.formBtn}
+              >
+                {submitStatus === "submitting" ? (
+                  <>Sending Message...</>
+                ) : (
+                  <>
+                    Send Message
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
-                    Get Directions
-                  </a>
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+
+          {/* Right Column: Asymmetric Bento Grid (BrickWise Style) */}
+          <div className={contactStyles.bentoGrid}>
+            
+            {/* Small Card 1 */}
+            <div className={contactStyles.bentoCard}>
+              <div className={contactStyles.bentoIconWrapper}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <h3 className={contactStyles.bentoCardTitle}>Welcome Hosts</h3>
+              <p className={contactStyles.bentoCardText}>
+                Our hosts stand at the main Arena entrance to guide you and answer any questions upon arrival.
+              </p>
+            </div>
+
+            {/* Small Card 2 */}
+            <div className={contactStyles.bentoCard}>
+              <div className={contactStyles.bentoIconWrapper}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </div>
+              <h3 className={contactStyles.bentoCardTitle}>99% Friendly Parish</h3>
+              <p className={contactStyles.bentoCardText}>
+                We are a diverse, casual, and warm church family. Feel free to come exactly as you are.
+              </p>
+            </div>
+
+            {/* Asymmetrical Wide Card 3 with stacked photo card details */}
+            <div className={`${contactStyles.bentoCard} ${contactStyles.bentoCardWide}`}>
+              <div>
+                <h3 className={contactStyles.bentoCardTitle}>Kids Sunday Church</h3>
+                <p className={contactStyles.bentoCardText}>
+                  A fun, safe, and engaging children's ministry is provided during the service for ages 2 to 11.
+                </p>
+              </div>
+              
+              <div className={contactStyles.bentoStackContainer}>
+                <div className={contactStyles.bentoGridPattern} />
+                
+                {/* Visual trace elements matching reference */}
+                <span className={contactStyles.bentoTraceBadge}>Sundays</span>
+                <div className={contactStyles.bentoTraceMarker} />
+                <div className={contactStyles.bentoTraceLine} />
+                
+                <div className={contactStyles.stackedPhotoCard}>
+                  <div className={contactStyles.stackedPhoto}>
+                    <Image
+                      src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=400&auto=format&fit=crop"
+                      alt="Children learning about grace"
+                      fill
+                      sizes="220px"
+                      className={contactStyles.cardImage}
+                    />
+                  </div>
+                  <h4 className={contactStyles.stackedPhotoTitle}>Grace-Filled Children</h4>
+                  <p className={contactStyles.stackedPhotoMeta}>Sunday School Classroom</p>
                 </div>
               </div>
             </div>
 
-          </div>
-        </div>
-      </ViewportSection>
-
-      {/* What to Expect Section */}
-      <ViewportSection as="section" className={contactStyles.expectSection}>
-        <div className={contactStyles.container}>
-          <div className={contactStyles.expectHeader}>
-            <h2 className={contactStyles.expectTitle}>
-              What to <span className={contactStyles.italicSerif}>Expect</span>
-            </h2>
-            <p className={contactStyles.expectSubtitle}>
-              Visiting a new church can be intimidating. Here is what you can look forward to when you join us this Sunday.
-            </p>
-          </div>
-
-          <div className={contactStyles.expectGrid}>
-            {expectData.map((item, idx) => (
-              <div
-                key={idx}
-                className={`${contactStyles.expectCard} animate-premium-block`}
-                style={{ animationDelay: `${0.2 + idx * 0.08}s` }}
-              >
-                <div className={contactStyles.expectCardIconWrapper}>
-                  {item.icon}
-                </div>
-                <h3 className={contactStyles.expectCardTitle}>{item.title}</h3>
-                <p className={contactStyles.expectCardText}>{item.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </ViewportSection>
@@ -711,3 +677,4 @@ export default function ContactPage() {
     </div>
   );
 }
+// Note: Map grayscale styles in dark mode are handled in contact.module.css
