@@ -199,7 +199,6 @@ export default function VisitUsPage() {
 
     setSubmitStatus("submitting");
     
-    // Simulate API request
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
       setSubmitStatus("success");
@@ -402,130 +401,134 @@ export default function VisitUsPage() {
                 </div>
               </div>
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className={visitStyles.form}>
-                <div className={visitStyles.formRow}>
-                  <div className={visitStyles.formGroup}>
-                    <label htmlFor="name" className={visitStyles.label}>Full Name *</label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className={visitStyles.input}
-                      style={errors.name ? { borderColor: "#dc2626" } : undefined}
-                      placeholder="John Doe"
-                    />
-                  </div>
-                  <div className={visitStyles.formGroup}>
-                    <label htmlFor="email" className={visitStyles.label}>Email Address *</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className={visitStyles.input}
-                      style={errors.email ? { borderColor: "#dc2626" } : undefined}
-                      placeholder="john@example.com"
-                    />
-                  </div>
-                </div>
-
-                <div className={visitStyles.formRow}>
-                  <div className={visitStyles.formGroup}>
-                    <label htmlFor="phone" className={visitStyles.label}>Phone Number</label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className={visitStyles.input}
-                      placeholder="+44 7123 456789"
-                    />
-                  </div>
-                  <div className={visitStyles.formGroup}>
-                    <label htmlFor="subject" className={visitStyles.label}>Subject</label>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      className={visitStyles.input}
-                      placeholder="How can we help?"
-                    />
-                  </div>
-                </div>
-
-                <div className={visitStyles.formGroup}>
-                  <label htmlFor="message" className={visitStyles.label}>Message *</label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    className={visitStyles.textarea}
-                    style={errors.message ? { borderColor: "#dc2626" } : undefined}
-                    placeholder="Write your message or prayer request here..."
-                  />
-                </div>
-
-                {submitStatus === "success" && (
-                  <div className={visitStyles.successMsg}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <div>
-                      <strong>Message sent successfully!</strong>
-                      <p style={{ marginTop: "4px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>
-                        Thank you for reaching out. A member of our welcome or pastoral team will get back to you shortly.
-                      </p>
+              {/* Form Card (Glassmorphic Container) */}
+              <div className={visitStyles.formCard}>
+                <form onSubmit={handleSubmit} className={visitStyles.form}>
+                  <div className={visitStyles.formRow}>
+                    <div className={visitStyles.formGroup}>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className={visitStyles.input}
+                        style={errors.name ? { borderColor: "#dc2626" } : undefined}
+                        placeholder=" "
+                        required
+                      />
+                      <label htmlFor="name" className={visitStyles.label}>Full Name *</label>
+                    </div>
+                    <div className={visitStyles.formGroup}>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className={visitStyles.input}
+                        style={errors.email ? { borderColor: "#dc2626" } : undefined}
+                        placeholder=" "
+                        required
+                      />
+                      <label htmlFor="email" className={visitStyles.label}>Email Address *</label>
                     </div>
                   </div>
-                )}
 
-                {submitStatus === "error" && (
-                  <div className={visitStyles.errorMsg}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="12" y1="8" x2="12" y2="12"></line>
-                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                    <div>
-                      <strong>Failed to send message.</strong>
-                      <p style={{ marginTop: "4px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>
-                        There was an error processing your request. Please try again or email us directly at info@thelightcitychurch.org.
-                      </p>
+                  <div className={visitStyles.formRow}>
+                    <div className={visitStyles.formGroup}>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className={visitStyles.input}
+                        placeholder=" "
+                      />
+                      <label htmlFor="phone" className={visitStyles.label}>Phone Number</label>
+                    </div>
+                    <div className={visitStyles.formGroup}>
+                      <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        className={visitStyles.input}
+                        placeholder=" "
+                      />
+                      <label htmlFor="subject" className={visitStyles.label}>Subject</label>
                     </div>
                   </div>
-                )}
 
-                <button
-                  type="submit"
-                  disabled={submitStatus === "submitting"}
-                  className={visitStyles.submitBtn}
-                >
-                  {submitStatus === "submitting" ? (
-                    <>Sending Message...</>
-                  ) : (
-                    <>
-                      Send Message
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  <div className={visitStyles.formGroup}>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      className={visitStyles.textarea}
+                      style={errors.message ? { borderColor: "#dc2626" } : undefined}
+                      placeholder=" "
+                      required
+                    />
+                    <label htmlFor="message" className={visitStyles.label}>Message *</label>
+                  </div>
+
+                  {submitStatus === "success" && (
+                    <div className={visitStyles.successMsg}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
+                        <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
-                    </>
+                      <div>
+                        <strong>Message sent successfully!</strong>
+                        <p style={{ marginTop: "4px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>
+                          Thank you for reaching out. A member of our welcome or pastoral team will get back to you shortly.
+                        </p>
+                      </div>
+                    </div>
                   )}
-                </button>
-              </form>
+
+                  {submitStatus === "error" && (
+                    <div className={visitStyles.errorMsg}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                      </svg>
+                      <div>
+                        <strong>Failed to send message.</strong>
+                        <p style={{ marginTop: "4px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>
+                          There was an error processing your request. Please try again or email us directly at info@thelightcitychurch.org.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={submitStatus === "submitting"}
+                    className={visitStyles.submitBtn}
+                  >
+                    {submitStatus === "submitting" ? (
+                      <>Sending Message...</>
+                    ) : (
+                      <>
+                        Send Message
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <line x1="22" y1="2" x2="11" y2="13"></line>
+                          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
             </div>
 
             {/* Right Column: Google Map Embed */}
             <div className={visitStyles.mapArea}>
-              <h2 className={visitStyles.sectionTitle} style={{ opacity: 0, height: 0, overflow: "hidden" }}>Our Location</h2>
               <div className={visitStyles.mapWrapper}>
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2402.730303649666!2d-1.1448831230006277!3d52.9531818722421!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4879c3d4abfca783%3A0xb3515cf8bfa00cb3!2sMotorpoint%20Arena%20Nottingham!5e0!3m2!1sen!2suk!4v1710000000000!5m2!1sen!2suk"
