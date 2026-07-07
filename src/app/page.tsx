@@ -308,7 +308,7 @@ export default function Home() {
       <header className={`${styles.header} animate-fade-in`} style={{ animationDelay: '0.1s' }}>
         <div className={styles.logoContainer}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
-            <Image src="/logo1.png" alt="TLCC Logo" width={32} height={32} />
+            <Image src="/logo1.png" alt="TLCC Logo" width={54} height={54} />
           </Link>
         </div>
 

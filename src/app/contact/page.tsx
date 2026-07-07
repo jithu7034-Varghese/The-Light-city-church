@@ -220,7 +220,7 @@ export default function ContactPage() {
       <header className={`${styles.header} animate-fade-in`} style={{ animationDelay: '0.1s' }}>
         <div className={styles.logoContainer}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
-            <Image src="/logo1.png" alt="TLCC Logo" width={32} height={32} />
+            <Image src="/logo1.png" alt="TLCC Logo" width={54} height={54} />
           </Link>
         </div>
 
@@ -622,7 +622,7 @@ export default function ContactPage() {
           {/* Bottom Half: Footer Links & Details */}
           <div className={styles.footerBottom}>
             <div className={styles.footerBrand} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Image src="/logo1.png" alt="TLCC Logo" width={40} height={40} />
+              <Image src="/logo1.png" alt="TLCC Logo" width={54} height={54} />
               <div>
                 <h3 className={styles.footerLogo} style={{ margin: 0 }}>TLCC</h3>
                 <p className={styles.footerTagline} style={{ margin: 0 }}>The Light City Church</p>
