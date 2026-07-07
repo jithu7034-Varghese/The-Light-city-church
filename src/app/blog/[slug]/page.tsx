@@ -153,7 +153,7 @@ export default function BlogDetailPage({ params }: PageProps) {
             <div className={blogStyles.authorMeta}>
               <div className={styles.authorAvatarWrapper} style={{ width: "36px", height: "36px" }}>
                 <Image
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"
+                  src="/pastorronny.jpeg"
                   alt="Pastor Ronnie Dube"
                   width={36}
                   height={36}

@@ -497,7 +497,7 @@ export default function Home() {
                 </p>
                 <div className={styles.avatarWrapper}>
                   <Image
-                    src="/avatar_ryan.png"
+                    src="/pastorronny.jpeg"
                     alt="Pastor Ronnie Dube"
                     width={52}
                     height={52}

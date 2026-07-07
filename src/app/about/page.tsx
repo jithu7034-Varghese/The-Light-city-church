@@ -163,7 +163,7 @@ export default function AboutUsPage() {
     ronnie: {
       name: "Pastor Ronnie Dube",
       role: "Co-Founder & Senior Pastor",
-      image: "/avatar_ryan.png",
+      image: "/pastorronny.jpeg",
       bio: "Pastor Ronnie is co-founder and senior pastor at The Light City Church. His ministry as a pastor, teacher, author, and healing minister continues to transform many lives around the world, helping them to experience a victorious and purposeful life in God’s Word. He is passionate about explaining the clear realities of right standing with God through faith in Christ Jesus.",
       quote: "The Word of God is building material for your life; you cannot afford to treat it casually. Esteem the Word highly in your life and watch the changes."
     },
