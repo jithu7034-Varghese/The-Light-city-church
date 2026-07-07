@@ -397,20 +397,24 @@ export default function Home() {
             {/* Left Video Card */}
             <div className={`${styles.videoCard} animate-premium-block`}>
               <Image
-                src="/feature_sculpture.png"
+                src="https://img.youtube.com/vi/QiJN-zZk-hI/maxresdefault.jpg"
                 alt="Worship at The Light City Church"
                 fill
                 sizes="(max-width: 1024px) 100vw, 800px"
                 className={styles.videoBgImage}
               />
-              <div className={styles.playButton} role="button" aria-label="Play video" onClick={() => {
-                const el = document.getElementById('contact');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}>
+              <a
+                href="https://youtu.be/QiJN-zZk-hI?si=GMjJ61ZN5MExy0YU"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.playButton}
+                role="button"
+                aria-label="Play video"
+              >
                 <svg width="18" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <polygon points="5 3 21 12 5 21 5 3"></polygon>
                 </svg>
-              </div>
+              </a>
               <div className={styles.videoBadges}>
                 <div className={styles.quoteBadge}>
                   &quot;Believe in God in you!&quot;
