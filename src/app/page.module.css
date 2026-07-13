@@ -1954,7 +1954,7 @@
 
 /* Services Section (Matching Mockup) */
 .servicesSection {
-  background-color: transparent;
+  background-color: rgba(4, 5, 8, 0.75);
   padding: 100px 80px;
   width: 100%;
 }

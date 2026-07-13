@@ -78,7 +78,7 @@
 /* Ministries Grid Section */
 .ministriesSection {
   padding: 100px 24px;
-  background-color: transparent;
+  background-color: rgba(4, 5, 8, 0.75);
 }
 
 .container {
