@@ -1588,15 +1588,14 @@
   line-height: 1.5;
 }
 
-/* Countdown Cell */
 .countdownCell {
   padding: 24px;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(20px);
-}
-
-[data-theme="dark"] .countdownCell {
-  background: rgba(13, 17, 26, 0.65);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-border-top);
+  box-shadow: var(--glass-shadow);
 }
 
 .widgetHeader {
@@ -1687,15 +1686,14 @@
   margin: 0;
 }
 
-/* Stats Cell */
 .statsCell {
   padding: 24px;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(20px);
-}
-
-[data-theme="dark"] .statsCell {
-  background: rgba(13, 17, 26, 0.65);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-border-top);
+  box-shadow: var(--glass-shadow);
 }
 
 .statsValueContainer {
@@ -3222,19 +3220,23 @@
 }
 
 .blogCard {
-  background-color: var(--bg-secondary);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-border-top);
   border-radius: 32px;
-  border: 1px solid var(--border-color);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: var(--transition-smooth);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--glass-shadow);
   cursor: pointer;
 }
 
 .blogCard:hover {
   transform: translateY(-6px);
+  background-color: rgba(255, 255, 255, 0.18);
   border-color: rgba(255, 255, 255, 0.45);
   box-shadow: 
     -15px 0 35px -2px rgba(168, 85, 247, 0.85), 

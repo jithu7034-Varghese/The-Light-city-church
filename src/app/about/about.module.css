@@ -131,10 +131,12 @@
   right: 32px;
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-border-top);
   padding: 24px 32px;
   border-radius: 20px;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--glass-shadow);
   z-index: 5;
 }
 
