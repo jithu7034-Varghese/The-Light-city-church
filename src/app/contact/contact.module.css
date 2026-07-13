@@ -478,8 +478,8 @@
 
 .bentoCard {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur)) saturate(210%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top);
   border-radius: 28px;
