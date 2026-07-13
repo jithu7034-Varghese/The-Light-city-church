@@ -1467,8 +1467,8 @@
   border-radius: 24px;
   overflow: hidden;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
+  -webkit-backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top);
   box-shadow: var(--glass-shadow);
@@ -1594,8 +1594,8 @@
 .countdownCell {
   padding: 24px;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
+  -webkit-backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top);
   box-shadow: var(--glass-shadow);
@@ -1692,8 +1692,8 @@
 .statsCell {
   padding: 24px;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
+  -webkit-backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top);
   box-shadow: var(--glass-shadow);
@@ -2859,8 +2859,8 @@
 
 .footerOverlay {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
+  -webkit-backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top); /* Highlighted top light source edge */
   border-radius: 36px;
@@ -3220,8 +3220,8 @@
 
 .blogCard {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
+  -webkit-backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top);
   border-radius: 32px;
