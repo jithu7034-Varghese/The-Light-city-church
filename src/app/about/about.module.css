@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-color: var(--bg-primary);
+  background-color: transparent;
 }
 
 .heroBackground {
@@ -85,7 +85,7 @@
 /* Our Story Section */
 .storySection {
   padding: 120px 24px;
-  background-color: var(--bg-primary);
+  background-color: transparent;
 }
 
 .storyContainer {
@@ -236,22 +236,28 @@
 }
 
 .bentoCard {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-border-top);
   border-radius: 32px;
   padding: 48px;
   position: relative;
   overflow: hidden;
   transition: var(--transition-smooth);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-shadow);
   display: flex;
   flex-direction: column;
 }
 
 .bentoCard:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-md);
-  border-color: rgba(14, 17, 24, 0.15);
+  background-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 
+    inset 0 1px 0px rgba(255, 255, 255, 0.4),
+    0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 /* Double height/width bento card with full image overlay */
@@ -350,7 +356,7 @@
 /* Interactive Leadership Magazine Section */
 .leadershipSection {
   padding: 120px 24px;
-  background-color: var(--bg-primary);
+  background-color: transparent;
 }
 
 .leadershipContainer {
@@ -509,9 +515,12 @@
   grid-template-columns: 1fr;
   border-radius: 40px;
   overflow: hidden;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-lg);
-  background: var(--bg-primary);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-border-top);
+  box-shadow: var(--glass-shadow);
   width: 100%;
 }
 

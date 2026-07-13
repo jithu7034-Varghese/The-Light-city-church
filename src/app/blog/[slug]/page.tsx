@@ -49,7 +49,7 @@ export default function BlogDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className={styles.container} style={{ background: "var(--bg-secondary)" }}>
+    <div className={styles.container} style={{ background: "transparent" }}>
       {/* Header */}
       <header className={`${styles.header} animate-fade-in`} style={{ animationDelay: '0.1s', background: "var(--glass-bg)" }}>
         <div className={styles.logoContainer}>
@@ -145,7 +145,8 @@ export default function BlogDetailPage({ params }: PageProps) {
           Back to Blog
         </Link>
 
-        <header className={blogStyles.articleHeader}>
+        <div className={blogStyles.articleCard}>
+          <header className={blogStyles.articleHeader}>
           <span className={blogStyles.articleCategory}>{article.category}</span>
           <h1 className={blogStyles.articleTitle}>{article.title}</h1>
           
@@ -200,6 +201,7 @@ export default function BlogDetailPage({ params }: PageProps) {
                 return <p key={idx}>{block.text}</p>;
             }
           })}
+          </div>
         </div>
       </article>
 
@@ -213,7 +215,7 @@ export default function BlogDetailPage({ params }: PageProps) {
                 href={`/blog/${rel.slug}`}
                 key={rel.slug}
                 className={`${styles.blogCard} animate-premium-block`}
-                style={{ animationDelay: `${0.1 + idx * 0.1}s`, background: "var(--bg-primary)" }}
+                style={{ animationDelay: `${0.1 + idx * 0.1}s` }}
               >
                 <div className={styles.blogCardImageWrapper}>
                   <Image

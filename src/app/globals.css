@@ -1,30 +1,30 @@
 /* src/app/globals.css */
 
 :root {
-  /* Colors - Light Theme (Default, matching premium warm stone/alabaster style) */
-  --bg-primary: #f6f5f2; /* Warm stone, very soft premium off-white */
-  --bg-secondary: #ffffff;
-  --text-primary: #0e1118; /* Rich slate dark grey/black */
-  --text-secondary: #5e6675; /* Premium muted cool slate */
-  --accent: #000000;
-  --accent-light: #f3f4f6;
-  --accent-hover: #1f1f1f;
-  --border-color: rgba(14, 17, 24, 0.08);
-  --border-glow: rgba(255, 255, 255, 0.6);
-  --glass-bg: rgba(255, 255, 255, 0.45);
-  --glass-border: rgba(14, 17, 24, 0.08);
-  --glass-border-top: rgba(255, 255, 255, 0.6);
-  --glass-blur: 24px;
+  /* Colors - Default Dark Obsidian Theme (matching the modernized premium style) */
+  --bg-primary: #0b0c0e; /* Deep obsidian charcoal */
+  --bg-secondary: #121418; /* Premium dark card background */
+  --text-primary: #f5f6f8;
+  --text-secondary: #9aa3b2;
+  --accent: #ffffff;
+  --accent-light: #17191e;
+  --accent-hover: #e2e8f0;
+  --border-color: rgba(245, 246, 248, 0.08);
+  --border-glow: rgba(0, 0, 0, 0.4);
+  --glass-bg: rgba(18, 20, 24, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-top: rgba(255, 255, 255, 0.2);
+  --glass-blur: 28px;
   --glass-shadow: 
-    inset 0 1px 0px rgba(255, 255, 255, 0.6),
-    inset 0 12px 28px rgba(255, 255, 255, 0.1),
-    inset 0 -12px 28px rgba(0, 0, 0, 0.02),
-    0 15px 35px rgba(14, 17, 24, 0.03);
+    inset 0 1px 0px rgba(255, 255, 255, 0.25),
+    inset 0 12px 28px rgba(255, 255, 255, 0.06),
+    inset 0 -12px 28px rgba(0, 0, 0, 0.3),
+    0 30px 60px rgba(0, 0, 0, 0.4);
   
   /* Shadows */
-  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.03);
-  --shadow-md: 0 12px 32px rgba(14, 17, 24, 0.04);
-  --shadow-lg: 0 24px 60px rgba(14, 17, 24, 0.08);
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.7);
  
   /* Fonts */
   --font-sans: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -37,9 +37,9 @@
 }
  
 [data-theme="dark"] {
-  /* Colors - Dark Theme (High-end obsidian/charcoal style) */
-  --bg-primary: #0b0c0e; /* Deep obsidian charcoal */
-  --bg-secondary: #121418; /* Premium dark card background */
+  /* Keep same as root to maintain unified dark premium style */
+  --bg-primary: #0b0c0e;
+  --bg-secondary: #121418;
   --text-primary: #f5f6f8;
   --text-secondary: #9aa3b2;
   --accent: #ffffff;
@@ -72,7 +72,13 @@
 html, body {
   max-width: 100vw;
   overflow-x: hidden;
-  background-color: var(--bg-primary);
+  background-color: #0b0c0e;
+  background-image: 
+    linear-gradient(rgba(11, 12, 14, 0.85), rgba(11, 12, 14, 0.90)), 
+    url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1600&auto=format&fit=crop');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 16px;
@@ -80,7 +86,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
-  transition: background-color 0.5s ease, color 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 a {

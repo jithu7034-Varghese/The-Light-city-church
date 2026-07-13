@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-color: var(--bg-primary);
+  background-color: transparent;
 }
 
 .heroBackground {
@@ -78,7 +78,7 @@
 /* Gallery Section */
 .gallerySection {
   padding: 100px 24px;
-  background-color: var(--bg-primary);
+  background-color: transparent;
 }
 
 .container {
