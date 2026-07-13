@@ -1467,8 +1467,8 @@
   border-radius: 24px;
   overflow: hidden;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(210%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top);
   box-shadow: var(--glass-shadow);
@@ -1594,8 +1594,8 @@
 .countdownCell {
   padding: 24px;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(210%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top);
   box-shadow: var(--glass-shadow);
@@ -1692,8 +1692,8 @@
 .statsCell {
   padding: 24px;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(210%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top);
   box-shadow: var(--glass-shadow);
@@ -2858,22 +2858,18 @@
 }
 
 .footerOverlay {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-top: 1.5px solid rgba(255, 255, 255, 0.55); /* Highlighted top light source edge */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-border-top); /* Highlighted top light source edge */
   border-radius: 36px;
   padding: 48px 64px 0 64px;
   margin: 0 40px 40px 40px; /* Floating offsets */
   display: flex;
   flex-direction: column;
   gap: 32px;
-  box-shadow: 
-    inset 0 1px 0px rgba(255, 255, 255, 0.5), /* Specular line */
-    inset 0 12px 28px rgba(255, 255, 255, 0.12), /* Soft white reflection */
-    inset 0 -12px 28px rgba(0, 0, 0, 0.25), /* Refraction shadow */
-    0 30px 60px rgba(0, 0, 0, 0.25); /* Ambient drop shadow */
+  box-shadow: var(--glass-shadow);
   overflow: hidden; /* Crop giant brand text */
   transition: border-color 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
 }
@@ -3224,8 +3220,8 @@
 
 .blogCard {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(210%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(210%) brightness(1.15);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top);
   border-radius: 32px;
