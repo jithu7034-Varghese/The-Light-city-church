@@ -237,7 +237,7 @@ export default function BlogDetailPage({ params }: PageProps) {
       </section>
 
       {/* Footer */}
-      <footer className={styles.ctaFooterSection}>
+      <footer className={styles.ctaFooterSection} id="contact">
         <div className={styles.ctaFooterContainer}>
           {/* Top Half: CTA Area */}
           <div className={styles.ctaContent}>
@@ -264,65 +264,38 @@ export default function BlogDetailPage({ params }: PageProps) {
                 window.location.href = 'mailto:info@thelightcitychurch.org?subject=Prayer%20Request%20/%20Contact';
               }}>
                 Send Us a Prayer Request
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
+                <span className={styles.ctaButtonArrow}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
+                  </svg>
+                </span>
               </button>
             </div>
           </div>
-          
-          {/* Bottom Half: Footer Links & Details */}
-          <div className={styles.footerBottom}>
-            <div className={styles.footerBrand}>
-              <h3 className={styles.footerLogo}>
-                City <span style={{ fontWeight: 400, opacity: 0.85 }}>Light</span>
-              </h3>
-              <p className={styles.footerTagline}>The Light City Church</p>
+
+          {/* Bottom Half: Glassmorphism Footer Overlay */}
+          <div className={styles.footerOverlay}>
+            <div className={styles.footerTopRow}>
+              <span className={styles.footerCopyrightText}>© Copyright 2026</span>
+              <div className={styles.footerDividerLine} />
+              <span className={styles.footerCopyrightText}>The Light City Church. All Rights Reserved.</span>
             </div>
             
-            <div className={styles.footerLinksGrid}>
-              <div>
-                <h4 className={styles.footerLinkTitle}>Explore</h4>
-                <ul className={styles.footerLinkList}>
-                  <li><Link href="/" className={styles.footerNavLink}>Home</Link></li>
-                  <li><Link href="/about" className={styles.footerNavLink}>About</Link></li>
-                  <li><Link href="/ministries" className={styles.footerNavLink}>Ministries</Link></li>
-                  <li><Link href="/gallery" className={styles.footerNavLink}>Gallery</Link></li>
-                  <li><Link href="/blog" className={styles.footerNavLink}>Blog</Link></li>
-                  <li><Link href="/contact" className={styles.footerNavLink}>Contact</Link></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className={styles.footerLinkTitle}>Connect</h4>
-                <ul className={styles.footerLinkList}>
-                  <li>
-                    <a href="https://instagram.com/thelovedcircle" target="_blank" rel="noopener noreferrer" className={styles.footerSocialLink}>
-                      Instagram
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://x.com/thelightcitychurch" target="_blank" rel="noopener noreferrer" className={styles.footerSocialLink}>
-                      Twitter
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://facebook.com/102820662239782" target="_blank" rel="noopener noreferrer" className={styles.footerSocialLink}>
-                      Facebook
-                    </a>
-                  </li>
-                </ul>
-              </div>
+            <nav className={styles.footerNav}>
+              <ul className={styles.footerNavList}>
+                <li><Link href="/" className={styles.footerNavLink}>Home</Link></li>
+                <li><Link href="/about" className={styles.footerNavLink}>About</Link></li>
+                <li><Link href="/ministries" className={styles.footerNavLink}>Ministries</Link></li>
+                <li><Link href="/gallery" className={styles.footerNavLink}>Gallery</Link></li>
+                <li><Link href="/blog" className={styles.footerNavLink}>Blog</Link></li>
+                <li><Link href="/contact" className={styles.footerNavLink}>Contact</Link></li>
+              </ul>
+            </nav>
+            
+            <div className={styles.giantBrandContainer}>
+              <h1 className={styles.giantBrandText}>LIGHT CITY</h1>
             </div>
-          </div>
-          
-          <div className={styles.footerDivider}></div>
-          
-          <div className={styles.footerCopyrightRow}>
-            <p className={styles.copyrightText}>
-              © Copyright 2026 The Light City Church. All Rights Reserved.
-            </p>
           </div>
         </div>
       </footer>
