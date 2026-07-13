@@ -11,7 +11,7 @@
   --accent-hover: #e2e8f0;
   --border-color: rgba(245, 246, 248, 0.08);
   --border-glow: rgba(0, 0, 0, 0.4);
-  --glass-bg: linear-gradient(135deg, rgba(15, 18, 22, 0.6) 0%, rgba(20, 24, 30, 0.4) 100%);
+  --glass-bg: linear-gradient(135deg, rgba(20, 22, 28, 0.92) 0%, rgba(15, 17, 22, 0.88) 100%);
   --glass-border: rgba(255, 255, 255, 0.09);
   --glass-border-top: rgba(255, 255, 255, 0.09);
   --glass-blur: 60px;
@@ -45,7 +45,7 @@
   --accent-hover: #e2e8f0;
   --border-color: rgba(245, 246, 248, 0.08);
   --border-glow: rgba(0, 0, 0, 0.4);
-  --glass-bg: linear-gradient(135deg, rgba(15, 18, 22, 0.6) 0%, rgba(20, 24, 30, 0.4) 100%);
+  --glass-bg: linear-gradient(135deg, rgba(20, 22, 28, 0.92) 0%, rgba(15, 17, 22, 0.88) 100%);
   --glass-border: rgba(255, 255, 255, 0.09);
   --glass-border-top: rgba(255, 255, 255, 0.09);
   --glass-blur: 60px;
