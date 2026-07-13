@@ -127,8 +127,8 @@
 .card {
   position: relative;
   background: var(--glass-bg);
-  backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
-  -webkit-backdrop-filter: blur(70px) saturate(210%) brightness(1.15);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
   border: 1px solid var(--glass-border);
   border-top: 1.5px solid var(--glass-border-top);
   border-radius: 24px;
