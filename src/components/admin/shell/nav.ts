@@ -2,15 +2,16 @@ import {
   Activity, FileText, Image as ImageIcon, Inbox, LayoutDashboard, Menu as MenuIcon,
   PanelBottom, Search, Settings, BookOpen, Users, type LucideIcon,
 } from "lucide-react";
-import type { PermissionModule } from "@/lib/auth/permissions";
+import type { PermissionAction, PermissionModule } from "@/lib/auth/permissions";
 
 export type NavItem = {
   key: string;
   label: string;
   href: string;
   icon: LucideIcon;
-  /** Needs `view` on this module. Undefined = every active staff member. */
+  /** Needs `action` (default `view`) on this module. Undefined = every active staff member. */
   module?: PermissionModule;
+  action?: PermissionAction;
   /** Phase the screen is built in. Items not built yet show as "Soon" and aren't links. */
   ready: boolean;
 };
@@ -23,7 +24,7 @@ export const NAV: NavGroup[] = [
     label: "General",
     items: [
       { key: "overview", label: "Overview", href: "/admin", icon: LayoutDashboard, ready: true },
-      { key: "enquiries", label: "Enquiries", href: "/admin/enquiries", icon: Inbox, module: "enquiries", ready: false },
+      { key: "enquiries", label: "Enquiries", href: "/admin/enquiries", icon: Inbox, module: "enquiries", ready: true },
     ],
   },
   {
@@ -46,7 +47,8 @@ export const NAV: NavGroup[] = [
   {
     label: "Administration",
     items: [
-      { key: "users", label: "Users", href: "/admin/users", icon: Users, module: "users", ready: false },
+      // Super Admin only: the default matrix gives nobody else users.edit
+      { key: "users", label: "Users", href: "/admin/users", icon: Users, module: "users", action: "edit", ready: true },
       { key: "activity", label: "Activity", href: "/admin/activity", icon: Activity, module: "activity", ready: false },
     ],
   },

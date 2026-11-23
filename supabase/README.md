@@ -7,8 +7,10 @@ The schema lives in `migrations/` and is applied with the Supabase CLI (already 
 1. supabase.com → New project → name `light-city-church`, region **London (eu-west-2)**, **Pro plan for production** (free projects pause after 7 days idle), save the database password.
 2. Project Settings → API: copy the URL, the anon/publishable key and the service-role key into `.env.local` (see `.env.example`).
 3. Authentication → Sign In / Providers → **turn OFF "Allow new users to sign up"** (staff are invite-only).
-4. Authentication → URL configuration: Site URL `http://localhost:3000` (use the production URL in the production project); add `http://localhost:3000/**` to redirect URLs. Invite and reset emails link to `{{ .SiteURL }}/api/auth/confirm`, so the Site URL must be the site that should receive them.
-5. Authentication → **Email Templates**: paste `templates/invite.html` into **Invite user** and `templates/recovery.html` into **Reset password** (subjects are in `config.toml`). Without this, the default links skip `/api/auth/confirm` and sign-in from email fails.
+4. Authentication → URL configuration: Site URL = the site's URL (`http://localhost:3000` locally, the production URL in production). Add **`<site>/admin/accept-invite`** and **`<site>/admin/reset-password`** (or `<site>/**`) to Redirect URLs. Invite and reset emails redirect there; a URL that isn't allow-listed makes Supabase fall back to the Site URL and the link won't sign anyone in.
+5. Email templates work **either way**:
+   - **Default templates** (a new project can't edit templates until custom SMTP is set up): the link goes through Supabase and lands on `/admin/accept-invite#access_token=…` (invite) or `/admin/reset-password?code=…` (reset). `AuthLinkHandler` in the browser turns that into a session. A reset link must be opened in the same browser it was requested from (PKCE).
+   - **Custom templates** (after step 9): paste `templates/invite.html` into **Invite user** and `templates/recovery.html` into **Reset password** (subjects are in `config.toml`). Their links go to `/api/auth/confirm?token_hash=…`, which signs in on the server and works in any browser.
 6. Authentication → **Multi-Factor** → enable **TOTP (authenticator app)**. Super Admins and Admins must set it up at first sign-in.
 7. Authentication → **Passwords**: minimum length **12**, and turn on leaked-password protection (Pro).
 8. Optional (Pro): Authentication → Sessions → inactivity timeout. The admin also signs people out after 30 minutes idle in the browser.
@@ -59,3 +61,5 @@ The test file is self-asserting: each passing check prints `ok - <name>`, and th
 | `…04_bookings.sql` | booking types, hosts, availability, bookings (no-double-booking constraint), status history |
 | `…05_rls_policies.sql` | Row Level Security for every table, public read access, RPC lockdown, storage bucket |
 | `…06_integrity_search_audit.sql` | media usage derived by triggers + delete guard, audit triggers, full-text search, rate limiter |
+| `…07_forms_inbox.sql` | standard forms + email templates, form policy trigger (sensitive + retention), saved filters, chart counts, convert to person, private notes fix |
+| `…08_retention_cron.sql` | daily `pg_cron` job deleting enquiries past `expires_at` (prayer 12 months, contact 24 months) |

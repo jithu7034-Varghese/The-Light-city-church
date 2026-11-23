@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "../page.module.css";
 import contactStyles from "./contact.module.css";
+import { submitForm } from "@/cms/actions/submit-form";
+import { Turnstile, type TurnstileHandle } from "@/components/site/Turnstile";
 
 interface SplitTextProps {
   text: string;
@@ -166,6 +168,10 @@ export default function ContactPage() {
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [serverMessage, setServerMessage] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | undefined>();
+  const [honeypot, setHoneypot] = useState("");
+  const turnstileRef = useRef<TurnstileHandle>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -199,19 +205,34 @@ export default function ContactPage() {
     if (!validate()) return;
 
     setSubmitStatus("submitting");
-    
+    setServerMessage(null);
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setSubmitStatus("success");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: ""
+      // The "Contact / Get Involved" form (forms.slug = 'get-involved'), validated on the server
+      const result = await submitForm("get-involved", formData, {
+        turnstileToken,
+        sourcePage: "/contact",
+        website: honeypot,
       });
+      if (result.ok) {
+        setSubmitStatus("success");
+        setServerMessage(result.message);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: ""
+        });
+      } else {
+        setSubmitStatus("error");
+        setServerMessage(result.error);
+        if (result.fieldErrors) setErrors(result.fieldErrors);
+      }
     } catch {
       setSubmitStatus("error");
+    } finally {
+      turnstileRef.current?.reset(); // tokens are single-use
     }
   };
 
@@ -443,7 +464,7 @@ export default function ContactPage() {
                   <div>
                     <strong>Message sent successfully!</strong>
                     <p style={{ marginTop: "2px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>
-                      Thank you. A member of our welcome or pastoral team will get back to you shortly.
+                      {serverMessage ?? "Thank you. A member of our welcome or pastoral team will get back to you shortly."}
                     </p>
                   </div>
                 </div>
@@ -459,7 +480,7 @@ export default function ContactPage() {
                   <div>
                     <strong>Failed to send message.</strong>
                     <p style={{ marginTop: "2px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>
-                      There was a problem submitting your request. Please try again.
+                      {serverMessage ?? "There was a problem submitting your request. Please try again."}
                     </p>
                   </div>
                 </div>
@@ -538,6 +559,14 @@ export default function ContactPage() {
                   required
                 />
               </div>
+
+              {/* Honeypot: hidden from people and screen readers, bots fill it in */}
+              <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+                <label htmlFor="website">Website</label>
+                <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+              </div>
+
+              <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
 
               <button
                 type="submit"

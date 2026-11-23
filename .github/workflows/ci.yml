@@ -20,8 +20,8 @@ jobs:
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
       NEXT_TELEMETRY_DISABLED: 1
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -52,7 +52,7 @@ jobs:
       PGPASSWORD: postgres
       PGDATABASE: lcc_test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Fake Supabase auth schema and roles
         run: psql -v ON_ERROR_STOP=1 -f supabase/tests/local_auth_stub.sql
       - name: Apply migrations

@@ -7,4 +7,4 @@
 - The public site must read all content from the CMS — never hardcode copy, images or links.
 - Schema changes go in `supabase/migrations/*.sql` (new file, never edit applied ones); add a test to `supabase/tests/rls_test.sql`; regenerate types.
 - Never use the service-role client outside `src/lib/supabase/admin.ts` callers listed in docs/ARCHITECTURE.md §7.
-- Every mutating Server Action: validate with Zod, check `can(user, module, action)`, call `logActivity()`.
+- Every mutating Server Action: validate with Zod, check `can(user, module, action)`, call `logActivity()` unless the table has a DB audit trigger.

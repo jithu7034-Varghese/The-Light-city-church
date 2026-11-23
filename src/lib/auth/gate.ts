@@ -8,8 +8,13 @@ export const IDLE_TIMEOUT_MINUTES = 30;
 /** Minimum password length for staff accounts. */
 export const MIN_PASSWORD_LENGTH = 12;
 
-/** Paths under /admin that work without a session. Everything else under /admin needs one. */
-export const PUBLIC_ADMIN_PATHS = ["/admin/login", "/admin/reset-password"] as const;
+/**
+ * Paths under /admin that work without a session. Everything else under /admin needs one.
+ * accept-invite and reset-password are public because Supabase's default email links deliver
+ * the session in the URL hash (#access_token=…) or as ?code=, which only the browser can
+ * turn into a session (see AuthLinkHandler). The pages show nothing private without one.
+ */
+export const PUBLIC_ADMIN_PATHS = ["/admin/login", "/admin/reset-password", "/admin/accept-invite"] as const;
 
 export function isPublicAdminPath(pathname: string): boolean {
   return PUBLIC_ADMIN_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));

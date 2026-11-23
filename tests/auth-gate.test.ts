@@ -51,9 +51,10 @@ describe("isMfaRequired", () => {
 });
 
 describe("isPublicAdminPath", () => {
-  it("allows only the login and reset pages without a session", () => {
+  it("allows only the login, reset and accept-invite pages without a session", () => {
     expect(isPublicAdminPath("/admin/login")).toBe(true);
     expect(isPublicAdminPath("/admin/reset-password")).toBe(true);
+    expect(isPublicAdminPath("/admin/accept-invite")).toBe(true);
     expect(isPublicAdminPath("/admin")).toBe(false);
     expect(isPublicAdminPath("/admin/mfa")).toBe(false);
     expect(isPublicAdminPath("/admin/loginx")).toBe(false);

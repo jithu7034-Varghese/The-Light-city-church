@@ -48,5 +48,5 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   // Only routes that use the staff session. The public site never touches auth cookies.
-  matcher: ["/admin/:path*", "/api/media/:path*", "/api/preview"],
+  matcher: ["/admin/:path*", "/api/media/:path*", "/api/enquiries/:path*", "/api/preview"],
 };

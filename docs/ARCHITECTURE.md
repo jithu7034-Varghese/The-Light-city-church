@@ -133,7 +133,7 @@ There is no `src/app/layout.tsx`: each route group owns its `<html>`, so moving 
 
 ## 7. Data and security model
 
-Six migrations in `supabase/migrations/`, all tested in `supabase/tests/rls_test.sql` (44 self-asserting checks, run in CI).
+Migrations in `supabase/migrations/`, all tested in `supabase/tests/rls_test.sql` (71 self-asserting checks, run in CI).
 
 | Migration | Contents |
 |---|---|
@@ -143,6 +143,8 @@ Six migrations in `supabase/migrations/`, all tested in `supabase/tests/rls_test
 | `04_bookings` | `booking_types`, hosts, availability rules/overrides, `bookings` (host required + no-overlap constraint), `booking_events` history |
 | `05_rls_policies` | RLS on every table, `(select …)`-wrapped permission calls (evaluated once per query), public read of published content only, column-limited anon access to `globals`/`forms`/`media`, RPC execute revoked from anon, storage bucket |
 | `06_integrity_search_audit` | media usage **derived by triggers** from content (`mediaId` convention) + delete guard, **audit triggers** on key tables, full-text search columns, DB-backed **rate limiter** |
+| `07_forms_inbox` (Phase 2) | the 6 standard forms + email templates, trigger that applies a form's `sensitive`/`retention_days` to every enquiry, `saved_filters`, `enquiry_daily_counts()` and `convert_enquiry_to_contact()` (both security invoker), and the fix that makes **notes follow their enquiry's visibility** |
+| `08_retention_cron` (Phase 2) | `purge_expired_enquiries()` (service role only) scheduled daily at 03:15 UTC with `pg_cron` |
 
 **Rules the database enforces (app code can't bypass them):**
 - Visitors read only published pages, posts, sermons and globals. They can't call privileged functions or write anything.
@@ -156,7 +158,7 @@ Six migrations in `supabase/migrations/`, all tested in `supabase/tests/rls_test
 **Conventions**
 - A media reference inside any JSON is `{ "mediaId": "<uuid>", … }`. This is what usage tracking relies on.
 - Every repeatable item inside a section has a stable `id` (nanoid) for drag and drop and diffing.
-- Server Actions: `zod.parse` → `can()` → DB call (as the user) → `updateTag` → toast. The service role only appears in `lib/supabase/admin.ts`, used for public submissions, media processing, invites, cron and seed.
+- Server Actions: `zod.parse` → `can()` → DB call (as the user) → `logActivity()` unless the table has a DB audit trigger (`06_integrity_search_audit`: pages, globals, posts, sermons, media, forms, booking_types, events, redirects, email_templates, profiles, role_permissions, contacts; enquiries for status/assignment/delete) → `updateTag` → toast. Changes to audited tables are made as the user so the trigger records the actor. The service role only appears in `lib/supabase/admin.ts`, used for public submissions, media processing, invites, cron and seed.
 
 ## 8. CMS design
 

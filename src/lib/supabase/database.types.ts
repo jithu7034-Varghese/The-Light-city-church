@@ -1474,6 +1474,42 @@ export type Database = {
         };
         Relationships: [];
       };
+      saved_filters: {
+        Row: {
+          created_at: string;
+          id: string;
+          module: string;
+          name: string;
+          owner_id: string;
+          query: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          id?: string;
+          module: string;
+          name: string;
+          owner_id?: string;
+          query: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          module?: string;
+          name?: string;
+          owner_id?: string;
+          query?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "saved_filters_owner_id_fkey";
+            columns: ["owner_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       sermons: {
         Row: {
           audio_url: string | null;
@@ -1601,6 +1637,11 @@ export type Database = {
       check_rate_limit: {
         Args: { p_key: string; p_max: number; p_window_seconds: number };
         Returns: boolean;
+      };
+      convert_enquiry_to_contact: { Args: { p_enquiry_id: string }; Returns: string };
+      enquiry_daily_counts: {
+        Args: { p_days: number };
+        Returns: { day: string; total: number }[];
       };
       extract_media_ids: { Args: { doc: Json }; Returns: string[] };
       has_permission: { Args: { p_action: string; p_module: string }; Returns: boolean };

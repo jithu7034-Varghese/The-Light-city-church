@@ -25,6 +25,15 @@ export const ROLE_LABELS: Record<AppRole, string> = {
   viewer: "Viewer",
 };
 
+/** Roles a Super Admin can invite in R1. Pastor arrives in R2; Super Admin is granted by hand. */
+export const INVITABLE_ROLES = ["admin", "editor", "viewer"] as const satisfies readonly AppRole[];
+
+export const ROLE_DESCRIPTIONS: Record<(typeof INVITABLE_ROLES)[number], string> = {
+  admin: "Everything except managing staff accounts",
+  editor: "Pages, devotionals, media and SEO. No enquiries",
+  viewer: "Read-only. Sees non-private enquiries and content",
+};
+
 /**
  * Mirrors public.has_permission() in SQL. Use it in Server Actions and to hide UI,
  * but RLS in the database stays the real enforcement.

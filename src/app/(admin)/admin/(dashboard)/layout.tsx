@@ -11,7 +11,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
 
   const allowedNav = NAV.flatMap((g) => g.items)
-    .filter((item) => !item.module || can(user, item.module, "view"))
+    .filter((item) => !item.module || can(user, item.module, item.action ?? "view"))
     .map((item) => item.key);
 
   return (

@@ -1,7 +1,8 @@
 "use server";
 // Self-service auth actions. These act on the caller's own account, so there is no
 // module permission to check with can(); instead each one validates with Zod, requires
-// the right session state, and logs to the activity log where a staff session exists.
+// the right session state, and logs to the activity log where a staff session exists
+// (sign-in/out, password, MFA: none of these touch an audited table).
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -151,7 +152,7 @@ export async function acceptInvite(_prev: FormState, formData: FormData): Promis
     .eq("id", user.id);
   if (profileError) return { error: "Your password was saved, but we couldn't save your name. Try again from your profile." };
 
-  await logActivity({ actorId: user.id, action: "update", module: "users", entityType: "profile", entityId: user.id, summary: "Accepted invite" });
+  // The profiles audit trigger records this update (with the user as actor).
   redirect("/admin"); // admins continue to 2FA setup from here
 }
 

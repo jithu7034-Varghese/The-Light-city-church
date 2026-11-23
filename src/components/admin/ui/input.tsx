@@ -20,6 +20,29 @@ export const Textarea = forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttrib
   },
 );
 
+export const Select = forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(
+  function Select({ className, children, ...props }, ref) {
+    return (
+      <select ref={ref} className={cn(fieldBase, "h-10 cursor-pointer pr-8", className)} {...props}>
+        {children}
+      </select>
+    );
+  },
+);
+
+export const Checkbox = forwardRef<HTMLInputElement, Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">>(
+  function Checkbox({ className, ...props }, ref) {
+    return (
+      <input
+        ref={ref}
+        type="checkbox"
+        className={cn("size-4 cursor-pointer rounded border-border accent-primary", className)}
+        {...props}
+      />
+    );
+  },
+);
+
 /** Password input with a show/hide toggle. */
 export const PasswordInput = forwardRef<HTMLInputElement, Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">>(
   function PasswordInput({ className, ...props }, ref) {

@@ -26,6 +26,8 @@
   --color-warning-soft: var(--c-warning-soft);
   --color-info-soft: var(--c-info-soft);
   --color-ring: var(--c-ring);
+  /* Chart marks: validated with the dataviz palette checks against each mode's surface */
+  --color-chart: var(--c-chart);
 }
 
 :root {
@@ -47,6 +49,7 @@
   --c-warning-soft: #fdf3e1;
   --c-info-soft: #e8eefc;
   --c-ring: #1f4fd8;
+  --c-chart: #1f4fd8;
 }
 
 /* Same dark values twice: explicit choice, and "system" when the OS is dark. */
@@ -69,6 +72,7 @@
   --c-warning-soft: #342812;
   --c-info-soft: #18233d;
   --c-ring: #86a6ff;
+  --c-chart: #5b82f5;
 }
 @media (prefers-color-scheme: dark) {
   :root[data-theme="system"] {
@@ -90,6 +94,7 @@
     --c-warning-soft: #342812;
     --c-info-soft: #18233d;
     --c-ring: #86a6ff;
+    --c-chart: #5b82f5;
   }
 }
 
