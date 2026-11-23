@@ -35,7 +35,7 @@ function toTiptap(blocks) {
     const text = (b.text ?? "").replace(/ /g, " ").trim();
     if (!text || isJunk(text)) continue;
     const t = b.type || "p";
-    if (t === "h2" || t === "header-two" || HEADINGS.test(text)) {
+    if (["h2", "h3", "h4", "header-one", "header-two", "header-three", "header-four"].includes(t) || HEADINGS.test(text)) {
       content.push({ type: "heading", attrs: { level: 3 }, content: [{ type: "text", text }] });
     } else if (t === "blockquote") {
       content.push({ type: "blockquote", content: [{ type: "paragraph", content: [{ type: "text", text }] }] });
@@ -62,9 +62,20 @@ function excerptOf(blocks) {
 }
 
 const posts = new Map();
+const seenLegacy = new Set();
 const add = (p, source) => {
-  const slug = cleanSlug(p.slug);
-  if (!slug || posts.has(slug)) return;
+  let slug = cleanSlug(p.slug);
+  if (!slug) return;
+  const legacy = p.legacySlug ?? p.slug;
+  if (seenLegacy.has(legacy)) return;          // same old URL already added from an earlier source
+  if (posts.has(slug)) {
+    // different old post whose cleaned slug collides (e.g. "god’s-mirror" vs "gods-mirror"): keep both
+    if (cleanSlug(posts.get(slug).legacy_url.split("/f/")[1]) === slug && posts.get(slug).title === p.title.trim()) return;
+    let n = 2;
+    while (posts.has(`${slug}-${n}`)) n++;
+    slug = `${slug}-${n}`;
+  }
+  seenLegacy.add(legacy);
   const blocks = p.blocks.filter((b) => b.text && !isJunk(b.text));
   if (!blocks.length) return;
   posts.set(slug, {
@@ -75,7 +86,7 @@ const add = (p, source) => {
     excerpt: p.excerpt || excerptOf(blocks),
     categories: p.categories?.length ? p.categories : ["Daily Light"],
     content: toTiptap(blocks),
-    legacy_url: `/dailylightdevotional/f/${p.legacySlug ?? p.slug}`,
+    legacy_url: `/dailylightdevotional/f/${legacy}`,
     source,
   });
 };
