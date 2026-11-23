@@ -76,11 +76,13 @@ create table public.bookings (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   check (ends_at > starts_at),
+  -- A host is assigned when the request is made, so the overlap guard below always applies
+  constraint bookings_active_needs_host check (status not in ('requested', 'confirmed', 'rescheduled') or host_id is not null),
   -- No double-booking a host while a booking is active
   constraint bookings_no_overlap exclude using gist (
     host_id with =,
     tstzrange(starts_at, ends_at, '[)') with &&
-  ) where (status in ('requested', 'confirmed', 'rescheduled') and host_id is not null)
+  ) where (status in ('requested', 'confirmed', 'rescheduled'))
 );
 create index bookings_starts_idx on public.bookings (starts_at);
 create index bookings_status_idx on public.bookings (status);

@@ -4,9 +4,10 @@ The schema lives in `migrations/` and is applied with the Supabase CLI (already 
 
 ## 1. Create the project (Jithu's account)
 
-1. supabase.com → New project → name `light-city-church`, region **London (eu-west-2)**, save the database password.
+1. supabase.com → New project → name `light-city-church`, region **London (eu-west-2)**, **Pro plan for production** (free projects pause after 7 days idle), save the database password.
 2. Project Settings → API: copy the URL, the anon/publishable key and the service-role key into `.env.local` (see `.env.example`).
-3. Authentication → URL configuration: Site URL `http://localhost:3000` (add the production URL later); add `http://localhost:3000/**` to redirect URLs.
+3. Authentication → Sign In / Providers → **turn OFF "Allow new users to sign up"** (staff are invite-only).
+4. Authentication → URL configuration: Site URL `http://localhost:3000` (add the production URL later); add `http://localhost:3000/**` to redirect URLs.
 
 ## 2. Apply the schema
 
@@ -22,7 +23,7 @@ npx supabase gen types typescript --linked --schema public > src/lib/supabase/da
 Authentication → Users → **Invite user** (your email). Then in the SQL editor:
 
 ```sql
-update public.profiles set role = 'super_admin' where email = 'you@example.com';
+update public.profiles set role = 'super_admin', is_active = true where email = 'you@example.com';
 ```
 
 ## Testing the policies locally (no Docker needed)
@@ -44,4 +45,5 @@ psql -d lcc_test -f supabase/tests/rls_test.sql          # each line says what t
 | `…02_media_cms.sql` | media library, pages + sections + versions, globals, devotionals, sermons, redirects, publish/restore functions |
 | `…03_people_forms_events.sql` | people, form builder, enquiries inbox, subscribers, events + registrations, email templates/log |
 | `…04_bookings.sql` | booking types, hosts, availability, bookings (no-double-booking constraint), status history |
-| `…05_rls_policies.sql` | Row Level Security for every table, public read access, storage bucket |
+| `…05_rls_policies.sql` | Row Level Security for every table, public read access, RPC lockdown, storage bucket |
+| `…06_integrity_search_audit.sql` | media usage derived by triggers + delete guard, audit triggers, full-text search, rate limiter |

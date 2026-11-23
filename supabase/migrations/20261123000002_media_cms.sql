@@ -54,6 +54,8 @@ create table public.pages (
   sort_order integer not null default 0,
   published_at timestamptz,
   updated_by uuid references public.profiles (id) on delete set null,
+  editing_by uuid references public.profiles (id) on delete set null,   -- soft lock: "being edited by X"
+  editing_heartbeat_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -63,6 +65,7 @@ create table public.page_sections (
   id uuid primary key default gen_random_uuid(),
   page_id uuid not null references public.pages (id) on delete cascade,
   type text not null,
+  schema_version integer not null default 1,   -- bump when a section's data shape changes; code upgrades old data on read
   sort_order integer not null default 0,
   visible boolean not null default true,
   data jsonb not null default '{}'::jsonb,
@@ -195,7 +198,7 @@ declare
   v_version integer;
   v_snapshot jsonb;
 begin
-  if auth.uid() is not null and not public.has_permission('pages', 'publish') then
+  if not public.is_service_role() and not public.has_permission('pages', 'publish') then
     raise exception 'Not allowed to publish pages';
   end if;
 
@@ -203,7 +206,7 @@ begin
     'title', p.title,
     'seo', p.seo,
     'sections', coalesce((
-      select jsonb_agg(jsonb_build_object('id', s.id, 'type', s.type, 'visible', s.visible, 'data', s.data)
+      select jsonb_agg(jsonb_build_object('id', s.id, 'type', s.type, 'schema_version', s.schema_version, 'visible', s.visible, 'data', s.data)
                        order by s.sort_order)
       from public.page_sections s where s.page_id = p.id
     ), '[]'::jsonb)
@@ -236,7 +239,7 @@ declare
   v_page_id uuid;
   v_snapshot jsonb;
 begin
-  if auth.uid() is not null and not public.has_permission('pages', 'edit') then
+  if not public.is_service_role() and not public.has_permission('pages', 'edit') then
     raise exception 'Not allowed to edit pages';
   end if;
 
@@ -246,8 +249,9 @@ begin
   end if;
 
   delete from public.page_sections where page_id = v_page_id;
-  insert into public.page_sections (page_id, type, sort_order, visible, data)
-  select v_page_id, s ->> 'type', (ord - 1)::int, coalesce((s ->> 'visible')::boolean, true), coalesce(s -> 'data', '{}'::jsonb)
+  insert into public.page_sections (page_id, type, schema_version, sort_order, visible, data)
+  select v_page_id, s ->> 'type', coalesce((s ->> 'schema_version')::int, 1), (ord - 1)::int,
+         coalesce((s ->> 'visible')::boolean, true), coalesce(s -> 'data', '{}'::jsonb)
   from jsonb_array_elements(v_snapshot -> 'sections') with ordinality as t(s, ord);
 
   update public.pages
@@ -267,7 +271,7 @@ declare
   v_draft jsonb;
   v_module text := case when p_key = 'site' then 'settings' else 'globals' end;
 begin
-  if auth.uid() is not null and not public.has_permission(v_module, 'publish') then
+  if not public.is_service_role() and not public.has_permission(v_module, 'publish') then
     raise exception 'Not allowed to publish %', p_key;
   end if;
 

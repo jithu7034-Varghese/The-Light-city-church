@@ -18,7 +18,7 @@ create table public.profiles (
   full_name text not null default '',
   avatar_media_id uuid,
   role public.app_role not null default 'viewer',
-  is_active boolean not null default true,
+  is_active boolean not null default false,
   require_mfa boolean not null default false,
   notification_prefs jsonb not null default '{"new_enquiry": true, "new_booking": true, "assignment": true}'::jsonb,
   signature text,
@@ -39,6 +39,22 @@ create table public.role_permissions (
   can_sensitive boolean not null default false,
   primary key (role, module)
 );
+
+-- True only for requests made with the service-role key (seed script, server-side jobs).
+-- Never infer "trusted" from a missing user: anonymous API calls also have no user.
+create or replace function public.is_service_role()
+returns boolean
+language sql stable
+as $$
+  -- coalesce(..., false): with no JWT at all this must be FALSE, never NULL
+  -- (NULL would make "not is_service_role()" NULL and silently skip permission checks)
+  select coalesce(
+    coalesce(
+      nullif(current_setting('request.jwt.claim.role', true), ''),
+      nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'role'
+    ) = 'service_role',
+    false);
+$$;
 
 -- Permission check used by every RLS policy (mirrored in src/lib/auth/permissions.ts)
 create or replace function public.has_permission(p_module text, p_action text)
@@ -69,17 +85,23 @@ as $$
   select exists (select 1 from public.profiles where id = auth.uid() and is_active);
 $$;
 
--- Create a profile when an auth user is created (invites set app_metadata.role)
+-- Create a profile when an auth user is created.
+-- Only admin invites (server-side, service role) set app_metadata.role. Anyone else who
+-- manages to create an account gets an INACTIVE profile with no access at all.
+-- (Public sign-up is also disabled in supabase/config.toml and the dashboard.)
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public
 as $$
+declare
+  v_role public.app_role := (new.raw_app_meta_data ->> 'role')::public.app_role;
 begin
-  insert into public.profiles (id, email, full_name, role)
+  insert into public.profiles (id, email, full_name, role, is_active)
   values (
     new.id,
     new.email,
     coalesce(new.raw_user_meta_data ->> 'full_name', ''),
-    coalesce((new.raw_app_meta_data ->> 'role')::public.app_role, 'viewer')
+    coalesce(v_role, 'viewer'),
+    v_role is not null
   )
   on conflict (id) do nothing;
   return new;
@@ -94,8 +116,11 @@ create or replace function public.guard_profile_changes()
 returns trigger language plpgsql security definer set search_path = public
 as $$
 begin
+  if public.is_service_role() or (auth.uid() is null and session_user in ('postgres', 'supabase_admin')) then
+    return new; -- server-side jobs, migrations
+  end if;
   if auth.uid() is null then
-    return new; -- service role / migrations
+    raise exception 'Not allowed';
   end if;
   if (new.role is distinct from old.role or new.is_active is distinct from old.is_active
       or new.require_mfa is distinct from old.require_mfa) then

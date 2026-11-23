@@ -44,73 +44,73 @@ begin
   ) as t(tbl, module)
   loop
     execute format('alter table public.%I enable row level security', r.tbl);
-    execute format('create policy staff_select on public.%I for select to authenticated using (public.has_permission(%L, ''view''))', r.tbl, r.module);
-    execute format('create policy staff_insert on public.%I for insert to authenticated with check (public.has_permission(%L, ''edit''))', r.tbl, r.module);
-    execute format('create policy staff_update on public.%I for update to authenticated using (public.has_permission(%L, ''edit'')) with check (public.has_permission(%L, ''edit''))', r.tbl, r.module, r.module);
-    execute format('create policy staff_delete on public.%I for delete to authenticated using (public.has_permission(%L, ''delete''))', r.tbl, r.module);
+    execute format('create policy staff_select on public.%I for select to authenticated using ((select public.has_permission(%L, ''view'')))', r.tbl, r.module);
+    execute format('create policy staff_insert on public.%I for insert to authenticated with check ((select public.has_permission(%L, ''edit'')))', r.tbl, r.module);
+    execute format('create policy staff_update on public.%I for update to authenticated using ((select public.has_permission(%L, ''edit''))) with check ((select public.has_permission(%L, ''edit'')))', r.tbl, r.module, r.module);
+    execute format('create policy staff_delete on public.%I for delete to authenticated using ((select public.has_permission(%L, ''delete'')))', r.tbl, r.module);
   end loop;
 end $$;
 
 -- Hosts manage their own working hours and see their own booking history
 create policy own_availability on public.availability_rules
-  for all to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
+  for all to authenticated using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
 create policy own_overrides on public.availability_overrides
-  for all to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
+  for all to authenticated using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
 
 -- ---------- Profiles ----------
 alter table public.profiles enable row level security;
 create policy profiles_select on public.profiles for select to authenticated
-  using (id = auth.uid() or public.is_staff());          -- staff can see colleagues (names for assignment)
+  using (id = (select auth.uid()) or (select public.is_staff()));          -- staff can see colleagues (names for assignment)
 create policy profiles_update_self on public.profiles for update to authenticated
-  using (id = auth.uid()) with check (id = auth.uid()); -- role/status changes blocked by trigger
+  using (id = (select auth.uid())) with check (id = (select auth.uid())); -- role/status changes blocked by trigger
 create policy profiles_update_admin on public.profiles for update to authenticated
-  using (public.has_permission('users', 'edit')) with check (public.has_permission('users', 'edit'));
+  using ((select public.has_permission('users', 'edit'))) with check ((select public.has_permission('users', 'edit')));
 create policy profiles_delete_admin on public.profiles for delete to authenticated
-  using (public.has_permission('users', 'delete'));
+  using ((select public.has_permission('users', 'delete')));
 
 -- ---------- Role permissions (only super admins change the matrix) ----------
 alter table public.role_permissions enable row level security;
-create policy role_permissions_select on public.role_permissions for select to authenticated using (public.is_staff());
+create policy role_permissions_select on public.role_permissions for select to authenticated using ((select public.is_staff()));
 create policy role_permissions_write on public.role_permissions for all to authenticated
-  using (exists (select 1 from public.profiles where id = auth.uid() and is_active and role = 'super_admin'))
-  with check (exists (select 1 from public.profiles where id = auth.uid() and is_active and role = 'super_admin'));
+  using (exists (select 1 from public.profiles where id = (select auth.uid()) and is_active and role = 'super_admin'))
+  with check (exists (select 1 from public.profiles where id = (select auth.uid()) and is_active and role = 'super_admin'));
 
 -- ---------- Activity log (append-only) ----------
 alter table public.activity_log enable row level security;
-create policy activity_select on public.activity_log for select to authenticated using (public.has_permission('activity', 'view'));
-create policy activity_insert on public.activity_log for insert to authenticated with check (actor_id = auth.uid() and public.is_staff());
+create policy activity_select on public.activity_log for select to authenticated using ((select public.has_permission('activity', 'view')));
+create policy activity_insert on public.activity_log for insert to authenticated with check (actor_id = (select auth.uid()) and (select public.is_staff()));
 
 -- ---------- Globals (site settings use the 'settings' module) ----------
 alter table public.globals enable row level security;
 create policy globals_staff_select on public.globals for select to authenticated
-  using (public.has_permission(case when key = 'site' then 'settings' else 'globals' end, 'view'));
+  using ((select public.has_permission(case when key = 'site' then 'settings' else 'globals' end, 'view')));
 create policy globals_staff_update on public.globals for update to authenticated
-  using (public.has_permission(case when key = 'site' then 'settings' else 'globals' end, 'edit'))
-  with check (public.has_permission(case when key = 'site' then 'settings' else 'globals' end, 'edit'));
+  using ((select public.has_permission(case when key = 'site' then 'settings' else 'globals' end, 'edit')))
+  with check ((select public.has_permission(case when key = 'site' then 'settings' else 'globals' end, 'edit')));
 
 -- ---------- Enquiries: sensitive (prayer) gating + assigned staff ----------
 alter table public.enquiries enable row level security;
 create policy enquiries_select on public.enquiries for select to authenticated using (
-  (public.has_permission('enquiries', 'view') and (not is_sensitive or public.has_permission('enquiries', 'sensitive')))
-  or assigned_to = auth.uid()
+  ((select public.has_permission('enquiries', 'view')) and (not is_sensitive or (select public.has_permission('enquiries', 'sensitive'))))
+  or assigned_to = (select auth.uid())
 );
 create policy enquiries_update on public.enquiries for update to authenticated
-  using (public.has_permission('enquiries', 'edit') or assigned_to = auth.uid())
-  with check (public.has_permission('enquiries', 'edit') or assigned_to = auth.uid());
+  using ((select public.has_permission('enquiries', 'edit')) or assigned_to = (select auth.uid()))
+  with check ((select public.has_permission('enquiries', 'edit')) or assigned_to = (select auth.uid()));
 create policy enquiries_delete on public.enquiries for delete to authenticated
-  using (public.has_permission('enquiries', 'delete'));
+  using ((select public.has_permission('enquiries', 'delete')));
 
 -- ---------- Bookings: permission or own (host) ----------
 alter table public.bookings enable row level security;
 create policy bookings_select on public.bookings for select to authenticated
-  using (public.has_permission('bookings', 'view') or host_id = auth.uid());
+  using ((select public.has_permission('bookings', 'view')) or host_id = (select auth.uid()));
 create policy bookings_insert on public.bookings for insert to authenticated
-  with check (public.has_permission('bookings', 'edit'));
+  with check ((select public.has_permission('bookings', 'edit')));
 create policy bookings_update on public.bookings for update to authenticated
-  using (public.has_permission('bookings', 'edit') or host_id = auth.uid())
-  with check (public.has_permission('bookings', 'edit') or host_id = auth.uid());
+  using ((select public.has_permission('bookings', 'edit')) or host_id = (select auth.uid()))
+  with check ((select public.has_permission('bookings', 'edit')) or host_id = (select auth.uid()));
 create policy bookings_delete on public.bookings for delete to authenticated
-  using (public.has_permission('bookings', 'delete'));
+  using ((select public.has_permission('bookings', 'delete')));
 
 -- ---------- Public read access (anon + authenticated) ----------
 create policy public_read on public.media for select to anon, authenticated using (true);
@@ -136,10 +136,19 @@ create policy public_read on public.forms for select to anon, authenticated usin
 revoke select on public.globals from anon;
 grant select (key, published, published_at) on public.globals to anon;
 revoke select on public.forms from anon;
+revoke select on public.media from anon;
+grant select (id, storage_path, mime, width, height, variants, lqip, alt, title, caption) on public.media to anon;
 grant select (id, slug, name, enquiry_type, fields, is_active) on public.forms to anon;
 
 -- Anon never writes directly
 revoke insert, update, delete on all tables in schema public from anon;
+
+-- Functions are exposed as /rest/v1/rpc/* : visitors may call none of the privileged ones
+revoke execute on function public.publish_page(uuid, text) from public, anon;
+revoke execute on function public.restore_page_version(uuid) from public, anon;
+revoke execute on function public.publish_global(text) from public, anon;
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
+revoke execute on function public.guard_profile_changes() from public, anon, authenticated;
 
 -- ---------- Storage: public 'media' bucket (uploads happen server-side) ----------
 do $$

@@ -60,3 +60,52 @@ select 'T13 media without alt (expect error):';
 insert into media(file_name,storage_path,mime,alt) values ('a.jpg','a.jpg','image/jpeg','  ');
 select 'T14 restore + version count';
 select restore_page_version((select id from page_versions limit 1)); select count(*)||' sections, unpublished='||(select has_unpublished_changes from pages) from page_sections;
+
+-- ===== Security regression tests (from the architecture review) =====
+update page_sections set data='{"heading":"UNPUBLISHED DRAFT"}';
+set role anon; select set_config('request.jwt.claim.sub','',false);
+select 'S1 anon publish_page (expect permission denied):';
+select publish_page((select id from pages where slug='about'));
+select 'S2 anon publish_global (expect permission denied):';
+select publish_global('navbar');
+select 'S3 anon media uploaded_by (expect permission denied):';
+select uploaded_by from media;
+reset role;
+select 'S4 live heading still: '||(snapshot->'sections'->0->'data'->>'heading') from page_versions where is_published;
+
+-- authenticated user without permission calling RPC
+set role authenticated; select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000003',false);
+select 'S5 viewer publish_global (expect error):'; select publish_global('navbar');
+reset role;
+
+-- stranger who somehow created an account (public signup is disabled, this is defence in depth)
+insert into auth.users(id,email) values ('00000000-0000-0000-0000-0000000000ff','stranger@x');
+set role authenticated; select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-0000000000ff',false);
+select 'S6 stranger active (expect false): '||is_active from profiles where id=(select auth.uid());
+select 'S7 stranger sees enquiries (expect 0): '||count(*) from enquiries;
+select 'S8 stranger sees other profiles (expect 1 = self): '||count(*) from profiles;
+update profiles set is_active=true where id=(select auth.uid());
+select 'S9 stranger self-activate blocked, active='||is_active from profiles where id=(select auth.uid());
+reset role;
+
+-- service role can still publish (seed script / server jobs)
+set role service_role; select set_config('request.jwt.claim.role','service_role',false);
+select 'S10 service role publish -> version '||publish_page((select id from pages where slug='about'));
+select 'S11 rate limit 3 per window: '||string_agg(check_rate_limit('t:1',3,60)::text, ',') from generate_series(1,5);
+select set_config('request.jwt.claim.role','',false);
+reset role;
+
+-- media usage derived + delete guard
+insert into media(id,file_name,storage_path,mime,alt) values ('11111111-1111-1111-1111-111111111111','hero.jpg','hero.jpg','image/jpeg','Church worship');
+update page_sections set data='{"heading":"Hi","image":{"mediaId":"11111111-1111-1111-1111-111111111111"}}';
+select 'S12 media usage rows (expect 1): '||count(*) from media_usage where media_id='11111111-1111-1111-1111-111111111111';
+select 'S13 delete used media (expect error):';
+delete from media where id='11111111-1111-1111-1111-111111111111';
+update page_sections set data='{"heading":"Hi"}';
+select 'S14 usage after removal (draft 0; published snapshot keeps it until republished): '||count(*) from media_usage where field_path='draft';
+
+-- booking host required; audit log; search
+select 'S15 active booking without host (expect error):';
+insert into bookings(booking_type_id,name,email,starts_at,ends_at) select id,'X','x@x','2026-12-02 10:00+00','2026-12-02 10:30+00' from booking_types;
+select 'S16 audit entries: '||count(*)||' ('||string_agg(distinct entity_type, ',')||')' from activity_log;
+select 'S17 search enquiries "B": '||count(*) from enquiries where search @@ plainto_tsquery('simple','B');

@@ -430,6 +430,7 @@ export type Database = {
           last_name: string;
           notes: string | null;
           phone: string | null;
+          search: unknown;
           tags: string[];
           updated_at: string;
         };
@@ -446,6 +447,7 @@ export type Database = {
           last_name?: string;
           notes?: string | null;
           phone?: string | null;
+          search?: never;
           tags?: string[];
           updated_at?: string;
         };
@@ -461,6 +463,7 @@ export type Database = {
           last_name?: string;
           notes?: string | null;
           phone?: string | null;
+          search?: never;
           tags?: string[];
           updated_at?: string;
         };
@@ -547,6 +550,7 @@ export type Database = {
           is_sensitive: boolean;
           name: string | null;
           phone: string | null;
+          search: unknown;
           source_page: string | null;
           status: Database["public"]["Enums"]["enquiry_status"];
           type: string;
@@ -568,6 +572,7 @@ export type Database = {
           is_sensitive?: boolean;
           name?: string | null;
           phone?: string | null;
+          search?: never;
           source_page?: string | null;
           status?: Database["public"]["Enums"]["enquiry_status"];
           type: string;
@@ -588,6 +593,7 @@ export type Database = {
           is_sensitive?: boolean;
           name?: string | null;
           phone?: string | null;
+          search?: never;
           source_page?: string | null;
           status?: Database["public"]["Enums"]["enquiry_status"];
           type?: string;
@@ -1046,6 +1052,7 @@ export type Database = {
           data: NonNullable<Json>;
           id: string;
           page_id: string;
+          schema_version: number;
           sort_order: number;
           type: string;
           updated_at: string;
@@ -1057,6 +1064,7 @@ export type Database = {
           data?: NonNullable<Json>;
           id?: string;
           page_id: string;
+          schema_version?: number;
           sort_order?: number;
           type: string;
           updated_at?: string;
@@ -1067,6 +1075,7 @@ export type Database = {
           data?: NonNullable<Json>;
           id?: string;
           page_id?: string;
+          schema_version?: number;
           sort_order?: number;
           type?: string;
           updated_at?: string;
@@ -1134,6 +1143,8 @@ export type Database = {
       pages: {
         Row: {
           created_at: string;
+          editing_by: string | null;
+          editing_heartbeat_at: string | null;
           has_unpublished_changes: boolean;
           id: string;
           published_at: string | null;
@@ -1148,6 +1159,8 @@ export type Database = {
         ComputedFields: never;
         Insert: {
           created_at?: string;
+          editing_by?: string | null;
+          editing_heartbeat_at?: string | null;
           has_unpublished_changes?: boolean;
           id?: string;
           published_at?: string | null;
@@ -1161,6 +1174,8 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          editing_by?: string | null;
+          editing_heartbeat_at?: string | null;
           has_unpublished_changes?: boolean;
           id?: string;
           published_at?: string | null;
@@ -1173,6 +1188,13 @@ export type Database = {
           updated_by?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: "pages_editing_by_fkey";
+            columns: ["editing_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "pages_updated_by_fkey";
             columns: ["updated_by"];
@@ -1255,6 +1277,7 @@ export type Database = {
           id: string;
           legacy_url: string | null;
           published_at: string | null;
+          search: unknown;
           seo: NonNullable<Json>;
           slug: string;
           status: Database["public"]["Enums"]["post_status"];
@@ -1272,6 +1295,7 @@ export type Database = {
           id?: string;
           legacy_url?: string | null;
           published_at?: string | null;
+          search?: never;
           seo?: NonNullable<Json>;
           slug: string;
           status?: Database["public"]["Enums"]["post_status"];
@@ -1288,6 +1312,7 @@ export type Database = {
           id?: string;
           legacy_url?: string | null;
           published_at?: string | null;
+          search?: never;
           seo?: NonNullable<Json>;
           slug?: string;
           status?: Database["public"]["Enums"]["post_status"];
@@ -1367,6 +1392,25 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      rate_limits: {
+        Row: {
+          hits: number;
+          key: string;
+          window_start: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          hits?: number;
+          key: string;
+          window_start: string;
+        };
+        Update: {
+          hits?: number;
+          key?: string;
+          window_start?: string;
+        };
+        Relationships: [];
       };
       redirects: {
         Row: {
@@ -1554,11 +1598,21 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      check_rate_limit: {
+        Args: { p_key: string; p_max: number; p_window_seconds: number };
+        Returns: boolean;
+      };
+      extract_media_ids: { Args: { doc: Json }; Returns: string[] };
       has_permission: { Args: { p_action: string; p_module: string }; Returns: boolean };
+      is_service_role: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       publish_global: { Args: { p_key: string }; Returns: number };
       publish_page: { Args: { p_note?: string; p_page_id: string }; Returns: number };
       restore_page_version: { Args: { p_version_id: string }; Returns: undefined };
+      sync_media_usage: {
+        Args: { p_doc: Json; p_entity_id: string; p_entity_type: string; p_field: string };
+        Returns: undefined;
+      };
     };
     Enums: {
       app_role: "super_admin" | "admin" | "pastor" | "editor" | "viewer";
