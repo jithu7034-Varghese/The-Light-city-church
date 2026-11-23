@@ -1,4 +1,5 @@
-// src/app/layout.tsx
+// Root layout #1: the public website (CSS Modules only, no Tailwind).
+// Phase 4 replaces the hardcoded metadata/copy with published CMS globals.
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";

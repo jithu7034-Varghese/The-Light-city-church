@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "../../page.module.css";
 import blogStyles from "../blog.module.css";
-import blogsData from "../../../data/blogs.json";
+import blogsData from "@/data/blogs.json";
 
 interface PageProps {
   params: Promise<{ slug: string }>;

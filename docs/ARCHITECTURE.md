@@ -127,11 +127,13 @@ supabase/
 tests/  (vitest unit)   e2e/ (playwright)
 ```
 
-Remove `src/app/layout.tsx` once both route-group root layouts exist, so each group owns its `<html>`. Moving between the admin and the public site is then a full page load.
+There is no `src/app/layout.tsx`: each route group owns its `<html>`, so moving between the admin and the public site is a full page load. Unmatched URLs render `src/app/global-not-found.tsx` (`experimental.globalNotFound`), because there's no single root layout to build a 404 from.
+
+**Auth flow (Phase 1).** Email links (invite, reset) land on `api/auth/confirm` with a `token_hash`, which sets the session cookie and continues to `accept-invite` or `reset-password`. `requireStaff()` (`lib/auth/session.ts`) runs in the dashboard layout, the pages and every admin Server Action. It checks: signed in → active profile → MFA, using the pure `authGate()` in `lib/auth/gate.ts`. Super Admins and Admins must enrol TOTP, and anyone with a verified factor must pass the challenge.
 
 ## 7. Data and security model
 
-Six migrations in `supabase/migrations/`, all tested in `supabase/tests/rls_test.sql` (31 checks).
+Six migrations in `supabase/migrations/`, all tested in `supabase/tests/rls_test.sql` (44 self-asserting checks, run in CI).
 
 | Migration | Contents |
 |---|---|
