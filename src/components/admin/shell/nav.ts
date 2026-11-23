@@ -33,7 +33,7 @@ export const NAV: NavGroup[] = [
       { key: "pages", label: "Pages", href: "/admin/pages", icon: FileText, module: "pages", ready: false },
       { key: "navbar", label: "Navbar", href: "/admin/navbar", icon: MenuIcon, module: "globals", ready: false },
       { key: "footer", label: "Footer", href: "/admin/footer", icon: PanelBottom, module: "globals", ready: false },
-      { key: "devotionals", label: "Devotionals", href: "/admin/devotionals", icon: BookOpen, module: "posts", ready: false },
+      { key: "devotionals", label: "Devotionals", href: "/admin/devotionals", icon: BookOpen, module: "posts", ready: true },
       { key: "media", label: "Media", href: "/admin/media", icon: ImageIcon, module: "media", ready: false },
     ],
   },

@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "../ui/cn";
 import { THEME_COOKIE, type AdminTheme } from "../theme";
@@ -19,12 +18,9 @@ function applyTheme(value: AdminTheme) {
 
 export function ThemeToggle({ initial }: { initial: AdminTheme }) {
   const [theme, setTheme] = useState<AdminTheme>(initial);
-  const router = useRouter();
-
   function choose(value: AdminTheme) {
     setTheme(value);
-    applyTheme(value);
-    router.refresh(); // re-render server parts (toaster theme) with the new cookie
+    applyTheme(value); // the toaster follows <html data-theme>, no server round trip needed
   }
 
   return (
