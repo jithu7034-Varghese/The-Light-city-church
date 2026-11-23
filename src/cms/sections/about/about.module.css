@@ -640,3 +640,9 @@
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
+
+/* CMS: dark backdrop when an editor hasn't chosen an image (keeps white text readable) */
+.cardBgFallback {
+  background: linear-gradient(135deg, #1c1917 0%, #3f3a33 100%);
+}
+

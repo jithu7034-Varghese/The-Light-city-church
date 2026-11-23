@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "../page.module.css";
 import blogStyles from "./devotionals.module.css";
-import { SiteFooter, SiteHeader } from "@/components/site/SiteChrome";
 import { getPublishedPosts, POSTS_PER_PAGE } from "@/lib/posts/public";
 import { PostCard } from "./post-card";
 
@@ -16,7 +15,6 @@ export const metadata: Metadata = {
 export default function DevotionalsPage({ searchParams }: PageProps<"/devotionals">) {
   return (
     <div className={styles.container} style={{ background: "transparent" }}>
-      <SiteHeader active="/devotionals" />
       <section className={blogStyles.blogHeaderContainer}>
         <h1 className={blogStyles.blogTitle}>
           Daily Light <span className={blogStyles.italicSerif}>Devotionals</span>
@@ -33,7 +31,6 @@ export default function DevotionalsPage({ searchParams }: PageProps<"/devotional
           </Suspense>
         </div>
       </section>
-      <SiteFooter />
     </div>
   );
 }

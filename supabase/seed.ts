@@ -1,10 +1,10 @@
 // Seed the devotionals: loads supabase/seed/posts.json into posts, categories and
-// post_categories, upserting by slug (safe to re-run), all with status "published".
+// post_categories by slug, all with status "published".
 //
-//   npx tsx supabase/seed.ts            (reads .env.local)
+//   npx tsx supabase/seed.ts            add posts that don't exist yet; existing ones are skipped
+//   npx tsx supabase/seed.ts --force    also overwrite existing posts with the JSON (loses edits)
 //
-// Uses the service role (docs/ARCHITECTURE.md §7: "seed"). Re-running overwrites seeded
-// posts' title/excerpt/content with the JSON, so run it before staff start editing them.
+// Uses the service role (docs/ARCHITECTURE.md §7: "seed"). Reads .env.local.
 import fs from "node:fs";
 import path from "node:path";
 import { createClient } from "@supabase/supabase-js";
@@ -26,23 +26,35 @@ if (!url || !serviceKey || url.includes("YOUR-PROJECT")) {
 
 const db = createClient<Database>(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
 
+const force = process.argv.includes("--force");
+
 async function main() {
   const plan = buildSeed(JSON.parse(fs.readFileSync(path.join(root, "supabase/seed/posts.json"), "utf8")));
-  console.log(`Seeding ${plan.posts.length} posts and ${plan.categories.length} categories into ${new URL(url!).host}`);
+  console.log(`Seeding ${plan.posts.length} posts and ${plan.categories.length} categories into ${new URL(url!).host}${force ? " (--force)" : ""}`);
 
-  const { data: cats, error: catError } = await db
-    .from("categories")
-    .upsert(plan.categories, { onConflict: "slug" })
-    .select("id, slug");
+  // Categories: create missing ones; only --force renames existing ones.
+  const { error: catUpsertError } = await db.from("categories").upsert(plan.categories, { onConflict: "slug", ignoreDuplicates: !force });
+  if (catUpsertError) throw catUpsertError;
+  const { data: cats, error: catError } = await db.from("categories").select("id, slug").in("slug", plan.categories.map((c) => c.slug));
   if (catError) throw catError;
   const catId = new Map((cats ?? []).map((c) => [String(c.slug), c.id]));
 
+  // Posts: skip slugs that already exist unless --force.
+  const existing = new Set<string>();
+  for (const batch of chunk(plan.posts.map((p) => p.slug), 200)) {
+    const { data, error } = await db.from("posts").select("slug").in("slug", batch);
+    if (error) throw error;
+    for (const r of data ?? []) existing.add(String(r.slug));
+  }
+  const toWrite = force ? plan.posts : plan.posts.filter((p) => !existing.has(p.slug));
+  console.log(`  ${existing.size} already exist${force ? " (overwriting)" : " (skipped)"}, ${toWrite.length} to write`);
+
   const postId = new Map<string, string>();
-  for (const batch of chunk(plan.posts, 50)) {
+  for (const batch of chunk(toWrite, 50)) {
     const { data, error } = await db.from("posts").upsert(batch, { onConflict: "slug" }).select("id, slug");
     if (error) throw error;
     for (const r of data ?? []) postId.set(String(r.slug), r.id);
-    process.stdout.write(`  posts ${postId.size}/${plan.posts.length}\r`);
+    process.stdout.write(`  posts ${postId.size}/${toWrite.length}\r`);
   }
   console.log();
 

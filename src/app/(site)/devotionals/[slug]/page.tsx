@@ -1,14 +1,23 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import styles from "../../page.module.css";
 import blogStyles from "../devotionals.module.css";
-import { SiteFooter, SiteHeader } from "@/components/site/SiteChrome";
-import { getLatestPosts, getPostBySlug } from "@/lib/posts/public";
+import { getLatestPosts, getPostBySlug, getPublishedPostSlugs } from "@/lib/posts/public";
 import { TiptapContent, tiptapToText } from "@/lib/tiptap/render";
 import { isValidSlug } from "@/lib/slug";
 import { formatPostDate, PostCard } from "../post-card";
+
+// Known slugs are prerendered; new ones render on first visit. `ensureStatic = "navigation"`
+// makes that first visit wait for the complete page instead of streaming an App Shell with a
+// 200, so a missing devotional returns a real 404 status. (All data here is cached, which
+// this setting requires and validates at build.)
+export const ensureStatic = "navigation";
+
+export async function generateStaticParams() {
+  const slugs = (await getPublishedPostSlugs()).filter(isValidSlug);
+  return (slugs.length ? slugs : ["__placeholder__"]).map((slug) => ({ slug }));
+}
 
 export async function generateMetadata({ params }: PageProps<"/devotionals/[slug]">): Promise<Metadata> {
   const { slug } = await params;
@@ -23,19 +32,7 @@ export async function generateMetadata({ params }: PageProps<"/devotionals/[slug
   };
 }
 
-export default function DevotionalPage({ params }: PageProps<"/devotionals/[slug]">) {
-  return (
-    <div className={styles.container} style={{ background: "transparent" }}>
-      <SiteHeader active="/devotionals" />
-      <Suspense fallback={<p style={{ textAlign: "center", padding: "180px 0", color: "var(--text-secondary)" }}>Loading…</p>}>
-        <Article params={params} />
-      </Suspense>
-      <SiteFooter />
-    </div>
-  );
-}
-
-async function Article({ params }: { params: PageProps<"/devotionals/[slug]">["params"] }) {
+export default async function DevotionalPage({ params }: PageProps<"/devotionals/[slug]">) {
   const { slug } = await params;
   if (!isValidSlug(slug)) notFound();
   const [post, latest] = await Promise.all([getPostBySlug(slug), getLatestPosts(4)]);
@@ -43,7 +40,7 @@ async function Article({ params }: { params: PageProps<"/devotionals/[slug]">["p
   const related = latest.filter((p) => p.slug !== post.slug).slice(0, 3);
 
   return (
-    <>
+    <div className={styles.container} style={{ background: "transparent" }}>
       <article className={blogStyles.articleWrapper}>
         <Link href="/devotionals" className={blogStyles.backButton}>← All devotionals</Link>
         <div className={blogStyles.articleCard}>
@@ -78,6 +75,6 @@ async function Article({ params }: { params: PageProps<"/devotionals/[slug]">["p
           </div>
         </section>
       )}
-    </>
+    </div>
   );
 }

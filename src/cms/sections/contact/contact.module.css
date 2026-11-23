@@ -651,3 +651,13 @@
   color: var(--text-secondary);
   margin-top: 2px;
 }
+
+/* CMS: the details bar hides columns that aren't set (e.g. no phone), so fit the grid to what's shown */
+@media (min-width: 640px) {
+  .statsBar1 { grid-template-columns: 1fr; }
+}
+@media (min-width: 992px) {
+  .statsBar2 { grid-template-columns: repeat(2, 1fr); }
+  .statsBar3 { grid-template-columns: repeat(3, 1fr); }
+}
+

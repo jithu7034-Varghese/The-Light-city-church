@@ -1,43 +1,61 @@
 "use client";
-// Header + footer for the devotional pages, same markup and styles as the existing pages.
-// (Phase 4 moves the nav/footer content into the CMS "navbar"/"footer" globals.)
+// Public site header, driven by the published "navbar" global (passed in by the layout).
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import styles from "@/app/(site)/page.module.css";
+import chrome from "./chrome.module.css";
 
-const NAV = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/ministries", label: "Ministries" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/devotionals", label: "Devotionals" },
-  { href: "/contact", label: "Contact" },
-];
+export type HeaderProps = {
+  logoText: string;
+  logoAccent: string;
+  logo: { url: string; alt: string } | null;
+  items: { id: string; label: string; href: string }[];
+  cta: { label: string; href: string };
+};
 
-export function SiteHeader({ active }: { active?: string }) {
+const isCurrent = (pathname: string, href: string) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`));
+
+export function SiteHeader({ logoText, logoAccent, logo, items, cta }: HeaderProps) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const links = items.filter((i) => i.label && i.href);
+
   return (
     <>
-      <header className={`${styles.header} animate-fade-in`} style={{ animationDelay: "0.1s", background: "var(--glass-bg)" }}>
+      <header className={`${styles.header} animate-fade-in`} style={{ animationDelay: "0.1s" }}>
         <div className={styles.logoContainer}>
-          <Link href="/" className={styles.textLogo}>
-            City<span className={styles.textLogoLight}>Light</span>
+          <Link href="/" className={`${styles.textLogo} ${chrome.logo}`} aria-label={`${logoText}${logoAccent} home`}>
+            {logo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logo.url} alt={logo.alt} className={chrome.logoImage} />
+            ) : (
+              <>
+                {logoText}
+                <span className={styles.textLogoLight}>{logoAccent}</span>
+              </>
+            )}
           </Link>
         </div>
         <nav className={styles.nav} aria-label="Main Navigation">
           <ul className={styles.navUl}>
-            {NAV.map((n) => (
-              <li key={n.href}>
-                <Link href={n.href} className={n.href === active ? styles.activeNavLink : styles.navLink} aria-current={n.href === active ? "page" : undefined}>
-                  {n.label}
-                </Link>
-              </li>
-            ))}
+            {links.map((n) => {
+              const current = isCurrent(pathname, n.href);
+              return (
+                <li key={n.id}>
+                  <Link href={n.href} className={current ? styles.activeNavLink : styles.navLink} aria-current={current ? "page" : undefined}>
+                    {n.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
-        <Link href="/contact" className={styles.preOrderBtn} id="header-preorder-btn">
-          Get Involved
-        </Link>
+        {cta.href && (
+          <Link href={cta.href} className={styles.preOrderBtn} id="header-preorder-btn">
+            {cta.label || "Get Involved"}
+          </Link>
+        )}
         <button
           className={`${styles.hamburgerButton} ${open ? styles.hamburgerActive : ""}`}
           onClick={() => setOpen(!open)}
@@ -52,51 +70,23 @@ export function SiteHeader({ active }: { active?: string }) {
       <div className={`${styles.mobileMenuOverlay} ${open ? styles.mobileMenuOpen : ""}`}>
         <nav className={styles.mobileNav} aria-label="Mobile Navigation">
           <ul className={styles.mobileNavUl}>
-            {NAV.map((n) => (
-              <li key={n.href}>
-                <Link href={n.href} className={n.href === active ? styles.mobileActiveNavLink : styles.mobileNavLink} onClick={() => setOpen(false)}>
+            {links.map((n) => (
+              <li key={n.id}>
+                <Link href={n.href} className={isCurrent(pathname, n.href) ? styles.mobileActiveNavLink : styles.mobileNavLink} onClick={() => setOpen(false)}>
                   {n.label}
                 </Link>
               </li>
             ))}
+            {cta.href && (
+              <li>
+                <Link href={cta.href} className={styles.mobileMenuBtn} onClick={() => setOpen(false)}>
+                  {cta.label || "Get Involved"}
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
     </>
-  );
-}
-
-export function SiteFooter() {
-  return (
-    <footer className={styles.ctaFooterSection} id="contact">
-      <div className={styles.ctaFooterContainer}>
-        <div className={styles.ctaContent}>
-          <h2 className={styles.ctaHeadline}>Ready to Experience His Extravagant Love?</h2>
-          <p className={styles.ctaSubtext}>
-            Join us every Sunday 10:30am at The Motorpoint Arena in Nottingham. We would love to welcome you and stand in agreement with you in prayer.
-          </p>
-          <div className={styles.ctaButtonWrapper}>
-            <Link href="/contact" className={styles.ctaButton}>Send Us a Prayer Request</Link>
-          </div>
-        </div>
-        <div className={styles.footerOverlay}>
-          <div className={styles.footerTopRow}>
-            <span className={styles.footerCopyrightText}>© Copyright 2026</span>
-            <div className={styles.footerDividerLine} />
-            <span className={styles.footerCopyrightText}>The Light City Church. All Rights Reserved.</span>
-          </div>
-          <nav className={styles.footerNav} aria-label="Footer">
-            <ul className={styles.footerNavList}>
-              {NAV.map((n) => (
-                <li key={n.href}><Link href={n.href} className={styles.footerNavLink}>{n.label}</Link></li>
-              ))}
-            </ul>
-          </nav>
-          <div className={styles.giantBrandContainer}>
-            <p className={styles.giantBrandText} aria-hidden>LIGHT CITY</p>
-          </div>
-        </div>
-      </div>
-    </footer>
   );
 }

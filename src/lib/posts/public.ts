@@ -80,6 +80,16 @@ export async function getLatestPosts(limit: number): Promise<PublicPostCard[]> {
   return (data as unknown as Row[]).map(toCard);
 }
 
+/** Every published slug (for generateStaticParams). */
+export async function getPublishedPostSlugs(): Promise<string[]> {
+  "use cache";
+  cacheTag("posts");
+  cacheLife("hours");
+  const { data, error } = await createSupabasePublicClient().from("posts").select("slug").order("published_at", { ascending: false }).limit(2000);
+  if (error) console.error("[posts] slugs failed", error.message);
+  return (data ?? []).map((p) => String(p.slug));
+}
+
 export async function getPostBySlug(slug: string): Promise<PublicPost | null> {
   "use cache";
   cacheTag("posts", `post:${slug}`);

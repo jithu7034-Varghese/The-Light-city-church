@@ -1,7 +1,10 @@
-// Root layout #1: the public website (CSS Modules only, no Tailwind).
-// Phase 4 replaces the hardcoded metadata/copy with published CMS globals.
+// Root layout #1: the public website (CSS Modules only, no Tailwind). Header, footer,
+// announcement bar and default metadata all come from the published CMS globals (cached).
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
+import { SiteHeader } from "@/components/site/SiteChrome";
+import { AnnouncementBar, SiteFooter } from "@/components/site/SiteFooter";
+import { getGlobal, getMediaByIds } from "@/cms/queries";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -11,32 +14,43 @@ const outfit = Outfit({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "The Light City Church — Nottingham",
-  description: "Without miracles Christianity is reduced to philosophy. Christ in you the hope of Glory! Believe in God in you! Send your prayer request, or join us in person.",
-  keywords: ["The Light City Church", "Lightcity", "Nottingham Church", "Ronnie Dube", "Annalene Dube", "Prayer for Healing", "Daily Light Devotional", "Motorpoint Arena Nottingham"],
-  authors: [{ name: "The Light City Church" }],
-  openGraph: {
-    title: "Welcome to The Light City Church",
-    description: "We are passionate about empowering every man, woman, and child to live in the fulness of their inheritance in Christ.",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getGlobal("site");
+  const name = site.name || "The Light City Church";
+  return {
+    title: { default: name, template: `%s` },
+    description: site.tagline || undefined,
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+    openGraph: { siteName: name, type: "website", locale: "en_GB" },
+  };
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const [navbar, footer, site, announcement] = await Promise.all([
+    getGlobal("navbar"),
+    getGlobal("footer"),
+    getGlobal("site"),
+    getGlobal("announcement"),
+  ]);
+  const logoMedia = navbar.logoImage ? (await getMediaByIds([navbar.logoImage.mediaId]))[navbar.logoImage.mediaId] : undefined;
+
   return (
-    <html lang="en" className={outfit.variable}>
+    <html lang="en-GB" className={outfit.variable}>
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
+        <AnnouncementBar data={announcement} />
+        <SiteHeader
+          logoText={navbar.logoText}
+          logoAccent={navbar.logoAccent}
+          logo={logoMedia ? { url: logoMedia.url, alt: logoMedia.alt } : null}
+          items={navbar.items}
+          cta={navbar.cta}
+        />
         {children}
+        <SiteFooter footer={footer} site={site} />
       </body>
     </html>
   );
 }
-

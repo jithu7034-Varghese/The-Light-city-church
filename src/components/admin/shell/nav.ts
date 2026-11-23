@@ -30,9 +30,9 @@ export const NAV: NavGroup[] = [
   {
     label: "Content",
     items: [
-      { key: "pages", label: "Pages", href: "/admin/pages", icon: FileText, module: "pages", ready: false },
-      { key: "navbar", label: "Navbar", href: "/admin/navbar", icon: MenuIcon, module: "globals", ready: false },
-      { key: "footer", label: "Footer", href: "/admin/footer", icon: PanelBottom, module: "globals", ready: false },
+      { key: "pages", label: "Pages", href: "/admin/pages", icon: FileText, module: "pages", ready: true },
+      { key: "navbar", label: "Navbar", href: "/admin/navbar", icon: MenuIcon, module: "globals", ready: true },
+      { key: "footer", label: "Footer", href: "/admin/footer", icon: PanelBottom, module: "globals", ready: true },
       { key: "devotionals", label: "Devotionals", href: "/admin/devotionals", icon: BookOpen, module: "posts", ready: true },
       { key: "media", label: "Media", href: "/admin/media", icon: ImageIcon, module: "media", ready: false },
     ],
@@ -41,7 +41,7 @@ export const NAV: NavGroup[] = [
     label: "Site",
     items: [
       { key: "seo", label: "SEO", href: "/admin/seo", icon: Search, module: "seo", ready: false },
-      { key: "settings", label: "Settings", href: "/admin/settings", icon: Settings, module: "settings", ready: false },
+      { key: "settings", label: "Settings", href: "/admin/settings", icon: Settings, module: "settings", ready: true },
     ],
   },
   {
