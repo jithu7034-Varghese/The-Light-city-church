@@ -301,7 +301,7 @@ export default function AboutUsPage() {
                 className={aboutStyles.storyImage}
               />
               <div className={aboutStyles.storyFloatingBadge}>
-                <h4 className={aboutStyles.storyBadgeTitle}>"Christ in you"</h4>
+                <h4 className={aboutStyles.storyBadgeTitle}>&ldquo;Christ in you&rdquo;</h4>
                 <p className={aboutStyles.storyBadgeSub}>The Hope of Glory — Colossians 1:27</p>
               </div>
             </div>

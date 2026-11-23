@@ -596,7 +596,7 @@ export default function ContactPage() {
               <div>
                 <h3 className={contactStyles.bentoCardTitle}>Kids Sunday Church</h3>
                 <p className={contactStyles.bentoCardText}>
-                  A fun, safe, and engaging children's ministry is provided during the service for ages 2 to 11.
+                  A fun, safe, and engaging children&apos;s ministry is provided during the service for ages 2 to 11.
                 </p>
               </div>
               
