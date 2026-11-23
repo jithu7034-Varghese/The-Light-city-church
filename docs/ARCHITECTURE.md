@@ -77,7 +77,11 @@ src/
       (auth)/login, reset-password, accept-invite, mfa
       (dashboard)/layout.tsx    # sidebar + topbar shell
         page.tsx                # Overview
-        enquiries/  contacts/  events/
+        enquiries/  forms/  contacts/  events/  subscribers/
+        bookings/                # calendar + list
+        bookings/requests/       # consultation approval queue
+        bookings/types/  bookings/availability/
+        sermons/  announcements/  email-templates/
         pages/[slug]/           # section-based page editor
         navbar/  footer/
         devotionals/  media/  seo/
@@ -85,6 +89,10 @@ src/
     api/
       preview/route.ts          # enables draftMode for live preview
       revalidate/route.ts       # optional webhook
+      cron/reminders/route.ts   # booking reminders (Vercel Cron)
+      cron/retention/route.ts   # GDPR auto-delete
+    (site)/consultation/        # public booking flow
+    (site)/booking/manage/[token]/  # reschedule / cancel without login
   cms/
     sections/                   # registry: hero.ts, text-image.ts, gallery.ts …
       registry.ts
@@ -117,15 +125,76 @@ Clean up first: delete `src/app/api/preorder` and `src/data/preorders.json` (lef
 | Brief item | Church version |
 |---|---|
 | Overview | **Overview** |
-| INFORMATION · Form Inquiries | **PEOPLE · Enquiries & Prayer**: all public form submissions, typed: Prayer request, Testimony, Get involved / Volunteer, Contact, Salvation decision (Freedom from Religion), Loved Circle sign-up |
-| Clients | **People**: members and contacts (a profile with linked enquiries, events and notes) |
-| Appointments | **Events & Appointments**: Sunday services, conferences, Light Groups, and pastoral appointments linked to a person |
-| *(new)* | **Subscribers**: devotional/newsletter sign-ups, CSV export |
-| CONTENT MANAGEMENT | Navbar, **Home, About, Ministries, Gallery, Freedom from Religion, The Loved Circle, Give & Partner, Contact**, Footer, **Devotionals** (Blog Engine), Media Library, SEO Manager |
-| SYSTEM | Users & Roles, Settings, Activity Log |
+| INFORMATION · Form Inquiries | **INBOX · Enquiries**: one inbox for every public form submission (prayer request, testimony, contact, get involved/volunteer, salvation decision, Loved Circle, consultation request…), filterable by form |
+| *(new)* | **INBOX · Form Submissions & Form Builder**: create and edit the public forms themselves (fields, required rules, recipients, auto-reply), and see the submissions for each form |
+| *(new)* | **BOOKINGS · Consultation Requests**: requests from the public "Request a Consultation" page waiting for approval |
+| Appointments | **BOOKINGS · Booking Management**: calendar and list of all bookings; availability, booking types, blackout dates |
+| *(new)* | **BOOKINGS · Events & Registrations**: services, conferences and Light Groups; RSVPs, capacity, waitlist, check-in |
+| Clients | **PEOPLE · People**: members and contacts (a profile with linked submissions, bookings, registrations and notes) |
+| *(new)* | **PEOPLE · Subscribers**: devotional/newsletter sign-ups, CSV export |
+| CONTENT MANAGEMENT | Navbar, **Home, About, Ministries, Gallery, Freedom from Religion, The Loved Circle, Give & Partner, Contact, Request a Consultation**, Footer, **Devotionals** (Blog Engine), **Sermons & Media**, Media Library, SEO Manager, **Announcements** |
+| SYSTEM | **Users & Roles** (full user management), **Email Templates**, Settings, Activity Log |
 | Footer of sidebar | Light Mode toggle, Sign Out |
 
 Pages are rows in the `pages` table, so the sidebar's page list is generated. Adding a page in the CMS adds it to the sidebar.
+
+### 5.1 Forms, submissions and enquiries
+
+- **Form Builder.** Forms are data, not code. Each form has:
+  - fields: text, email, phone, textarea, select, radio, checkbox, date, consent, hidden
+  - per field: label, placeholder, help text, required, options, validation (min/max length, pattern)
+  - field order set by drag and drop
+  - settings: enquiry type, notification recipients, auto-reply email (on/off, template), success message or redirect URL, Turnstile on/off, data-retention period
+- **Using a form on a page.** A `form` section type on any page takes a `form_id`, so the church can add a form anywhere without a developer.
+- **Seeded forms:** Contact / Get Involved, Prayer Request & Testimony, Salvation Decision (Freedom from Religion), Join The Loved Circle, Newsletter, Request a Consultation, Volunteer.
+- **Inbox (Enquiries):**
+  - statuses Unread / Read / Follow-up / Closed
+  - assign to a team member (e.g. a pastor) with an email notification
+  - internal notes, convert to person, link to a booking, delete, bulk actions, CSV export per form
+  - saved filters ("My assigned", "Prayer – unread")
+- **Privacy.** Prayer requests are marked sensitive. Only roles with `enquiries.sensitive` can open them. Each form has its own retention period, and an auto-delete job removes old submissions (GDPR).
+
+### 5.2 Consultation requests & booking management
+
+- **Booking types** (CMS-editable): Pastoral consultation, Prayer & counselling session, Baptism enquiry, Wedding consultation, Child dedication, Hospital/home visit request, Meet the Pastor. Each type has:
+  - duration and buffer time
+  - location options: in person (venue/address), online (auto-attached video link field), or phone
+  - who can take it (one or more staff hosts)
+  - whether it needs approval or is instantly confirmed
+  - intake questions (reuses the Form Builder)
+  - minimum notice and booking window (e.g. 24 hours to 60 days ahead)
+  - a daily cap
+- **Availability:**
+  - weekly working hours per host
+  - date overrides and blackout dates (holidays, conference weeks)
+  - time zone Europe/London
+- **Public "Request a Consultation" page:**
+  1. pick a type
+  2. pick a slot from real availability, or send a "request a time" if none suit
+  3. intake form + consent
+  4. confirmation
+- **Booking lifecycle:**
+  - statuses: `requested → confirmed → completed`, or `cancelled` / `rescheduled` / `no_show` / `declined`
+  - every status change emails the person (templates editable in the CMS) and attaches an **.ics calendar invite**
+  - reminder emails 24 hours and 2 hours before
+  - each confirmation email has a secure **reschedule/cancel link** (signed token, no login needed)
+- **Admin views:**
+  - **Consultation Requests** queue (approve / decline / propose a new time)
+  - **Booking Management** calendar (day/week/month), filterable by host and type, plus a list view; drag a booking to reschedule; manual "book on behalf of"
+  - each booking is linked to a **Person**, created automatically on first booking
+- **Optional later:** two-way Google Calendar sync per host, and SMS reminders through Twilio.
+
+### 5.3 Full user management
+
+- Invite by email, resend or revoke an invite, edit profile, change role, deactivate or reactivate, delete with data handover.
+- Roles: Super Admin, Admin, Pastor/Staff (sees their bookings and the enquiries assigned to them), Editor, Viewer. A **per-module permission matrix** covers view / edit / publish / delete / sensitive.
+- Security:
+  - require 2FA per role
+  - active sessions list with "sign out everywhere"
+  - session timeout
+  - last-login and failed-attempt display
+  - password policy
+- Each user's personal settings: notification preferences (email on new enquiry, booking, assignment), working hours (used by booking availability), avatar and signature.
 
 ## 6. Design system
 
@@ -151,7 +220,7 @@ All tables have `id uuid pk default gen_random_uuid()`, `created_at`, `updated_a
 
 **Users & permissions**
 - `profiles` (id → auth.users, full_name, avatar_media_id, role `super_admin|admin|editor|viewer`, is_active, last_seen_at)
-- `role_permissions` (role, module, can_view, can_edit, can_publish, can_delete). Modules: `enquiries, contacts, events, subscribers, pages, globals, posts, media, seo, users, settings, activity`
+- `role_permissions` (role, module, can_view, can_edit, can_publish, can_delete). Modules: `enquiries, forms, bookings, contacts, events, subscribers, pages, globals, posts, sermons, media, seo, email_templates, users, settings, activity`. Plus a `sensitive` action for prayer requests
 - SQL function `has_permission(module text, action text) returns boolean`, used in every RLS policy and mirrored in `lib/auth/permissions.ts`
 
 **Page CMS**
@@ -173,12 +242,33 @@ All tables have `id uuid pk default gen_random_uuid()`, `created_at`, `updated_a
 - `media` (folder_id, file_name, storage_path, mime, size, width, height, variants jsonb `{320,640,1024,1600: path}`, blurhash/lqip, **alt text not null check (length > 0)**, title, caption, uploaded_by)
 - `media_usage` (media_id, entity_type `page|post|global`, entity_id, field_path). Rebuilt whenever an entity is saved by walking its JSON for media ids. It powers "used in…" and the delete warning
 
-**People & forms**
-- `enquiries` (type, name, email, phone, city, subject, message, interest, status `unread|read|follow_up|closed`, contact_id, source_page, consent bool, meta jsonb, ip_hash)
+**Forms & enquiries**
+- `forms` (slug, name, enquiry_type, fields jsonb [ordered field definitions], settings jsonb {recipients[], auto_reply, success_message, redirect_url, turnstile, retention_days, sensitive}, is_active)
+- `enquiries`: one row per form submission (form_id, type, name, email, phone, data jsonb [all answers], status `unread|read|follow_up|closed`, assigned_to, contact_id, booking_id null, source_page, consent bool, ip_hash, expires_at)
 - `enquiry_notes` (enquiry_id, author_id, body)
+
+**Bookings**
+- `booking_types` (slug, name, description, duration_min, buffer_min, locations jsonb, requires_approval, intake_form_id, min_notice_hours, max_days_ahead, daily_cap, color, is_active)
+- `booking_type_hosts` (booking_type_id, user_id)
+- `availability_rules` (user_id, weekday, start_time, end_time)
+- `availability_overrides` (user_id null = everyone, date, start_time null, end_time null, is_blackout, reason)
+- `bookings` (booking_type_id, host_id, contact_id, starts_at, ends_at, location_kind, location_detail, status `requested|confirmed|rescheduled|cancelled|declined|completed|no_show`, intake jsonb, manage_token_hash, reminder_24h_sent_at, reminder_2h_sent_at, cancel_reason)
+- `booking_events` (booking_id, actor_id null, from_status, to_status, note, created_at): audit trail
+- A Postgres exclusion constraint on `(host_id, tstzrange(starts_at, ends_at))` for active statuses prevents double-booking
+- Slot computation: `lib/bookings/slots.ts` takes rules, subtracts overrides, existing bookings and buffers, then applies notice/window/cap
+
+**Events & registrations**
+- `event_registrations` (event_id, contact_id, name, email, guests int, status `registered|waitlisted|cancelled|attended`, checked_in_at)
+
+**Email**
+- `email_templates` (key e.g. `booking_confirmed`, subject, body rich text with `{{variables}}`, is_active)
+- `email_log` (to, template_key, entity, status, provider_id, error)
+- Reminders and retention cleanup run as Vercel Cron jobs (`/api/cron/*`, protected by a secret) every 15 minutes / daily
+
+**People**
 - `contacts` (first_name, last_name, email unique, phone, city, address, tags text[], notes, joined_at, consent_marketing)
 - `contact_notes` (contact_id, author_id, body)
-- `events` (title, kind `service|conference|group|appointment|other`, starts_at, ends_at, all_day, location, description, contact_id null, status `scheduled|completed|cancelled|rescheduled`, recurrence_rule null)
+- `events` (title, slug, kind `service|conference|group|other`, starts_at, ends_at, all_day, location, description, cover_media_id, status `scheduled|completed|cancelled|rescheduled`, recurrence_rule null, registration_enabled, capacity, waitlist_enabled). Pastoral appointments live in `bookings`, not here
 - `subscribers` (email unique, name, source, confirmed_at, unsubscribed_at)
 
 **SEO & system**
@@ -210,7 +300,11 @@ Each section is a registry entry with a schema, an editor and a component. Repea
 | `stats` | items[{value, label}] | any |
 | `cta` | heading, text, buttons[] | many |
 | `giving` | heading, text, PayPal link(s), bank details (optional, rich text) | Home, Give & Partner |
-| `prayer_form` / `contact_form` / `signup_form` | heading, intro, which fields, enquiry type, success message | Contact, Freedom from Religion, Loved Circle, Home |
+| `form` | heading, intro, **form_id** (picks a form from the Form Builder), layout | Contact, Freedom from Religion, Loved Circle, Home, anywhere |
+| `booking` | heading, intro, which booking types to offer | Request a Consultation |
+| `upcoming_events` | heading, count, kinds, show "Register" button | Home, Events |
+| `sermons` | heading, series/speaker filter, count | Home, Sermons |
+| `announcement_bar` | site-wide notice text, link, colour, start/end dates (stored in globals) | all pages |
 | `newsletter` | heading, text, button label | Home |
 | `directions` | items[{mode: car/tram/park&ride, text}], map embed | Contact |
 | `rich_text` | rich text | Privacy Policy, misc |
@@ -261,7 +355,7 @@ Each section is a registry entry with a schema, an editor and a component. Repea
 
 ## 10. Build phases
 
-Each phase is one Claude Code session or a few. Commit at the end of each one.
+Each phase is one Claude Code session or a few. Commit at the end of each one. Phases 0–6 follow the order in the original brief; bookings come after the CMS because they reuse the Form Builder, email templates and People.
 
 ### Phase 0: Foundations
 - Set up the Supabase project (EU), the Supabase CLI, `.env.local` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `TURNSTILE_*`), and `.env.example`.
@@ -275,18 +369,21 @@ Each phase is one Claude Code session or a few. Commit at the end of each one.
 - Admin shell (sidebar, top bar, mobile drawer, theme toggle) and the UI kit components.
 - **Done when:** an invited user can log in and see an empty dashboard in dark and light mode on desktop and mobile.
 
-### Phase 2: Overview + Enquiries
-- Public forms (prayer, contact, get involved, salvation, Loved Circle, newsletter) are wired to a Server Action that validates, checks Turnstile, inserts the row and emails the configured recipients.
-- Enquiries list:
-  - search, filters (type, status, date range)
-  - detail drawer, internal notes
-  - status changes, convert to person, delete, CSV export
+### Phase 2: Overview, Form Builder & Enquiries
+- **Form Builder:** create and edit forms (fields, ordering, validation, recipients, auto-reply, success message, retention). Seed the 7 standard forms.
+- One generic Server Action `submitForm(formSlug, data)` builds a Zod schema from the form definition, checks Turnstile, rate-limits, inserts the enquiry, emails the recipients and sends the auto-reply.
+- Enquiries inbox:
+  - search, filters (form, status, assignee, date range), saved filters
+  - detail drawer, internal notes, assign to a team member
+  - status changes, convert to person, bulk actions, delete, CSV export
+  - sensitive (prayer) gating
+- Email templates + `email_log` (Resend).
 - Overview:
-  - 4 stat cards (Total Enquiries, Unread, Published Devotionals, Published Pages)
+  - 4 stat cards (Total Enquiries · LIFETIME, Unread · ATTENTION NEEDED, Devotionals · PUBLISHED, Pending Consultations · ATTENTION NEEDED)
   - Growth Trajectory chart (7/30/90 days)
-  - Action Items generated from real data: unread enquiries, events in the next 7 days, pages/posts missing SEO fields, media without alt text
+  - Action Items generated from real data: unread enquiries, consultation requests awaiting approval, bookings and events in the next 7 days, pages/posts missing SEO fields, media without alt text
   - Recent Enquiries table
-- **Done when:** submitting the live contact form shows up on the Overview within seconds and sends an email.
+- **Done when:** submitting a live form shows up on the Overview within seconds, emails the team, and sends the auto-reply.
 
 ### Phase 3: Media Library
 - Grid and list views, folders, search, multi-upload with drag and drop, the processing pipeline, the details panel (alt text required, title, caption, file name), replace file, "used in" list, delete with an in-use warning.
@@ -313,15 +410,28 @@ Each phase is one Claude Code session or a few. Commit at the end of each one.
 - Public index (category filter, pagination) and the article page (related posts, Article JSON-LD).
 - Seed all migrated devotionals and the legacy-URL redirects.
 
-### Phase 7: People, Events, Subscribers, Users & Roles, Settings, Activity
-- People profiles (linked enquiries, events, notes, GDPR export/delete).
-- Events: month and list views, create/edit/reschedule/cancel, link to a person. Public "Upcoming events" section type.
+### Phase 7: Consultations & Booking Management
+- Booking types, hosts, weekly availability, overrides/blackouts, and the slot engine with tests (DST, buffers, notice, caps, double-booking constraint).
+- Public "Request a Consultation" page (the `booking` section): type → slot → intake → confirmation, plus the "request a time" fallback.
+- Emails at every status change, with an .ics attachment and a signed reschedule/cancel link. Reminder cron (24 h / 2 h).
+- Admin:
+  - Consultation Requests queue (approve / decline / propose a time)
+  - Booking Management calendar (day/week/month, drag to reschedule, filter by host and type) and list view
+  - book on behalf of someone
+- **Done when:** a visitor books a pastoral consultation, the pastor approves it from the queue, the visitor gets a confirmation with a calendar invite and a reminder, and can reschedule from the email link.
+
+### Phase 8: People, Events, Subscribers, Users & Roles, Settings, Activity
+- People profiles (linked enquiries, bookings, registrations, notes, GDPR export/delete).
+- Events:
+  - month and list views, create/edit/cancel, recurring services
+  - registrations/RSVP with capacity, waitlist and check-in list (printable, or mobile check-in)
+  - public `upcoming_events` section and event pages
 - Subscribers list and CSV export.
-- Users: invite, edit role, deactivate. Per-module permission matrix editor (Super Admin only).
+- Users: full user management (section 5.3): invite, roles incl. Pastor/Staff, permission matrix, 2FA requirement, sessions, deactivate.
 - Settings: site identity, contact, service times, socials, SMTP/Resend, notifications, analytics IDs, backup/export (JSON dump of the content tables).
 - Activity Log: filterable by user, module and date.
 
-### Phase 8: Content QA & launch
+### Phase 9: Content QA & launch
 - Check every page against the old site, run Lighthouse and an accessibility pass, test the forms, check the redirects.
 - Deploy to Vercel, move the domain off GoDaddy (DNS), submit the sitemap in Search Console.
 
@@ -352,3 +462,35 @@ Known facts to seed:
 5. Giving: keep the PayPal links only, or add bank-transfer details or a provider like Stripe later?
 6. Blog URL: `/devotionals` (recommended, matches the brand "Daily Light") or `/blog`.
 7. Domain/DNS access (currently GoDaddy) for launch.
+8. Booking: which pastors/staff take consultations, their weekly hours, which consultation types to offer, and whether each needs approval.
+9. Is an online-meeting link (Zoom/Google Meet) needed for online consultations?
+
+## 13. Suggested extras (prioritised)
+
+The extras that make the most difference for a church website, beyond the original brief. **P1** is worth building in the phases above. **P2** comes after launch. **P3** is optional.
+
+| Priority | Feature | Why | Where it fits |
+|---|---|---|---|
+| P1 | **Sermons & Media**: sermon library from YouTube (series, speaker, scripture, date, notes), auto-import from the church's YouTube channel, audio **podcast RSS feed** | The old site already has YouTube + a podcast; sermons are the most visited content on church sites | New CMS module + `sermons` section; after Phase 6 |
+| P1 | **Announcement bar**: scheduled site-wide notice ("Venue change this Sunday", "Conference registration open") | Saves editing pages for short-term news | Globals; Phase 4 |
+| P1 | **Live-stream banner**: "We're live now" with a link, toggled manually or by schedule | Sunday online viewers | Globals; Phase 4 |
+| P1 | **Gift Aid + giving page**: keep PayPal, add a UK **Gift Aid declaration form** (stored with consent, CSV export for HMRC claims) | UK churches can reclaim 25% on eligible donations | Form Builder + Give page; Phase 2/4 |
+| P1 | **Event registration**: RSVP, capacity, waitlist, check-in | Conferences and special services | Phase 8 (included above) |
+| P1 | **WhatsApp click-to-chat** button (the old site has one) | Fastest way people contact the church | Settings + footer; Phase 4 |
+| P2 | **Newsletter sending**: compose and send to subscribers from admin (Resend Broadcasts or Mailchimp sync), double opt-in, unsubscribe | Daily Light devotional by email | After launch |
+| P2 | **Prayer team workflow**: assign prayer requests to the prayer team, "prayed for" status, optional reply to the requester | Turns the inbox into a ministry tool | Enquiries extension |
+| P2 | **Volunteer sign-up & rota**: teams (worship, media, welcome), availability, monthly rota, email reminders | Common church need | New module |
+| P2 | **Light Groups directory**: group, leader, day/time, online/in-person, "join this group" form | Old site mentions online Light Groups | `cards_grid` + form; or own module |
+| P2 | **Admin analytics**: page views, top devotionals, form conversion (Vercel Analytics / GA4 API) | Shows the team what's working | Overview tab |
+| P2 | **Notifications centre**: in-app bell with assignments, new bookings and mentions; email digest | Already in the top bar design | Phase 1 bell → real feed |
+| P3 | **Public prayer wall** (moderated) | Community engagement | Later |
+| P3 | **Member area**: members log in to see their bookings and registrations and update their details | Replaces the old GoDaddy "Sign in / Partner with TLCC" member pages | Later |
+| P3 | **Multilingual content** | Only if the congregation needs it | Later |
+
+**Always-on hygiene** (part of every phase):
+- automated daily database backups (Supabase PITR) and the export in Settings
+- error tracking (Sentry)
+- uptime monitoring
+- accessibility (WCAG AA)
+- cookie consent banner (only if analytics or Meta Pixel are enabled)
+- a short **admin user guide** page inside the dashboard, so church volunteers can edit content without help
