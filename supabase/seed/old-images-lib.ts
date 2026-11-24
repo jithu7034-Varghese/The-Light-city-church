@@ -59,6 +59,82 @@ export function isReplaceable(ref: { mediaId?: string } | null | undefined, stor
   return path === undefined || PLACEHOLDER_PATHS.has(path); // deleted media, or a placeholder
 }
 
+type OldImageEntry = { url: string; page: string };
+export type OldImageSource = {
+  posts: Record<string, { featured?: string | null; og?: string | null }>;
+  gallery: OldImageEntry[];
+  page_images: OldImageEntry[];
+};
+
+/**
+ * One storage path per source image, decided in a fixed order (devotionals in file order, then the
+ * gallery, then page images) so it never depends on which steps a run skips. `candidates` lists every
+ * path the import may ever have written for a source; any that isn't the canonical path is a duplicate.
+ */
+export function planImagePaths(src: OldImageSource, slugForLegacy: (legacy: string) => string | undefined, opts: { includeStock?: boolean } = {}) {
+  const canonical = new Map<string, string>();
+  const candidates: { path: string; source: string }[] = [];
+  const claim = (source: string, path: string) => {
+    candidates.push({ path, source });
+    if (!canonical.has(source)) canonical.set(source, path);
+  };
+  for (const [legacy, entry] of Object.entries(src.posts)) {
+    const slug = slugForLegacy(legacy);
+    const source = pickPostImage(entry);
+    if (slug && source) claim(source, `devotionals/${slug}.webp`);
+  }
+  src.gallery.forEach((g, i) => {
+    if (opts.includeStock || !isStockImage(g.url)) claim(fullImageUrl(g.url), `gallery/old-site-${i + 1}.webp`);
+  });
+  src.page_images.forEach((p, i) => {
+    if (opts.includeStock || !isStockImage(p.url)) claim(fullImageUrl(p.url), `pages/${p.page}-${i + 1}.webp`);
+  });
+  return { canonical, candidates };
+}
+
+/** Gallery entries with repeated photos removed (the old site listed some twice). */
+export function uniqueGallery<T extends { url: string }>(entries: T[]): T[] {
+  const seen = new Set<string>();
+  return entries.filter((e) => {
+    const key = fullImageUrl(e.url);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+/** Replace every `{ mediaId: from }` inside a JSON value. Returns the new value and whether anything changed. */
+export function replaceMediaIds(value: unknown, map: Map<string, string>): { value: unknown; changed: boolean } {
+  let changed = false;
+  const walk = (v: unknown): unknown => {
+    if (Array.isArray(v)) return v.map(walk);
+    if (v && typeof v === "object") {
+      const out: Record<string, unknown> = {};
+      for (const [k, x] of Object.entries(v)) {
+        if (k === "mediaId" && typeof x === "string" && map.has(x)) {
+          out[k] = map.get(x);
+          changed = true;
+        } else out[k] = walk(x);
+      }
+      return out;
+    }
+    return v;
+  };
+  return { value: walk(value), changed };
+}
+
+/** Drop later list items that show the same image as an earlier one. */
+export function dedupeByImage<T extends { image?: { mediaId?: string } | null }>(items: T[]): T[] {
+  const seen = new Set<string>();
+  return items.filter((it) => {
+    const id = it.image?.mediaId;
+    if (!id) return true;
+    if (seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+}
+
 /** Alt text for an image shared by several devotionals (one post's title would mislabel the others). */
 export const SHARED_DEVOTIONAL_ALT = "Daily Light devotional illustration";
 

@@ -18,7 +18,8 @@ import sharp from "sharp";
 import { createClient } from "@supabase/supabase-js";
 import type { Database, Json } from "../../src/lib/supabase/database.types";
 import {
-  devotionalAltPlan, fileNameOf, fullImageUrl, isReplaceable, isStockImage, legacySlugOf, normalizeSlug, pickPostImage, runPool, SHARED_DEVOTIONAL_ALT,
+  dedupeByImage, devotionalAltPlan, fileNameOf, fullImageUrl, isReplaceable, isStockImage, legacySlugOf, normalizeSlug, pickPostImage,
+  planImagePaths, replaceMediaIds, runPool, SHARED_DEVOTIONAL_ALT, uniqueGallery,
 } from "./old-images-lib";
 
 type ImageEntry = { url: string; alt: string; section: string; page: string };
@@ -59,10 +60,16 @@ async function download(source: string): Promise<Buffer> {
   return buf;
 }
 
-/** Download → WebP (max 1600px) → upload to storagePath → media row. Reuses existing rows unless --force. */
-function importImage(source: string, storagePath: string, alt: string): Promise<string> {
+// Fixed storage path per source image (see planImagePaths); set in main() before anything runs.
+let canonicalPath = new Map<string, string>();
+let candidatePaths: { path: string; source: string }[] = [];
+
+/** Download → WebP (max 1600px) → upload to the source's canonical path → media row. Reuses existing rows unless --force. */
+function importImage(source: string, alt: string): Promise<string> {
   const cached = mediaBySource.get(source);
   if (cached) return cached;
+  const storagePath = canonicalPath.get(source);
+  if (!storagePath) return Promise.reject(new Error("no storage path planned for this image"));
   const job = (async () => {
     const { data: existing } = await db.from("media").select("id").eq("storage_path", storagePath).maybeSingle();
     if (existing && !force) return existing.id;
@@ -95,7 +102,7 @@ async function importDevotionals() {
 
   type Job = { legacy: string; post: (typeof posts)[number]; source: string };
   const jobs: Job[] = [];
-  const pathForSource = new Map<string, string>(); // first post's slug names a shared image
+  const sources = new Set<string>();
   let skippedExisting = 0;
   for (const [legacy, entry] of Object.entries(src.posts)) {
     const post = byLegacy.get(normalizeSlug(legacy));
@@ -112,12 +119,12 @@ async function importDevotionals() {
       skippedExisting++;
       continue;
     }
-    if (!pathForSource.has(source)) pathForSource.set(source, `devotionals/${post.slug}.webp`);
+    sources.add(source);
     jobs.push({ legacy, post, source });
   }
 
   const results = await runPool(jobs, 4, async (j) => {
-    const mediaId = await importImage(j.source, pathForSource.get(j.source)!, j.post.title);
+    const mediaId = await importImage(j.source, j.post.title);
     const { error: upErr } = await db.from("posts").update({ featured_media_id: mediaId }).eq("id", j.post.id);
     if (upErr) throw new Error(`update post: ${upErr.message}`);
     return mediaId;
@@ -127,7 +134,7 @@ async function importDevotionals() {
     if (r.ok) updated++;
     else failures.push(`devotional "${r.item.post.slug}" (${r.item.source}): ${r.error}`);
   }
-  return { updated, skippedExisting, uniqueSources: pathForSource.size };
+  return { updated, skippedExisting, uniqueSources: sources.size };
 }
 
 /**
@@ -176,10 +183,12 @@ const pathOf = (id: string) => storagePaths.get(id);
 const newId = (prefix: string, i: number) => `${prefix}-${i + 1}`;
 
 async function importGallery() {
-  const entries = src.gallery.filter((g) => includeStock || !isStockImage(g.url));
-  const stock = src.gallery.length - entries.length;
+  const allowed = src.gallery.filter((g) => includeStock || !isStockImage(g.url));
+  const stock = src.gallery.length - allowed.length;
   if (stock) notes.push(`gallery: skipped ${stock} stock photo(s)`);
-  const results = await runPool(entries.map((g, i) => ({ ...g, i })), 4, (g) => importImage(fullImageUrl(g.url), `gallery/old-site-${g.i + 1}.webp`, g.alt || GALLERY_ALT));
+  const entries = uniqueGallery(allowed); // the old site listed some photos twice
+  if (entries.length < allowed.length) notes.push(`gallery: ${allowed.length - entries.length} photo(s) were listed twice on the old site, imported once`);
+  const results = await runPool(entries.map((g, i) => ({ ...g, i })), 4, (g) => importImage(fullImageUrl(g.url), g.alt || GALLERY_ALT));
   const ids: string[] = [];
   for (const r of results) {
     if (r.ok) ids.push(r.value);
@@ -195,9 +204,14 @@ async function importGallery() {
   if (grid) {
     const items = (grid.data.items as { id: string; image: { mediaId: string } | null }[]) ?? [];
     const present = new Set(items.map((it) => it.image?.mediaId));
+    const usedIds = new Set(items.map((it) => it.id));
     ids.forEach((id, i) => {
       if (present.has(id)) return;
-      items.push({ id: newId("old-site", i), image: { mediaId: id }, tag: "", title: "", caption: "" } as never);
+      present.add(id);
+      let itemId = newId("old-site", i);
+      for (let n = 2; usedIds.has(itemId); n++) itemId = `${newId("old-site", i)}-${n}`;
+      usedIds.add(itemId);
+      items.push({ id: itemId, image: { mediaId: id }, tag: "", title: "", caption: "" } as never);
       galleryAdded++;
     });
     if (galleryAdded) {
@@ -240,18 +254,19 @@ const PAGE_TARGETS: Record<string, { page: string; match: string }> = {
 async function importPageImages() {
   const assigned: string[] = [];
   const changedPages = new Set<string>();
-  for (const [i, entry] of src.page_images.entries()) {
+  for (const entry of src.page_images) {
     const label = `${entry.page} → "${entry.section}"`;
     if (isStockImage(entry.url) && !includeStock) {
       notes.push(`${label}: skipped, it's a GoDaddy stock photo ("${entry.alt}"), not a church photo`);
       continue;
     }
     let mediaId: string;
+    const alt = entry.alt || `The Light City Church: ${entry.section}`;
     try {
-      mediaId = await importImage(fullImageUrl(entry.url), `pages/${entry.page}-${i + 1}.webp`, entry.alt || `The Light City Church: ${entry.section}`);
+      mediaId = await importImage(fullImageUrl(entry.url), alt);
     } catch (e) {
       try {
-        mediaId = await importImage(fullImageUrl(entry.url), `pages/${entry.page}-${i + 1}.webp`, entry.alt || `The Light City Church: ${entry.section}`);
+        mediaId = await importImage(fullImageUrl(entry.url), alt);
       } catch {
         failures.push(`page image ${label} (${entry.url}): ${e instanceof Error ? e.message : e}`);
         continue;
@@ -274,7 +289,7 @@ async function importPageImages() {
         if (!("image" in d)) {
           notes.push(`${label}: the "${s.type}" section has no image field, left as is`);
         } else if (!isReplaceable(d.image as { mediaId: string } | null, pathOf)) {
-          notes.push(`${label}: kept the real church photo already there (${pathOf((d.image as { mediaId: string }).mediaId)})`);
+          notes.push(`${label}: kept the image already there (not a placeholder) (${pathOf((d.image as { mediaId: string }).mediaId)})`);
         } else {
           await saveSection(s, { ...d, image: { mediaId } });
           changedPages.add(target.page);
@@ -288,7 +303,7 @@ async function importPageImages() {
         if (idx >= 0) {
           found = true;
           if (!isReplaceable(items[idx].image, pathOf)) {
-            notes.push(`${label}: kept the real church photo already there (${pathOf(items[idx].image!.mediaId)})`);
+            notes.push(`${label}: kept the image already there (not a placeholder) (${pathOf(items[idx].image!.mediaId)})`);
           } else {
             const next = items.map((it, j) => (j === idx ? { ...it, image: { mediaId } } : it));
             await saveSection(s, { ...d, items: next });
@@ -313,6 +328,80 @@ async function saveSection(section: SectionRow, data: Record<string, unknown>) {
   section.data = data;
 }
 
+/**
+ * Repair duplicates from earlier runs (before paths were fixed per source): any media row this import
+ * wrote at a non-canonical path for a source is merged into the canonical row. Page references and
+ * featured images are repointed, repeated photos in the Gallery grid / Home collage are removed, the
+ * affected pages are republished, and only then are the duplicate rows and files deleted. Idempotent.
+ */
+async function consolidateDuplicates() {
+  const { data: media, error } = await db.from("media").select("id, storage_path");
+  if (error || !media) throw new Error(`load media: ${error?.message}`);
+  const idByPath = new Map(media.map((m) => [m.storage_path, m.id]));
+  const dupToCanon = new Map<string, string>();
+  const dupPaths: string[] = [];
+  for (const { path: p, source } of candidatePaths) {
+    const canon = canonicalPath.get(source);
+    if (!canon || canon === p) continue;
+    const dupId = idByPath.get(p);
+    const canonId = idByPath.get(canon);
+    if (!dupId || dupToCanon.has(dupId)) continue;
+    if (!canonId) {
+      notes.push(`duplicate ${p} kept: its original (${canon}) is missing`);
+      continue;
+    }
+    dupToCanon.set(dupId, canonId);
+    dupPaths.push(p);
+  }
+
+  // Repoint page sections (and drop repeated photos in the two photo lists).
+  const { data: pages, error: pErr } = await db.from("pages").select("id, slug, page_sections(id, type, data)");
+  if (pErr || !pages) throw new Error(`load pages: ${pErr?.message}`);
+  const republish: { id: string; slug: string }[] = [];
+  let removedRepeats = 0;
+  for (const page of pages) {
+    let pageChanged = false;
+    for (const s of page.page_sections as { id: string; type: string; data: Record<string, unknown> }[]) {
+      const { value, changed } = replaceMediaIds(s.data, dupToCanon);
+      let data = value as Record<string, unknown>;
+      let sectionChanged = changed;
+      const listKey = s.type === "gallery_grid" ? "items" : s.type === "home_gallery" ? "photos" : null;
+      if (listKey && Array.isArray(data[listKey])) {
+        const list = data[listKey] as { image?: { mediaId?: string } | null }[];
+        const unique = dedupeByImage(list);
+        if (unique.length !== list.length) {
+          removedRepeats += list.length - unique.length;
+          data = { ...data, [listKey]: unique };
+          sectionChanged = true;
+        }
+      }
+      if (sectionChanged) {
+        await saveSection({ id: s.id, type: s.type, sort_order: 0, data: s.data }, data);
+        pageChanged = true;
+      }
+    }
+    if (pageChanged) republish.push({ id: page.id, slug: String(page.slug) });
+  }
+  for (const p of republish) await publish(p.id, p.slug, "Removed duplicate images from the old-site import");
+
+  // Repoint featured images, then delete the duplicates (the delete guard blocks anything still in use).
+  for (const [dup, canon] of dupToCanon) {
+    const { error: upErr } = await db.from("posts").update({ featured_media_id: canon }).eq("featured_media_id", dup);
+    if (upErr) failures.push(`repoint posts from duplicate ${dup}: ${upErr.message}`);
+  }
+  let deleted = 0;
+  for (const [i, dup] of [...dupToCanon.keys()].entries()) {
+    const { error: delErr } = await db.from("media").delete().eq("id", dup);
+    if (delErr) {
+      failures.push(`delete duplicate ${dupPaths[i]}: ${delErr.message}`);
+      continue;
+    }
+    await db.storage.from("media").remove([dupPaths[i]]);
+    deleted++;
+  }
+  return { deleted, removedRepeats, republished: republish.map((p) => p.slug) };
+}
+
 const published = new Set<string>();
 async function publish(pageId: string, slug: string, note: string) {
   const { error } = await db.rpc("publish_page", { p_page_id: pageId, p_note: note });
@@ -322,6 +411,16 @@ async function publish(pageId: string, slug: string, note: string) {
 
 async function main() {
   console.log(`Importing old-site images into ${new URL(url!).host}${force ? " (--force)" : ""}${includeStock ? " (--include-stock)" : ""}`);
+  // Fix every source image's storage path up front, from the file alone.
+  const { data: allPosts, error: postsErr } = await db.from("posts").select("slug, legacy_url");
+  if (postsErr || !allPosts) throw new Error(`load posts: ${postsErr?.message}`);
+  const slugByLegacy = new Map(allPosts.map((p) => [normalizeSlug(legacySlugOf(p.legacy_url) ?? ""), String(p.slug)]));
+  const plan = planImagePaths(src, (legacy) => slugByLegacy.get(normalizeSlug(legacy)), { includeStock });
+  canonicalPath = plan.canonical;
+  candidatePaths = plan.candidates;
+
+  const merged = await consolidateDuplicates();
+  console.log(`  duplicates: ${merged.deleted} removed, ${merged.removedRepeats} repeated photo(s) dropped`);
   const dev = await importDevotionals();
   console.log(`  devotionals: ${dev.updated} updated`);
   const alt = await fixDevotionalAlt();
@@ -333,6 +432,7 @@ async function main() {
   console.log("\n===== Summary =====");
   console.log(`Posts updated:            ${dev.updated}${dev.skippedExisting ? ` (${dev.skippedExisting} skipped: already had a featured image)` : ""}`);
   console.log(`Unique images uploaded:   ${uploaded}`);
+  console.log(`Duplicates cleaned up:    ${merged.deleted} media row(s) merged, ${merged.removedRepeats} repeated photo(s) removed${merged.republished.length ? ` (republished ${merged.republished.join(", ")})` : ""}`);
   console.log(`Devotional alt text:      ${alt.shared} shared image(s) → "${SHARED_DEVOTIONAL_ALT}", ${alt.single} single-use image(s) → post title (${alt.changed} changed)`);
   console.log(`Gallery images:           ${gal.count} (added ${gal.galleryAdded} to the Gallery page, filled ${gal.homeFilled} Home collage slot(s))`);
   console.log(`Page images assigned:     ${pages.assigned.length ? pages.assigned.join("; ") : "none"}`);

@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import posts from "../supabase/seed/posts.json";
 import images from "../supabase/seed/raw/old-site-images.json";
 import {
-  devotionalAltPlan, fileNameOf, fullImageUrl, isReplaceable, isStockImage, legacySlugOf, normalizeSlug, pickPostImage, runPool, SHARED_DEVOTIONAL_ALT,
+  dedupeByImage, devotionalAltPlan, fileNameOf, fullImageUrl, isReplaceable, isStockImage, legacySlugOf, normalizeSlug, pickPostImage,
+  planImagePaths, replaceMediaIds, runPool, SHARED_DEVOTIONAL_ALT, uniqueGallery,
 } from "../supabase/seed/old-images-lib";
 
 describe("fullImageUrl", () => {
@@ -29,6 +30,48 @@ describe("matching old images to posts", () => {
     const unmatched = keys.filter((k) => !byLegacy.has(normalizeSlug(k)));
     expect(unmatched).toEqual([]);
     expect(keys.length).toBe(239);
+  });
+});
+
+describe("planImagePaths (stable across runs)", () => {
+  const byLegacy = new Map(posts.map((p) => [normalizeSlug(legacySlugOf(p.legacy_url) ?? ""), p.slug]));
+  const plan = planImagePaths(images, (l) => byLegacy.get(normalizeSlug(l)));
+
+  it("gives a gallery photo that is also a devotional image the devotional's path", () => {
+    const g1 = fullImageUrl(images.gallery[0].url);
+    expect(plan.canonical.get(g1)).toMatch(/^devotionals\//);
+    expect(plan.candidates.some((c) => c.path === "gallery/old-site-1.webp" && c.source === g1)).toBe(true);
+  });
+
+  it("is the same whatever a run skips (it depends only on the file)", () => {
+    const again = planImagePaths(images, (l) => byLegacy.get(normalizeSlug(l)));
+    expect([...again.canonical]).toEqual([...plan.canonical]);
+  });
+
+  it("skips the stock photo on the Home page unless asked (devotional illustrations are kept)", () => {
+    const pageStock = images.page_images.find((p) => p.url.includes("/isteam/stock/"))!;
+    expect(plan.candidates.some((c) => c.source === fullImageUrl(pageStock.url))).toBe(false);
+    const withStock = planImagePaths(images, (l) => byLegacy.get(normalizeSlug(l)), { includeStock: true });
+    expect(withStock.candidates.some((c) => c.source === fullImageUrl(pageStock.url))).toBe(true);
+  });
+
+  it("finds the duplicated photos in the old gallery list", () => {
+    expect(images.gallery.length).toBe(9);
+    expect(uniqueGallery(images.gallery).length).toBe(7);
+  });
+});
+
+describe("replaceMediaIds / dedupeByImage", () => {
+  it("repoints references deep inside page data", () => {
+    const r = replaceMediaIds({ items: [{ id: "a", image: { mediaId: "dup" } }, { id: "b", image: { mediaId: "keep" } }] }, new Map([["dup", "orig"]]));
+    expect(r.changed).toBe(true);
+    expect(JSON.stringify(r.value)).toBe('{"items":[{"id":"a","image":{"mediaId":"orig"}},{"id":"b","image":{"mediaId":"keep"}}]}');
+    expect(replaceMediaIds({ a: 1 }, new Map([["x", "y"]])).changed).toBe(false);
+  });
+
+  it("drops repeated images but keeps items without one", () => {
+    const out = dedupeByImage([{ id: "1", image: { mediaId: "a" } }, { id: "2", image: null }, { id: "3", image: { mediaId: "a" } }, { id: "4", image: { mediaId: "b" } }]);
+    expect(out.map((x) => x.id)).toEqual(["1", "2", "4"]);
   });
 });
 
