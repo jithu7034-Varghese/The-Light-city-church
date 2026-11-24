@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import posts from "../supabase/seed/posts.json";
 import images from "../supabase/seed/raw/old-site-images.json";
 import {
-  fileNameOf, fullImageUrl, isReplaceable, isStockImage, legacySlugOf, normalizeSlug, pickPostImage, runPool,
+  devotionalAltPlan, fileNameOf, fullImageUrl, isReplaceable, isStockImage, legacySlugOf, normalizeSlug, pickPostImage, runPool, SHARED_DEVOTIONAL_ALT,
 } from "../supabase/seed/old-images-lib";
 
 describe("fullImageUrl", () => {
@@ -29,6 +29,20 @@ describe("matching old images to posts", () => {
     const unmatched = keys.filter((k) => !byLegacy.has(normalizeSlug(k)));
     expect(unmatched).toEqual([]);
     expect(keys.length).toBe(239);
+  });
+});
+
+describe("devotionalAltPlan", () => {
+  it("uses the post title for single-use images and a neutral description for shared ones", () => {
+    const plan = devotionalAltPlan([
+      { title: "Peace with God", featured_media_id: "shared" },
+      { title: "Stay connected!", featured_media_id: "shared" },
+      { title: " Divine Authority ", featured_media_id: "solo" },
+      { title: "No image", featured_media_id: null },
+    ]);
+    expect(plan.get("shared")).toBe(SHARED_DEVOTIONAL_ALT);
+    expect(plan.get("solo")).toBe("Divine Authority");
+    expect(plan.size).toBe(2);
   });
 });
 

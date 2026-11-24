@@ -18,7 +18,7 @@ import sharp from "sharp";
 import { createClient } from "@supabase/supabase-js";
 import type { Database, Json } from "../../src/lib/supabase/database.types";
 import {
-  fileNameOf, fullImageUrl, isReplaceable, isStockImage, legacySlugOf, normalizeSlug, pickPostImage, runPool,
+  devotionalAltPlan, fileNameOf, fullImageUrl, isReplaceable, isStockImage, legacySlugOf, normalizeSlug, pickPostImage, runPool, SHARED_DEVOTIONAL_ALT,
 } from "./old-images-lib";
 
 type ImageEntry = { url: string; alt: string; section: string; page: string };
@@ -130,6 +130,33 @@ async function importDevotionals() {
   return { updated, skippedExisting, uniqueSources: pathForSource.size };
 }
 
+/**
+ * Alt text for the imported devotional images: a shared image gets a neutral description
+ * (one post's title would mislabel the others); an image used by one post gets its title.
+ * Only touches rows under devotionals/ (this import's own images). Idempotent.
+ */
+async function fixDevotionalAlt() {
+  const { data: posts, error } = await db.from("posts").select("title, featured_media_id").not("featured_media_id", "is", null);
+  if (error || !posts) throw new Error(`load posts for alt text: ${error?.message}`);
+  const plan = devotionalAltPlan(posts);
+  const { data: rows, error: mErr } = await db.from("media").select("id, alt").like("storage_path", "devotionals/%");
+  if (mErr || !rows) throw new Error(`load media for alt text: ${mErr?.message}`);
+  let shared = 0;
+  let single = 0;
+  let changed = 0;
+  for (const row of rows) {
+    const alt = plan.get(row.id);
+    if (!alt) continue; // not used by any post
+    if (alt === SHARED_DEVOTIONAL_ALT) shared++;
+    else single++;
+    if (row.alt === alt) continue;
+    const { error: upErr } = await db.from("media").update({ alt }).eq("id", row.id);
+    if (upErr) failures.push(`alt text for media ${row.id}: ${upErr.message}`);
+    else changed++;
+  }
+  return { shared, single, changed };
+}
+
 // ---------- pages ----------
 type SectionRow = { id: string; type: string; sort_order: number; data: Record<string, unknown> };
 
@@ -173,8 +200,10 @@ async function importGallery() {
       items.push({ id: newId("old-site", i), image: { mediaId: id }, tag: "", title: "", caption: "" } as never);
       galleryAdded++;
     });
-    await saveSection(grid, { ...grid.data, items });
-    await publish(gallery.id, "gallery", "Added the old site's photo gallery");
+    if (galleryAdded) {
+      await saveSection(grid, { ...grid.data, items });
+      await publish(gallery.id, "gallery", "Added the old site's photo gallery");
+    }
   } else notes.push("gallery page: no gallery grid section found");
 
   // Home photo collage (4 slots): fill empty/placeholder slots only.
@@ -295,6 +324,8 @@ async function main() {
   console.log(`Importing old-site images into ${new URL(url!).host}${force ? " (--force)" : ""}${includeStock ? " (--include-stock)" : ""}`);
   const dev = await importDevotionals();
   console.log(`  devotionals: ${dev.updated} updated`);
+  const alt = await fixDevotionalAlt();
+  console.log(`  devotional alt text: ${alt.changed} changed`);
   const gal = await importGallery();
   console.log(`  gallery: ${gal.count} imported`);
   const pages = await importPageImages();
@@ -302,6 +333,7 @@ async function main() {
   console.log("\n===== Summary =====");
   console.log(`Posts updated:            ${dev.updated}${dev.skippedExisting ? ` (${dev.skippedExisting} skipped: already had a featured image)` : ""}`);
   console.log(`Unique images uploaded:   ${uploaded}`);
+  console.log(`Devotional alt text:      ${alt.shared} shared image(s) → "${SHARED_DEVOTIONAL_ALT}", ${alt.single} single-use image(s) → post title (${alt.changed} changed)`);
   console.log(`Gallery images:           ${gal.count} (added ${gal.galleryAdded} to the Gallery page, filled ${gal.homeFilled} Home collage slot(s))`);
   console.log(`Page images assigned:     ${pages.assigned.length ? pages.assigned.join("; ") : "none"}`);
   console.log(`Pages published:          ${[...published].join(", ") || "none"}`);

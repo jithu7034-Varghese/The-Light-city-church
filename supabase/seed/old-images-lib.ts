@@ -59,6 +59,22 @@ export function isReplaceable(ref: { mediaId?: string } | null | undefined, stor
   return path === undefined || PLACEHOLDER_PATHS.has(path); // deleted media, or a placeholder
 }
 
+/** Alt text for an image shared by several devotionals (one post's title would mislabel the others). */
+export const SHARED_DEVOTIONAL_ALT = "Daily Light devotional illustration";
+
+/**
+ * Alt text per devotional image: a single post's title when one post uses it, the neutral
+ * description when several do. Images no post uses are left out.
+ */
+export function devotionalAltPlan(posts: { title: string; featured_media_id: string | null }[]): Map<string, string> {
+  const users = new Map<string, string[]>();
+  for (const p of posts) {
+    if (!p.featured_media_id) continue;
+    users.set(p.featured_media_id, [...(users.get(p.featured_media_id) ?? []), p.title]);
+  }
+  return new Map([...users].map(([id, titles]) => [id, titles.length > 1 ? SHARED_DEVOTIONAL_ALT : titles[0].trim()]));
+}
+
 /** Run tasks with limited concurrency; each task is retried once on failure. */
 export async function runPool<T, R>(items: T[], limit: number, task: (item: T) => Promise<R>): Promise<({ ok: true; item: T; value: R } | { ok: false; item: T; error: string })[]> {
   const results: ({ ok: true; item: T; value: R } | { ok: false; item: T; error: string })[] = new Array(items.length);
