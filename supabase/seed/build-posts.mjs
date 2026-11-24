@@ -1,4 +1,16 @@
 #!/usr/bin/env node
+// ============================================================================================
+//  LEGACY: ONE-TIME IMPORT, ALREADY APPLIED. DO NOT RERUN.
+//
+//  This built supabase/seed/posts.json (239 devotionals) once, and that file has been seeded
+//  into the church database. Its raw inputs no longer reproduce it: running it again on
+//  2026-11-24 wrote only 200 posts and would have silently dropped 39 devotionals from
+//  posts.json. The devotionals now live in the CMS. Edit them in the admin, not here.
+//
+//  It refuses to run unless you pass --force, and then it writes to a NEW file
+//  (posts.rebuilt.json) for comparison; it never overwrites posts.json.
+// ============================================================================================
+//
 // Merges every captured devotional into supabase/seed/posts.json (the input for seed.ts).
 //
 // Sources (later sources never overwrite earlier ones; first wins per slug):
@@ -6,13 +18,24 @@
 //   2. supabase/seed/raw/posts_*.txt             39 posts copied from the old site's RSS range
 //   3. supabase/seed/raw/light-city-devotionals.json   the rest, downloaded from the old site
 //
-// Usage:  node supabase/seed/build-posts.mjs
+// Usage (legacy, for comparison only):  node supabase/seed/build-posts.mjs --force
 import fs from "node:fs";
 import path from "node:path";
 
+if (!process.argv.includes("--force")) {
+  console.error(
+    "build-posts.mjs is a legacy one-time import that has already been applied.\n" +
+      "It no longer reproduces supabase/seed/posts.json, so it doesn't run by default.\n" +
+      "Edit devotionals in the admin instead. To rebuild for comparison only, pass --force\n" +
+      "(output goes to supabase/seed/posts.rebuilt.json; posts.json is never touched).",
+  );
+  process.exit(1);
+}
+
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1")), "../..");
 const rawDir = path.join(root, "supabase/seed/raw");
-const out = path.join(root, "supabase/seed/posts.json");
+// Never overwrite the applied posts.json (see the header).
+const out = path.join(root, "supabase/seed/posts.rebuilt.json");
 
 const cleanSlug = (s) =>
   decodeURIComponent(s)

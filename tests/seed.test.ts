@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildSeed, chunk } from "../supabase/seed/build-seed";
+import { buildSeed, chunk, seedRefusal } from "../supabase/seed/build-seed";
 import { isValidSlug } from "@/lib/slug";
 
 const doc = { type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: "Hi" }] }] };
@@ -70,6 +70,19 @@ describe("buildSeed", () => {
     expect(plan.posts.every((p) => p.status === "published" && isValidSlug(p.slug))).toBe(true);
     expect(plan.categories.map((c) => c.name).sort()).toEqual(["Daily Light", "My Daily Light"]);
     expect(plan.links).toHaveLength(239);
+  });
+});
+
+describe("seedRefusal", () => {
+  it("runs on an empty database", () => {
+    expect(seedRefusal(0, false)).toBeNull();
+  });
+
+  it("refuses when posts already exist, unless --force", () => {
+    expect(seedRefusal(239, false)).toMatch(/already has 239 devotionals/);
+    expect(seedRefusal(1, false)).toMatch(/already has 1 devotional,/);
+    expect(seedRefusal(239, false)).toMatch(/--force/);
+    expect(seedRefusal(239, true)).toBeNull();
   });
 });
 

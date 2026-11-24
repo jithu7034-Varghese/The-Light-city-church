@@ -73,6 +73,21 @@ export function buildSeed(input: unknown): SeedPlan {
   return plan;
 }
 
+/**
+ * seed.ts is a first-load tool: on a database that already has devotionals it stops, because
+ * the live posts are now edited in the admin. --force runs anyway and overwrites matching posts.
+ * Returns the reason to refuse, or null to go ahead.
+ */
+export function seedRefusal(existingPosts: number, force: boolean): string | null {
+  if (force || existingPosts === 0) return null;
+  return (
+    `This database already has ${existingPosts} devotional${existingPosts === 1 ? "" : "s"}, so the posts seed won't run.\n` +
+    "posts.json is a legacy one-time import that has already been applied; edit devotionals in the admin.\n" +
+    "Only if you really mean to reload it, rerun with --force: posts with the same slug are OVERWRITTEN\n" +
+    "with posts.json (staff edits to them are lost) and missing ones are added."
+  );
+}
+
 /** Split into batches (PostgREST request size). */
 export function chunk<T>(items: T[], size: number): T[][] {
   const out: T[][] = [];

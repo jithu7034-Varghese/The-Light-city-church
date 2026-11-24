@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Legacy build-posts.mjs comparison output (never committed)
+supabase/seed/posts.rebuilt.json

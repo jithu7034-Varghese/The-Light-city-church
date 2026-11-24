@@ -1,15 +1,20 @@
 // Seed the devotionals: loads supabase/seed/posts.json into posts, categories and
 // post_categories by slug, all with status "published".
 //
-//   npx tsx supabase/seed.ts            add posts that don't exist yet; existing ones are skipped
-//   npx tsx supabase/seed.ts --force    also overwrite existing posts with the JSON (loses edits)
+// LEGACY first-load tool: posts.json (built once by the legacy build-posts.mjs) has already been
+// applied to the church database, and devotionals are now edited in the admin.
+//
+//   npx tsx supabase/seed.ts            only on a database with NO posts yet (e.g. a new staging project);
+//                                       refuses if any posts exist
+//   npx tsx supabase/seed.ts --force    run anyway: overwrites posts with the same slug (loses staff edits)
+//                                       and adds missing ones
 //
 // Uses the service role (docs/ARCHITECTURE.md §7: "seed"). Reads .env.local.
 import fs from "node:fs";
 import path from "node:path";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "../src/lib/supabase/database.types";
-import { buildSeed, chunk } from "./seed/build-seed";
+import { buildSeed, chunk, seedRefusal } from "./seed/build-seed";
 
 const root = path.resolve(import.meta.dirname, "..");
 for (const file of [".env.local", ".env"]) {
@@ -29,6 +34,15 @@ const db = createClient<Database>(url, serviceKey, { auth: { persistSession: fal
 const force = process.argv.includes("--force");
 
 async function main() {
+  // Refuse to touch a database that already has devotionals unless --force.
+  const { count: existingCount, error: countErr } = await db.from("posts").select("id", { count: "exact", head: true });
+  if (countErr) throw countErr;
+  const refusal = seedRefusal(existingCount ?? 0, force);
+  if (refusal) {
+    console.error(refusal);
+    process.exit(1);
+  }
+
   const plan = buildSeed(JSON.parse(fs.readFileSync(path.join(root, "supabase/seed/posts.json"), "utf8")));
   console.log(`Seeding ${plan.posts.length} posts and ${plan.categories.length} categories into ${new URL(url!).host}${force ? " (--force)" : ""}`);
 
