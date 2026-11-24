@@ -64,6 +64,7 @@ const site: SiteData = {
   whatsapp: "https://wa.me/447878393146",
   paypal: { business: "", itemName: "", currency: "GBP" },
   socials: [{ id: "f", network: "facebook", url: "https://www.facebook.com/102820662239782" }, { id: "bad", network: "x", url: "javascript:alert(1)" }],
+  sectionBackground: null,
 };
 
 describe("JSON-LD", () => {

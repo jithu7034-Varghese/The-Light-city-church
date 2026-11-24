@@ -2756,7 +2756,12 @@
   max-width: 100%;
   border-radius: 0;
   overflow: hidden;
-  background-image: linear-gradient(rgba(18, 20, 24, 0.45), rgba(18, 20, 24, 0.15)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1600&auto=format&fit=crop');
+  /* Site settings → "Section background image" (via --section-bg-image), else a solid dark gradient. */
+  background-color: #0b0c0e;
+  background-image:
+    linear-gradient(rgba(18, 20, 24, 0.45), rgba(18, 20, 24, 0.15)),
+    var(--section-bg-image, none),
+    linear-gradient(135deg, #1c1f26 0%, #0b0c0e 100%);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

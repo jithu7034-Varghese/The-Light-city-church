@@ -42,6 +42,9 @@ const siteFields = {
     { network: f.select("Network", SOCIAL_NETWORKS), url: f.text("Profile link", { max: 300 }) },
     { max: 10, titleKey: "network" },
   ),
+  sectionBackground: f.image("Section background image", {
+    help: "A church photo shown behind the page background and the large call-to-action/footer areas, under a dark overlay. Leave empty for a plain dark gradient.",
+  }),
 };
 
 const navbarFields = {
