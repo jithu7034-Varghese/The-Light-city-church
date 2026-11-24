@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { getSessionUser } from "@/lib/auth/session";
 import { safeAdminRedirect } from "@/lib/auth/gate";
 import { signOut } from "../actions";
@@ -8,6 +9,7 @@ import { MfaChallenge, MfaEnroll } from "./mfa-forms";
 export const metadata: Metadata = { title: "Two-factor authentication" };
 
 export default async function MfaPage({ searchParams }: PageProps<"/admin/mfa">) {
+  await connection(); // session-checked: always per request
   const params = await searchParams;
   const next = safeAdminRedirect(typeof params.next === "string" ? params.next : undefined);
 

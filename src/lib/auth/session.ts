@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { authGate, isMfaRequired, type GateResult } from "./gate";
 import type { AppRole, PermissionSubject, RolePermissionRow } from "./permissions";
@@ -21,6 +22,10 @@ export type SessionUser = PermissionSubject & {
  * Verifies the JWT (getClaims), never trusts the cookie alone. Cached per request.
  */
 export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
+  // Session checks are always per request. With Cache Components, cookies() can resolve while
+  // Next prerenders the App Shell, and Supabase's getClaims() then reads Date.now(), which is
+  // a "Blocking Route" error. connection() stops prerendering before any auth code runs.
+  await connection();
   const supabase = await createSupabaseServerClient();
   const { data: claimsData, error } = await supabase.auth.getClaims();
   const claims = claimsData?.claims;

@@ -1,11 +1,19 @@
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { AdminShell } from "@/components/admin/shell/admin-shell";
 import { NAV } from "@/components/admin/shell/nav";
 import { THEME_COOKIE, parseTheme } from "@/components/admin/theme";
 import { requireStaff } from "@/lib/auth/session";
 import { can, ROLE_LABELS } from "@/lib/auth/permissions";
 
+// This layout authenticates before showing the admin shell, so navigating INTO it is allowed to
+// block (Cache Components instant-navigation validation). Navigations BETWEEN admin pages are
+// instant thanks to ./loading.tsx, which wraps each page in a Suspense boundary.
+export const instant = false;
+
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  // Session-checked: always render per request, never prerender (see getSessionUser).
+  await connection();
   // Signed in + active + MFA passed, or redirected. (Every Server Action checks again.)
   const user = await requireStaff();
   const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);

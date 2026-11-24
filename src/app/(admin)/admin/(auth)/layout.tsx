@@ -1,6 +1,12 @@
+import { connection } from "next/server";
 import { Church } from "lucide-react";
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+// Session-checked, so navigating into these pages may block; ./loading.tsx covers the pages.
+export const instant = false;
+
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  // Login, reset, invite and MFA pages check the session: always render per request.
+  await connection();
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center px-4 py-10">
       <div className="mb-6 flex items-center gap-2.5 text-fg">
