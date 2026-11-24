@@ -32,13 +32,21 @@ export async function PageSections({ page }: { page: PublishedPage }) {
   );
 }
 
-export function pageMetadata(page: PublishedPage | null, path: string): Metadata {
-  if (!page) return { title: "Page not found" };
-  const title = page.seo.title || `${page.title} | The Light City Church`;
+/** Metadata from the page's SEO fields, falling back to Site settings (name, tagline). */
+export async function pageMetadata(page: PublishedPage | null, path: string): Promise<Metadata> {
+  if (!page) return { title: "Page not found", robots: { index: false } };
+  const site = await getGlobal("site");
+  const siteName = site.name || "The Light City Church";
+  const title = page.seo.title || (page.slug === "home" ? siteName : `${page.title} | ${siteName}`);
+  const description = page.seo.description || site.tagline || undefined;
+  // Share image: the first image on the page (e.g. its hero), if any.
+  const firstImage = [...collectMediaIds(page.sections.filter((s) => s.visible !== false))][0];
+  const image = firstImage ? (await getMediaByIds([firstImage]))[firstImage] : undefined;
   return {
     title,
-    description: page.seo.description || undefined,
+    description,
     alternates: { canonical: path },
-    openGraph: { title, description: page.seo.description || undefined, type: "website" },
+    openGraph: { title, description, type: "website", url: path, siteName, ...(image && { images: [{ url: image.url, alt: image.alt }] }) },
+    twitter: { card: image ? "summary_large_image" : "summary", title, description },
   };
 }

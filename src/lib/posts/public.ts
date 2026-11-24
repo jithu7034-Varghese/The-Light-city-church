@@ -19,7 +19,8 @@ export type PublicPostCard = {
   image: { url: string; alt: string } | null;
 };
 
-export type PublicPost = PublicPostCard & { content: unknown };
+export type PostSeo = { title?: string; description?: string; ogImage?: { mediaId?: string } | null };
+export type PublicPost = PublicPostCard & { content: unknown; seo: PostSeo };
 
 const CARD_COLUMNS =
   "slug, title, excerpt, published_at, author_name, media:featured_media_id(storage_path, alt), post_categories(categories(name))";
@@ -80,6 +81,20 @@ export async function getLatestPosts(limit: number): Promise<PublicPostCard[]> {
   return (data as unknown as Row[]).map(toCard);
 }
 
+/** Published devotionals for the sitemap. */
+export async function getSitemapPosts(): Promise<{ slug: string; lastModified: string }[]> {
+  "use cache";
+  cacheTag("posts");
+  cacheLife("hours");
+  const { data, error } = await createSupabasePublicClient()
+    .from("posts")
+    .select("slug, published_at, updated_at")
+    .order("published_at", { ascending: false })
+    .limit(5000);
+  if (error) console.error("[posts] sitemap failed", error.message);
+  return (data ?? []).map((p) => ({ slug: String(p.slug), lastModified: p.updated_at ?? p.published_at ?? new Date(0).toISOString() }));
+}
+
 /** Every published slug (for generateStaticParams). */
 export async function getPublishedPostSlugs(): Promise<string[]> {
   "use cache";
@@ -93,14 +108,14 @@ export async function getPublishedPostSlugs(): Promise<string[]> {
 export async function getPostBySlug(slug: string): Promise<PublicPost | null> {
   "use cache";
   cacheTag("posts", `post:${slug}`);
-  cacheLife("days");
+  cacheLife("hours");
   const { data, error } = await createSupabasePublicClient()
     .from("posts")
-    .select(`${CARD_COLUMNS}, content`)
+    .select(`${CARD_COLUMNS}, content, seo`)
     .eq("slug", slug)
     .maybeSingle();
   if (error) console.error("[posts] get failed", error.message);
   if (!data) return null;
-  const row = data as unknown as Row;
-  return { ...toCard(row), content: row.content };
+  const row = data as unknown as Row & { seo: PostSeo | null };
+  return { ...toCard(row), content: row.content, seo: row.seo ?? {} };
 }

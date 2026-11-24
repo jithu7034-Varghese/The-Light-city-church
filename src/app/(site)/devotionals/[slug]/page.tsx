@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import styles from "../../page.module.css";
 import blogStyles from "../devotionals.module.css";
-import { getLatestPosts, getPostBySlug, getPublishedPostSlugs } from "@/lib/posts/public";
+import { getLatestPosts, getPostBySlug, getPublishedPostSlugs, type PublicPost } from "@/lib/posts/public";
+import { getGlobal, getMediaByIds } from "@/cms/queries";
+import { articleJsonLd, JsonLd } from "@/lib/seo/jsonld";
 import { TiptapContent, tiptapToText } from "@/lib/tiptap/render";
 import { isValidSlug } from "@/lib/slug";
 import { formatPostDate, PostCard } from "../post-card";
@@ -19,28 +21,47 @@ export async function generateStaticParams() {
   return (slugs.length ? slugs : ["__placeholder__"]).map((slug) => ({ slug }));
 }
 
+const describe = (post: PublicPost) => post.seo.description || post.excerpt || tiptapToText(post.content);
+
 export async function generateMetadata({ params }: PageProps<"/devotionals/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const post = isValidSlug(slug) ? await getPostBySlug(slug) : null;
-  if (!post) return { title: "Devotional not found" };
-  const description = post.excerpt || tiptapToText(post.content);
+  if (!post) return { title: "Devotional not found", robots: { index: false } };
+  const site = await getGlobal("site");
+  const title = post.seo.title || `${post.title} | Daily Light Devotional`;
+  const description = describe(post);
+  const ogId = post.seo.ogImage?.mediaId;
+  const og = ogId ? (await getMediaByIds([ogId]))[ogId] : undefined;
+  const image = og ?? post.image ?? undefined;
   return {
-    title: `${post.title} | Daily Light Devotional`,
+    title,
     description,
+    authors: [{ name: post.authorName }],
     alternates: { canonical: `/devotionals/${post.slug}` },
-    openGraph: { type: "article", title: post.title, description, publishedTime: post.publishedAt, images: post.image ? [post.image.url] : undefined },
+    openGraph: {
+      type: "article",
+      title,
+      description,
+      url: `/devotionals/${post.slug}`,
+      siteName: site.name || "The Light City Church",
+      publishedTime: post.publishedAt,
+      authors: [post.authorName],
+      ...(image && { images: [{ url: image.url, alt: image.alt }] }),
+    },
+    twitter: { card: image ? "summary_large_image" : "summary", title, description },
   };
 }
 
 export default async function DevotionalPage({ params }: PageProps<"/devotionals/[slug]">) {
   const { slug } = await params;
   if (!isValidSlug(slug)) notFound();
-  const [post, latest] = await Promise.all([getPostBySlug(slug), getLatestPosts(4)]);
+  const [post, latest, site] = await Promise.all([getPostBySlug(slug), getLatestPosts(4), getGlobal("site")]);
   if (!post) notFound();
   const related = latest.filter((p) => p.slug !== post.slug).slice(0, 3);
 
   return (
     <div className={styles.container} style={{ background: "transparent" }}>
+      <JsonLd data={articleJsonLd(post, site, describe(post))} />
       <article className={blogStyles.articleWrapper}>
         <Link href="/devotionals" className={blogStyles.backButton}>← All devotionals</Link>
         <div className={blogStyles.articleCard}>

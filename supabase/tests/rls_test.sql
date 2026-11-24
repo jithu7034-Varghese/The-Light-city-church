@@ -190,6 +190,16 @@ select tests.eq('F6 contact submission not sensitive, kept 24 months',
 insert into enquiries(id,form_id,type,name,email,data)
   select '55555555-5555-5555-5555-555555555555', id, 'salvation', 'Sam Saved', 'sam@x', '{"city":"Leeds"}' from forms where slug='salvation';
 select tests.eq('F6b salvation submission is sensitive', (select is_sensitive::text from enquiries where id='55555555-5555-5555-5555-555555555555'), 'true');
+-- Migration 09: salvation decisions are kept 12 months, matching the privacy policy
+select tests.eq('F6c salvation form keeps 365 days', (select settings->>'retention_days' from forms where slug='salvation'), '365');
+select tests.eq('F6d salvation submission expires in 365 days',
+  (select (expires_at::date - created_at::date)::text from enquiries where id='55555555-5555-5555-5555-555555555555'), '365');
+-- The migration's backfill (same statement) gives older salvation submissions the same expiry
+update enquiries set expires_at = null, created_at = now() - interval '30 days' where id='55555555-5555-5555-5555-555555555555';
+update enquiries e set expires_at = e.created_at + interval '365 days'
+  from forms f where e.form_id = f.id and f.slug = 'salvation' and e.expires_at is null;
+select tests.eq('F6e older salvation submissions backfilled to 365 days after they arrived',
+  (select (expires_at::date - created_at::date)::text from enquiries where id='55555555-5555-5555-5555-555555555555'), '365');
 select set_config('request.jwt.claim.role','',false);
 reset role;
 insert into enquiry_notes(enquiry_id,author_id,body) values ('22222222-2222-2222-2222-222222222222','00000000-0000-0000-0000-000000000004','Prayed with Pat on the phone');

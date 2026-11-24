@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import posts from "./supabase/seed/posts.json";
+import oldSite from "./supabase/seed/old-site-content.json";
+import { legacyRedirects } from "./src/lib/seo/legacy-redirects";
 
 const nextConfig: NextConfig = {
   // Pin the project root so a stray lockfile in a parent folder can't change it.
@@ -15,10 +18,13 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // The devotionals moved from /blog (and the old GoDaddy blog) to /devotionals.
+      // Old GoDaddy URLs (docs/ARCHITECTURE.md §9): devotionals (/dailylightdevotional/f/:slug,
+      // with exact rules for the 8 slugs that changed) and pages (/contact-us → /contact,
+      // /partner-with-us → /give, /dailylightdevotional → /devotionals, …).
+      ...legacyRedirects(posts, oldSite.redirects),
+      // The devotionals briefly lived at /blog on the new site.
       { source: "/blog", destination: "/devotionals", permanent: true },
       { source: "/blog/:slug", destination: "/devotionals/:slug", permanent: true },
-      { source: "/dailylightdevotional", destination: "/devotionals", permanent: true },
     ];
   },
   images: {

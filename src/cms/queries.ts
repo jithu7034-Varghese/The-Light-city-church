@@ -14,7 +14,7 @@ export type PublishedPage = { slug: string; title: string; seo: { title?: string
 export async function getPublishedPage(slug: string): Promise<PublishedPage | null> {
   "use cache";
   cacheTag(`page:${slug}`, "pages");
-  cacheLife("days");
+  cacheLife("hours");
   const { data, error } = await createSupabasePublicClient()
     .from("pages")
     .select("slug, title, page_versions!inner(snapshot)")
@@ -35,7 +35,7 @@ export async function getPublishedPage(slug: string): Promise<PublishedPage | nu
 export async function getPublishedPageSlugs(): Promise<string[]> {
   "use cache";
   cacheTag("pages");
-  cacheLife("days");
+  cacheLife("hours");
   const { data, error } = await createSupabasePublicClient().from("pages").select("slug");
   if (error) console.error("[cms] slugs read failed", error.message);
   return (data ?? []).map((p) => String(p.slug));
@@ -44,7 +44,7 @@ export async function getPublishedPageSlugs(): Promise<string[]> {
 export async function getGlobal<K extends GlobalKey>(key: K): Promise<ReturnType<(typeof GLOBALS)[K]["parse"]>> {
   "use cache";
   cacheTag(`global:${key}`);
-  cacheLife("days");
+  cacheLife("hours");
   const { data, error } = await createSupabasePublicClient().from("globals").select("published").eq("key", key).maybeSingle();
   if (error) console.error("[cms] global read failed", key, error.message);
   return GLOBALS[key].parse(data?.published) as ReturnType<(typeof GLOBALS)[K]["parse"]>;
@@ -54,7 +54,7 @@ export async function getGlobal<K extends GlobalKey>(key: K): Promise<ReturnType
 export async function getMediaByIds(ids: string[]): Promise<Record<string, MediaInfo>> {
   "use cache";
   cacheTag("media");
-  cacheLife("days");
+  cacheLife("hours");
   if (ids.length === 0) return {};
   const { data, error } = await createSupabasePublicClient()
     .from("media")
@@ -72,7 +72,7 @@ export type PublicFormField = { key: string; type: string; label: string; requir
 export async function getPublicForm(slug: string): Promise<{ slug: string; name: string; fields: PublicFormField[] } | null> {
   "use cache";
   cacheTag("forms");
-  cacheLife("days");
+  cacheLife("hours");
   const { data } = await createSupabasePublicClient().from("forms").select("slug, name, fields").eq("slug", slug).eq("is_active", true).maybeSingle();
   if (!data) return null;
   return { slug: String(data.slug), name: data.name, fields: (Array.isArray(data.fields) ? data.fields : []) as PublicFormField[] };
