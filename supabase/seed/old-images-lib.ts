@@ -92,6 +92,20 @@ export function planImagePaths(src: OldImageSource, slugForLegacy: (legacy: stri
   return { canonical, candidates };
 }
 
+/** Title marking stock-library media rows in the admin, so staff don't reuse them by accident. */
+export const STOCK_MEDIA_TITLE = "GoDaddy stock image: licence not confirmed (see docs/stock-images-to-review.md)";
+
+/** Devotionals whose old-site image came from GoDaddy's stock library, in file order. */
+export function stockDevotionals(src: OldImageSource, slugForLegacy: (legacy: string) => string | undefined) {
+  const out: { legacy: string; slug: string; source: string }[] = [];
+  for (const [legacy, entry] of Object.entries(src.posts)) {
+    const source = pickPostImage(entry);
+    const slug = slugForLegacy(legacy);
+    if (source && slug && isStockImage(source)) out.push({ legacy, slug, source });
+  }
+  return out;
+}
+
 /** Gallery entries with repeated photos removed (the old site listed some twice). */
 export function uniqueGallery<T extends { url: string }>(entries: T[]): T[] {
   const seen = new Set<string>();

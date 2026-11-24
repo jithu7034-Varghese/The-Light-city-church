@@ -2,12 +2,15 @@
 //
 //   npx tsx supabase/seed/import-old-images.ts                  add what's missing
 //   npx tsx supabase/seed/import-old-images.ts --force          also redo posts that already have a featured image
-//   npx tsx supabase/seed/import-old-images.ts --include-stock  also use GoDaddy stock-library photos (skipped by default:
-//                                                               they show people who aren't from the church)
+//   npx tsx supabase/seed/import-old-images.ts --include-stock  also use GoDaddy stock-library images. Skipped by default:
+//                                                               their licence may only cover GoDaddy-hosted sites (see
+//                                                               docs/stock-images-to-review.md), and the page photo shows
+//                                                               people who aren't from the church
 //
 // Uses the service role (docs/ARCHITECTURE.md §7: "seed"). Every image is resized to max 1600px WebP
 // and stored once per source URL in the public "media" bucket with a media row (alt text required).
-//   - Devotionals: featured (else og) image → devotionals/<slug>.webp → posts.featured_media_id
+//   - Devotionals: featured (else og) image → devotionals/<slug>.webp → posts.featured_media_id.
+//     Stock images are left off the posts (featured image cleared) and their media rows are marked, unused.
 //   - Gallery: all old gallery photos → Gallery page grid + empty/placeholder slots of the Home photo collage
 //   - Page images: About → Pastor Ronnie, The Loved Circle → "Extravagant Love", Home → "Worship with us",
 //     only where the current image is empty or a placeholder (never a real church photo). Pages are
@@ -19,7 +22,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database, Json } from "../../src/lib/supabase/database.types";
 import {
   dedupeByImage, devotionalAltPlan, fileNameOf, fullImageUrl, isReplaceable, isStockImage, legacySlugOf, normalizeSlug, pickPostImage,
-  planImagePaths, replaceMediaIds, runPool, SHARED_DEVOTIONAL_ALT, uniqueGallery,
+  planImagePaths, replaceMediaIds, runPool, SHARED_DEVOTIONAL_ALT, STOCK_MEDIA_TITLE, stockDevotionals, uniqueGallery,
 } from "./old-images-lib";
 
 type ImageEntry = { url: string; alt: string; section: string; page: string };
@@ -115,6 +118,7 @@ async function importDevotionals() {
       failures.push(`devotional "${post.slug}": the old site had no image`);
       continue;
     }
+    if (isStockImage(source) && !includeStock) continue; // see clearStockImages()
     if (post.featured_media_id && !force) {
       skippedExisting++;
       continue;
@@ -135,6 +139,45 @@ async function importDevotionals() {
     else failures.push(`devotional "${r.item.post.slug}" (${r.item.source}): ${r.error}`);
   }
   return { updated, skippedExisting, uniqueSources: sources.size };
+}
+
+/**
+ * GoDaddy stock-library images may only be licensed for GoDaddy-hosted sites. Unless --include-stock,
+ * take them off the devotionals that use them (featured image → none, so the site shows its default
+ * image) and mark their media rows so staff don't pick them by accident. The rows are kept, unused,
+ * until the church confirms the licence or chooses replacements. Idempotent.
+ */
+async function clearStockImages(slugByLegacy: Map<string, string>) {
+  if (includeStock) return { cleared: 0, posts: 0, rows: 0 };
+  const stock = stockDevotionals(src, (l) => slugByLegacy.get(normalizeSlug(l)));
+  const stockPaths = [...new Set(stock.map((s) => canonicalPath.get(s.source)).filter((p): p is string => Boolean(p)))];
+  const { data: rows, error } = await db.from("media").select("id, storage_path, title").in("storage_path", stockPaths);
+  if (error) throw new Error(`load stock media: ${error.message}`);
+  const stockIds = (rows ?? []).map((r) => r.id);
+
+  let cleared = 0;
+  if (stockIds.length) {
+    // Only posts whose featured image is one of these stock rows (staff replacements are left alone).
+    const { data: changed, error: upErr } = await db
+      .from("posts")
+      .update({ featured_media_id: null })
+      .in("slug", stock.map((s) => s.slug))
+      .in("featured_media_id", stockIds)
+      .select("id");
+    if (upErr) throw new Error(`clear stock featured images: ${upErr.message}`);
+    cleared = changed?.length ?? 0;
+  }
+  for (const r of rows ?? []) {
+    if (r.title === STOCK_MEDIA_TITLE) continue;
+    const { error: tErr } = await db.from("media").update({ title: STOCK_MEDIA_TITLE }).eq("id", r.id);
+    if (tErr) failures.push(`mark stock media ${r.storage_path}: ${tErr.message}`);
+  }
+  // Warn if a stock image is still used anywhere (e.g. picked onto a page).
+  if (stockIds.length) {
+    const { data: inUse } = await db.from("media_usage").select("media_id, entity_type, entity_id").in("media_id", stockIds);
+    for (const u of inUse ?? []) notes.push(`stock image still used by ${u.entity_type} ${u.entity_id}`);
+  }
+  return { cleared, posts: stock.length, rows: stockIds.length };
 }
 
 /**
@@ -421,6 +464,8 @@ async function main() {
 
   const merged = await consolidateDuplicates();
   console.log(`  duplicates: ${merged.deleted} removed, ${merged.removedRepeats} repeated photo(s) dropped`);
+  const stock = await clearStockImages(slugByLegacy);
+  console.log(`  stock images: ${stock.cleared} featured image(s) cleared`);
   const dev = await importDevotionals();
   console.log(`  devotionals: ${dev.updated} updated`);
   const alt = await fixDevotionalAlt();
@@ -432,6 +477,7 @@ async function main() {
   console.log("\n===== Summary =====");
   console.log(`Posts updated:            ${dev.updated}${dev.skippedExisting ? ` (${dev.skippedExisting} skipped: already had a featured image)` : ""}`);
   console.log(`Unique images uploaded:   ${uploaded}`);
+  if (!includeStock) console.log(`Stock images:             ${stock.posts} devotionals use one (${stock.rows} media rows, marked and unused); ${stock.cleared} featured image(s) cleared this run`);
   console.log(`Duplicates cleaned up:    ${merged.deleted} media row(s) merged, ${merged.removedRepeats} repeated photo(s) removed${merged.republished.length ? ` (republished ${merged.republished.join(", ")})` : ""}`);
   console.log(`Devotional alt text:      ${alt.shared} shared image(s) → "${SHARED_DEVOTIONAL_ALT}", ${alt.single} single-use image(s) → post title (${alt.changed} changed)`);
   console.log(`Gallery images:           ${gal.count} (added ${gal.galleryAdded} to the Gallery page, filled ${gal.homeFilled} Home collage slot(s))`);

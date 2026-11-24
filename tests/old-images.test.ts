@@ -3,7 +3,7 @@ import posts from "../supabase/seed/posts.json";
 import images from "../supabase/seed/raw/old-site-images.json";
 import {
   dedupeByImage, devotionalAltPlan, fileNameOf, fullImageUrl, isReplaceable, isStockImage, legacySlugOf, normalizeSlug, pickPostImage,
-  planImagePaths, replaceMediaIds, runPool, SHARED_DEVOTIONAL_ALT, uniqueGallery,
+  planImagePaths, replaceMediaIds, runPool, SHARED_DEVOTIONAL_ALT, stockDevotionals, uniqueGallery,
 } from "../supabase/seed/old-images-lib";
 
 describe("fullImageUrl", () => {
@@ -58,6 +58,17 @@ describe("planImagePaths (stable across runs)", () => {
   it("finds the duplicated photos in the old gallery list", () => {
     expect(images.gallery.length).toBe(9);
     expect(uniqueGallery(images.gallery).length).toBe(7);
+  });
+});
+
+describe("stockDevotionals", () => {
+  it("finds the 57 devotionals whose old image is from GoDaddy's stock library", () => {
+    const byLegacy = new Map(posts.map((p) => [normalizeSlug(legacySlugOf(p.legacy_url) ?? ""), p.slug]));
+    const list = stockDevotionals(images, (l) => byLegacy.get(normalizeSlug(l)));
+    expect(list).toHaveLength(57);
+    expect(new Set(list.map((s) => s.source)).size).toBe(49);
+    expect(list.every((s) => isStockImage(s.source))).toBe(true);
+    expect(list.map((s) => s.slug)).toContain("divine-strength");
   });
 });
 
