@@ -130,6 +130,47 @@
 
 .authorAvatar {
   border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.authorText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.authorPosition {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.dates {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-size: 0.85rem;
+}
+
+.chipList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.chipList .articleCategory {
+  margin-bottom: 0;
+  transition: var(--transition-fast);
+}
+
+.chipList .articleCategory:hover {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
 }
 
 .authorName {
@@ -185,6 +226,43 @@
   margin-bottom: 12px;
 }
 
+.articleBody ul,
+.articleBody ol {
+  margin: 0 0 24px;
+  padding-left: 20px;
+}
+
+.articleBody ul {
+  list-style: disc;
+}
+
+.articleBody ol {
+  list-style: decimal;
+}
+
+.articleBody li p {
+  margin-bottom: 8px;
+}
+
+.articleBody a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: var(--transition-fast);
+}
+
+.articleBody a:hover {
+  color: var(--text-primary);
+  text-decoration-thickness: 2px;
+}
+
+.articleBody a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* Related articles */
 .relatedSection {
   background: transparent;
@@ -235,6 +313,13 @@
   }
   .articleTitle {
     font-size: 2.25rem;
+  }
+  .metaRow {
+    flex-wrap: wrap;
+  }
+  .dates {
+    margin-left: 0;
+    align-items: flex-start;
   }
   .relatedGrid {
     grid-template-columns: 1fr;

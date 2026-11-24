@@ -1,7 +1,9 @@
 "use client";
 import { useState, useTransition } from "react";
 import { ChevronDown, Eye, EyeOff, ExternalLink } from "lucide-react";
-import { Alert, Badge, Button, buttonStyles, Card, Field, Input, Textarea, toast } from "../ui";
+import { Alert, Badge, Button, buttonStyles, Card, toast } from "../ui";
+import { SeoFields } from "../seo-fields";
+import type { SeoValue } from "@/cms/seo";
 import { cn } from "../ui/cn";
 import { FieldsEditor, type MediaMap } from "./fields-editor";
 import { savePage } from "@/cms/actions/pages";
@@ -23,7 +25,7 @@ export function PageEditor({
   initialMedia,
   canUpload,
 }: {
-  page: { id: string; slug: string; title: string; updatedAt: string; seo: { title: string; description: string } };
+  page: { id: string; slug: string; title: string; updatedAt: string; seo: SeoValue };
   initialSections: EditorSection[];
   initialMedia: MediaMap;
   canUpload: boolean;
@@ -125,13 +127,13 @@ export function PageEditor({
       </ol>
 
       <Card className="space-y-4 p-4">
-        <h2 className="font-semibold">Search engines</h2>
-        <Field label="Page title in Google" hint={`${seo.title.length}/70. Leave empty to use "${page.title} | The Light City Church".`}>
-          <Input value={seo.title} maxLength={70} onChange={(e) => { setDirty(true); setSeo({ ...seo, title: e.target.value }); }} />
-        </Field>
-        <Field label="Description in Google" hint={`${seo.description.length}/170`}>
-          <Textarea value={seo.description} maxLength={170} onChange={(e) => { setDirty(true); setSeo({ ...seo, description: e.target.value }); }} />
-        </Field>
+        <h2 className="font-semibold">Search &amp; sharing</h2>
+        <SeoFields
+          value={seo}
+          onChange={(next) => { setDirty(true); setSeo(next); }}
+          canUpload={canUpload}
+          fallbackTitle={page.slug === "home" ? "The Light City Church" : `${page.title} | The Light City Church`}
+        />
       </Card>
     </div>
   );

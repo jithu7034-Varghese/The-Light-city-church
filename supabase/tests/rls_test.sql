@@ -302,4 +302,63 @@ begin
   perform tests.eq('R6 daily retention job scheduled', v_schedule, '15 3 * * *');
 end $$;
 
+-- ===== Devotional authors, categories, SEO columns (migration 10) =====
+insert into authors(id,name,position) values
+  ('aaaaaaaa-0000-0000-0000-000000000001','Live Author','Pastor'),
+  ('aaaaaaaa-0000-0000-0000-000000000002','Draft Author',null);
+insert into posts(slug,title,status,published_at,author_id) values
+  ('live-post','Live','published',now(),'aaaaaaaa-0000-0000-0000-000000000001'),
+  ('draft-post','Draft','draft',null,'aaaaaaaa-0000-0000-0000-000000000002');
+select tests.throws('B1 post author must exist in authors',
+  $q$insert into posts(slug,title,author_id) values ('x-post','X','aaaaaaaa-0000-0000-0000-0000000000ff')$q$, 'posts_author_id_fkey');
+select tests.throws('B2 share image must be a web or site URL',
+  $q$update posts set seo_image_url='javascript:alert(1)' where slug='live-post'$q$, 'posts_seo_image_url_check');
+select tests.eq('B3 creator column kept as created_by',
+  (select count(*) from information_schema.columns where table_name='posts' and column_name='created_by')::text, '1');
+
+set role anon; select set_config('request.jwt.claim.sub','',false);
+select tests.eq('B4 anon sees only authors of live devotionals', (select string_agg(name, ',') from authors), 'Live Author');
+select tests.eq('B5 anon reads post SEO columns', (select count(*) from (select seo_title, seo_description, seo_keywords, seo_image_url from posts) p)::text, '1');
+select tests.throws('B6 anon cannot add authors', $q$insert into authors(name) values ('Spam')$q$, 'permission denied');
+select tests.throws('B7 anon cannot add categories', $q$insert into categories(name,slug) values ('Spam','spam')$q$, 'permission denied');
+reset role;
+
+set role authenticated; select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000003',false);
+select tests.eq('B8 viewer sees every author (posts view)', (select count(*) from authors)::text, '2');
+select tests.throws('B9 viewer cannot add authors', $q$insert into authors(name) values ('V')$q$, 'row-level security');
+update authors set name='Hacked' where id='aaaaaaaa-0000-0000-0000-000000000001';
+select tests.eq('B10 viewer cannot rename authors', (select name from authors where id='aaaaaaaa-0000-0000-0000-000000000001'), 'Live Author');
+select tests.throws('B11 viewer cannot add categories', $q$insert into categories(name,slug) values ('V','v')$q$, 'row-level security');
+reset role;
+
+set role authenticated; select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000004',false);
+insert into authors(id,name) values ('aaaaaaaa-0000-0000-0000-000000000003','Guest Writer');
+insert into categories(id,name,slug) values ('cccccccc-0000-0000-0000-000000000001','Faith','faith');
+update categories set name='Faith & Grace' where id='cccccccc-0000-0000-0000-000000000001';
+select tests.eq('B12 pastor (posts edit) adds an author and renames a category',
+  (select count(*) from authors where name='Guest Writer')::text || '/' || (select name from categories where slug='faith'), '1/Faith & Grace');
+delete from authors where id='aaaaaaaa-0000-0000-0000-000000000003';
+select tests.eq('B13 pastor (no posts delete) cannot delete authors', (select count(*) from authors where name='Guest Writer')::text, '1');
+reset role;
+select tests.eq('B14 author and category changes audited with the actor',
+  (select string_agg(distinct entity_type, ',') from activity_log
+    where entity_type in ('authors','categories') and actor_id='00000000-0000-0000-0000-000000000004'), 'authors,categories');
+
+-- the editor (promoted to admin in T10) has posts delete
+set role authenticated; select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000002',false);
+delete from authors where id='aaaaaaaa-0000-0000-0000-000000000003';
+delete from categories where id='cccccccc-0000-0000-0000-000000000001';
+select tests.eq('B15 admin deletes an author and a category',
+  (select count(*) from authors where id='aaaaaaaa-0000-0000-0000-000000000003')::text || '/' || (select count(*) from categories where slug='faith')::text, '0/0');
+-- Page SEO goes live through publish_page (the snapshot is built from the seo_* columns)
+update pages set seo_title='About us', seo_keywords='church, nottingham', seo_image_url='/og.jpg' where slug='about';
+select publish_page((select id from pages where slug='about'));
+reset role;
+set role anon; select set_config('request.jwt.claim.sub','',false);
+select tests.eq('B16 published snapshot carries page SEO',
+  (select snapshot->'seo'->>'title' || '|' || (snapshot->'seo'->>'keywords') || '|' || (snapshot->'seo'->>'image') || '|' || coalesce(snapshot->'seo'->>'description','none')
+     from page_versions where is_published),
+  'About us|church, nottingham|/og.jpg|none');
+reset role;
+
 select 'ALL RLS TESTS PASSED';

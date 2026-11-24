@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import styles from "../../page.module.css";
 import blogStyles from "../devotionals.module.css";
 import { getLatestPosts, getPostBySlug, getPublishedPostSlugs, type PublicPost } from "@/lib/posts/public";
-import { getGlobal, getMediaByIds } from "@/cms/queries";
+import { getGlobal } from "@/cms/queries";
+import { splitKeywords } from "@/cms/seo";
 import { articleJsonLd, JsonLd } from "@/lib/seo/jsonld";
 import { TiptapContent, tiptapToText } from "@/lib/tiptap/render";
 import { isValidSlug } from "@/lib/slug";
@@ -30,12 +31,11 @@ export async function generateMetadata({ params }: PageProps<"/devotionals/[slug
   const site = await getGlobal("site");
   const title = post.seo.title || `${post.title} | Daily Light Devotional`;
   const description = describe(post);
-  const ogId = post.seo.ogImage?.mediaId;
-  const og = ogId ? (await getMediaByIds([ogId]))[ogId] : undefined;
-  const image = og ?? post.image ?? undefined;
+  const image = post.seo.imageUrl ? { url: post.seo.imageUrl, alt: post.title } : (post.image ?? undefined);
   return {
     title,
     description,
+    keywords: splitKeywords(post.seo.keywords),
     authors: [{ name: post.authorName }],
     alternates: { canonical: `/devotionals/${post.slug}` },
     openGraph: {
@@ -45,6 +45,8 @@ export async function generateMetadata({ params }: PageProps<"/devotionals/[slug
       url: `/devotionals/${post.slug}`,
       siteName: site.name || "The Light City Church",
       publishedTime: post.publishedAt,
+      ...(post.updatedDisplayAt && { modifiedTime: post.updatedDisplayAt }),
+      ...(post.categories.length && { tags: post.categories.map((c) => c.name) }),
       authors: [post.authorName],
       ...(image && { images: [{ url: image.url, alt: image.alt }] }),
     },
@@ -66,12 +68,37 @@ export default async function DevotionalPage({ params }: PageProps<"/devotionals
         <Link href="/devotionals" className={blogStyles.backButton}>← All devotionals</Link>
         <div className={blogStyles.articleCard}>
           <header className={blogStyles.articleHeader}>
-            <span className={blogStyles.articleCategory}>{post.category ?? "Devotional"}</span>
+            {post.categories.length > 0 ? (
+              <ul className={blogStyles.chipList} aria-label="Categories">
+                {post.categories.map((c) => (
+                  <li key={c.slug}>
+                    <Link href={`/devotionals?category=${encodeURIComponent(c.slug)}`} className={blogStyles.articleCategory}>{c.name}</Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span className={blogStyles.articleCategory}>Devotional</span>
+            )}
             <h1 className={blogStyles.articleTitle}>{post.title}</h1>
             <div className={blogStyles.metaRow}>
-              <span className={blogStyles.authorName}>{post.authorName}</span>
-              <span aria-hidden>•</span>
-              <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
+              <div className={blogStyles.authorMeta}>
+                {post.author?.photo && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={post.author.photo.url} alt="" width={44} height={44} className={blogStyles.authorAvatar} />
+                )}
+                <span className={blogStyles.authorText}>
+                  <span className={blogStyles.authorName}>{post.author?.name ?? post.authorName}</span>
+                  {post.author?.position && <span className={blogStyles.authorPosition}>{post.author.position}</span>}
+                </span>
+              </div>
+              <span className={blogStyles.dates}>
+                <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
+                {post.updatedDisplayAt && (
+                  <span>
+                    Last updated <time dateTime={post.updatedDisplayAt}>{formatPostDate(post.updatedDisplayAt)}</time>
+                  </span>
+                )}
+              </span>
             </div>
           </header>
           {post.image && (

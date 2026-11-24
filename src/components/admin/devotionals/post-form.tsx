@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { JSONContent } from "@tiptap/react";
 import { ExternalLink, ImageIcon, Trash2, X } from "lucide-react";
-import { Alert, Button, buttonStyles, Card, ConfirmDialog, Field, Input, Select, Textarea, toast } from "../ui";
+import { Alert, Button, buttonStyles, Card, Checkbox, ConfirmDialog, Field, Input, Select, Textarea, toast } from "../ui";
 import { RichTextEditor } from "../editors/rich-text-editor";
 import { MediaPicker } from "../media/media-picker";
+import { SeoFields } from "../seo-fields";
+import type { SeoValue } from "@/cms/seo";
 import { slugify } from "@/lib/slug";
 import { deletePost, savePost } from "@/cms/actions/posts";
 import type { MediaItem } from "@/cms/actions/media";
@@ -18,10 +20,19 @@ export type PostFormValue = {
   excerpt: string;
   content: JSONContent;
   featured: { id: string; url: string; alt: string } | null;
-  categoryId: string | null;
+  categoryIds: string[];
+  authorId: string | null;
   status: "draft" | "published";
   publishedAt: string | null; // ISO
+  updatedDisplayAt: string | null; // ISO, the "Last updated" date shown on the devotional
+  seo: SeoValue;
 };
+
+/** ISO → value for <input type="date"> (Europe/London calendar day). */
+function toDateInput(iso: string | null) {
+  if (!iso) return "";
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(iso));
+}
 
 /** ISO → value for <input type="datetime-local"> in the browser's time zone. */
 function toLocalInput(iso: string | null) {
@@ -34,10 +45,12 @@ function toLocalInput(iso: string | null) {
 export function PostForm({
   initial,
   categories,
+  authors,
   permissions,
 }: {
   initial: PostFormValue;
   categories: { id: string; name: string }[];
+  authors: { id: string; name: string; position: string | null }[];
   permissions: { publish: boolean; remove: boolean; upload: boolean };
 }) {
   const router = useRouter();
@@ -59,9 +72,12 @@ export function PostForm({
         excerpt: v.excerpt,
         content: v.content as { type: "doc"; content: unknown[] },
         featuredMediaId: v.featured?.id ?? null,
-        categoryId: v.categoryId,
+        categoryIds: v.categoryIds,
+        authorId: v.authorId,
         status,
         publishedAt: v.publishedAt,
+        updatedDisplayAt: v.updatedDisplayAt,
+        seo: v.seo,
       });
       if (!r.ok) {
         if (r.field) setErrors({ [r.field]: r.error });
@@ -108,6 +124,16 @@ export function PostForm({
           <RichTextEditor label="Devotional content" value={v.content} onChange={(doc) => set("content", doc)} />
           {errors.content && <p className="text-xs font-medium text-danger">{errors.content}</p>}
         </div>
+        <Card className="p-4">
+          <h2 className="mb-4 font-semibold">Search &amp; sharing</h2>
+          <SeoFields
+            value={v.seo}
+            onChange={(seo) => set("seo", seo)}
+            canUpload={permissions.upload}
+            fallbackTitle={`${v.title || "Title"} | Daily Light Devotional`}
+            errors={errors}
+          />
+        </Card>
       </div>
 
       <div className="space-y-4">
@@ -125,12 +151,35 @@ export function PostForm({
               onChange={(e) => set("publishedAt", e.target.value ? new Date(e.target.value).toISOString() : null)}
             />
           </Field>
-          <Field label="Category">
-            <Select value={v.categoryId ?? ""} onChange={(e) => set("categoryId", e.target.value || null)}>
-              <option value="">No category</option>
-              {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+          <Field label="Last updated" hint="Optional. Shown on the devotional as “Last updated”." error={errors.updatedDisplayAt}>
+            <Input
+              type="date"
+              value={toDateInput(v.updatedDisplayAt)}
+              onChange={(e) => set("updatedDisplayAt", e.target.value ? new Date(`${e.target.value}T12:00:00Z`).toISOString() : null)}
+            />
+          </Field>
+          <Field label="Author" error={errors.authorId}>
+            <Select value={v.authorId ?? ""} onChange={(e) => set("authorId", e.target.value || null)}>
+              <option value="">No author (keep current byline)</option>
+              {authors.map((a) => <option key={a.id} value={a.id}>{a.name}{a.position ? ` (${a.position})` : ""}</option>)}
             </Select>
           </Field>
+          <fieldset className="space-y-2">
+            <legend className="mb-1.5 text-sm font-medium">Categories</legend>
+            {categories.length === 0 && <p className="text-xs text-muted">No categories yet. Add them under Categories &amp; authors.</p>}
+            <div className="max-h-48 space-y-1.5 overflow-y-auto">
+              {categories.map((c) => (
+                <label key={c.id} className="flex items-center gap-2 text-sm">
+                  <Checkbox
+                    checked={v.categoryIds.includes(c.id)}
+                    onChange={(e) => set("categoryIds", e.target.checked ? [...v.categoryIds, c.id] : v.categoryIds.filter((id) => id !== c.id))}
+                  />
+                  {c.name}
+                </label>
+              ))}
+            </div>
+            {errors.categoryIds && <p className="text-xs font-medium text-danger">{errors.categoryIds}</p>}
+          </fieldset>
           {!permissions.publish && <Alert tone="info">You can save drafts. An Editor or Admin publishes them.</Alert>}
           <div className="flex flex-col gap-2">
             {permissions.publish && (

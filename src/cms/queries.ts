@@ -9,7 +9,7 @@ import { GLOBALS, type GlobalKey } from "./globals";
 import type { MediaInfo } from "./define";
 
 export type PublishedSection = { id: string; type: string; schema_version: number; visible: boolean; data: unknown };
-export type PublishedPage = { slug: string; title: string; seo: { title?: string; description?: string }; sections: PublishedSection[] };
+export type PublishedPage = { slug: string; title: string; seo: { title?: string; description?: string; keywords?: string; image?: string }; sections: PublishedSection[] };
 
 export async function getPublishedPage(slug: string): Promise<PublishedPage | null> {
   "use cache";

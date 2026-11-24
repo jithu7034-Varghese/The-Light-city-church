@@ -48,6 +48,42 @@ export type Database = {
           },
         ];
       };
+      authors: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+          photo_media_id: string | null;
+          position: string | null;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          id?: string;
+          name: string;
+          photo_media_id?: string | null;
+          position?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
+          photo_media_id?: string | null;
+          position?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "authors_photo_media_id_fkey";
+            columns: ["photo_media_id"];
+            isOneToOne: false;
+            referencedRelation: "media";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       availability_overrides: {
         Row: {
           date: string;
@@ -1149,6 +1185,10 @@ export type Database = {
           id: string;
           published_at: string | null;
           seo: NonNullable<Json>;
+          seo_description: string | null;
+          seo_image_url: string | null;
+          seo_keywords: string | null;
+          seo_title: string | null;
           slug: string;
           sort_order: number;
           status: Database["public"]["Enums"]["publish_status"];
@@ -1165,6 +1205,10 @@ export type Database = {
           id?: string;
           published_at?: string | null;
           seo?: NonNullable<Json>;
+          seo_description?: string | null;
+          seo_image_url?: string | null;
+          seo_keywords?: string | null;
+          seo_title?: string | null;
           slug: string;
           sort_order?: number;
           status?: Database["public"]["Enums"]["publish_status"];
@@ -1180,6 +1224,10 @@ export type Database = {
           id?: string;
           published_at?: string | null;
           seo?: NonNullable<Json>;
+          seo_description?: string | null;
+          seo_image_url?: string | null;
+          seo_keywords?: string | null;
+          seo_title?: string | null;
           slug?: string;
           sort_order?: number;
           status?: Database["public"]["Enums"]["publish_status"];
@@ -1272,6 +1320,7 @@ export type Database = {
           author_name: string;
           content: NonNullable<Json>;
           created_at: string;
+          created_by: string | null;
           excerpt: string | null;
           featured_media_id: string | null;
           id: string;
@@ -1279,10 +1328,15 @@ export type Database = {
           published_at: string | null;
           search: unknown;
           seo: NonNullable<Json>;
+          seo_description: string | null;
+          seo_image_url: string | null;
+          seo_keywords: string | null;
+          seo_title: string | null;
           slug: string;
           status: Database["public"]["Enums"]["post_status"];
           title: string;
           updated_at: string;
+          updated_display_at: string | null;
         };
         ComputedFields: never;
         Insert: {
@@ -1290,6 +1344,7 @@ export type Database = {
           author_name?: string;
           content?: NonNullable<Json>;
           created_at?: string;
+          created_by?: string | null;
           excerpt?: string | null;
           featured_media_id?: string | null;
           id?: string;
@@ -1297,16 +1352,22 @@ export type Database = {
           published_at?: string | null;
           search?: never;
           seo?: NonNullable<Json>;
+          seo_description?: string | null;
+          seo_image_url?: string | null;
+          seo_keywords?: string | null;
+          seo_title?: string | null;
           slug: string;
           status?: Database["public"]["Enums"]["post_status"];
           title: string;
           updated_at?: string;
+          updated_display_at?: string | null;
         };
         Update: {
           author_id?: string | null;
           author_name?: string;
           content?: NonNullable<Json>;
           created_at?: string;
+          created_by?: string | null;
           excerpt?: string | null;
           featured_media_id?: string | null;
           id?: string;
@@ -1314,15 +1375,27 @@ export type Database = {
           published_at?: string | null;
           search?: never;
           seo?: NonNullable<Json>;
+          seo_description?: string | null;
+          seo_image_url?: string | null;
+          seo_keywords?: string | null;
+          seo_title?: string | null;
           slug?: string;
           status?: Database["public"]["Enums"]["post_status"];
           title?: string;
           updated_at?: string;
+          updated_display_at?: string | null;
         };
         Relationships: [
           {
             foreignKeyName: "posts_author_id_fkey";
             columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "authors";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "posts_created_by_fkey";
+            columns: ["created_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];

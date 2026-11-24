@@ -6,7 +6,7 @@ import { NoAccess } from "@/components/admin/no-access";
 import { PostForm } from "@/components/admin/devotionals/post-form";
 import { requireStaff } from "@/lib/auth/session";
 import { can } from "@/lib/auth/permissions";
-import { loadCategories, loadPostForEditor } from "../load";
+import { loadAuthors, loadCategories, loadPostForEditor } from "../load";
 
 export const metadata: Metadata = { title: "Edit devotional" };
 
@@ -16,7 +16,7 @@ export default async function EditDevotionalPage({ params }: PageProps<"/admin/d
   if (!can(user, "posts", "edit")) return <NoAccess what="editing devotionals" />;
   if (!z.uuid().safeParse(id).success) notFound();
 
-  const [post, categories] = await Promise.all([loadPostForEditor(id), loadCategories()]);
+  const [post, categories, authors] = await Promise.all([loadPostForEditor(id), loadCategories(), loadAuthors()]);
   if (!post) notFound();
   return (
     <>
@@ -25,6 +25,7 @@ export default async function EditDevotionalPage({ params }: PageProps<"/admin/d
         key={post.id}
         initial={post}
         categories={categories}
+        authors={authors}
         permissions={{ publish: can(user, "posts", "publish"), remove: can(user, "posts", "delete"), upload: can(user, "media", "edit") }}
       />
     </>

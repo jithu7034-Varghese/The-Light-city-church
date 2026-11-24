@@ -35,9 +35,10 @@ function renderText(node: Node, key: number): ReactNode {
       case "link": {
         const href = safeHref(mark.attrs?.href);
         if (href) {
-          const external = /^https?:/.test(href);
+          // "Open in new tab" is chosen per link in the editor (stored as target="_blank").
+          const newTab = mark.attrs?.target === "_blank";
           out = (
-            <a href={href} {...(external ? { target: "_blank", rel: "noopener noreferrer nofollow" } : {})}>
+            <a href={href} {...(newTab ? { target: "_blank", rel: "noopener noreferrer" } : /^https?:/.test(href) ? { rel: "noopener noreferrer" } : {})}>
               {out}
             </a>
           );
@@ -67,7 +68,7 @@ function renderNode(node: Node, key: number): ReactNode {
     case "bulletList":
       return <ul key={key}>{renderChildren(node.content)}</ul>;
     case "orderedList":
-      return <ol key={key}>{renderChildren(node.content)}</ol>;
+      return <ol key={key} start={Number(node.attrs?.start) > 1 ? Number(node.attrs?.start) : undefined}>{renderChildren(node.content)}</ol>;
     case "listItem":
       return <li key={key}>{renderChildren(node.content)}</li>;
     case "blockquote":

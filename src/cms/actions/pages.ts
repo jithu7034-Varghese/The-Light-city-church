@@ -11,6 +11,7 @@ import { can } from "@/lib/auth/permissions";
 import { logActivity } from "@/lib/activity";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getSectionDef } from "@/cms/registry";
+import { seoSchema } from "@/cms/seo";
 import type { Json } from "@/lib/supabase/database.types";
 
 export type SavePageResult = { ok: true; message: string; updatedAt: string } | { ok: false; error: string; sectionId?: string };
@@ -18,7 +19,7 @@ export type SavePageResult = { ok: true; message: string; updatedAt: string } | 
 const inputSchema = z.object({
   pageId: z.uuid(),
   expectedUpdatedAt: z.string().max(64),
-  seo: z.object({ title: z.string().trim().max(70), description: z.string().trim().max(170) }),
+  seo: seoSchema,
   sections: z.array(z.object({ id: z.uuid(), visible: z.boolean(), data: z.unknown() })).max(60),
 });
 
@@ -33,7 +34,7 @@ export async function savePage(input: z.input<typeof inputSchema>): Promise<Save
 
   const supabase = await createSupabaseServerClient();
   const [{ data: page }, { data: existing }] = await Promise.all([
-    supabase.from("pages").select("id, slug, title, seo, updated_at").eq("id", pageId).maybeSingle(),
+    supabase.from("pages").select("id, slug, title, updated_at").eq("id", pageId).maybeSingle(),
     supabase.from("page_sections").select("id, type, schema_version").eq("page_id", pageId),
   ]);
   if (!page) return { ok: false, error: "That page no longer exists." };
@@ -58,8 +59,11 @@ export async function savePage(input: z.input<typeof inputSchema>): Promise<Save
     const { error } = await supabase.from("page_sections").update({ visible: u.visible, data: u.data, schema_version: u.schema_version }).eq("id", u.id).eq("page_id", pageId);
     if (error) return { ok: false, error: "Couldn't save a section. Please try again.", sectionId: u.id };
   }
-  const nextSeo = { ...((page.seo as Record<string, unknown>) ?? {}), title: seo.title, description: seo.description };
-  const { error: seoError } = await supabase.from("pages").update({ seo: nextSeo, updated_by: user.id }).eq("id", pageId);
+  // SEO columns go live with the snapshot publish_page() builds from them.
+  const { error: seoError } = await supabase
+    .from("pages")
+    .update({ seo_title: seo.title, seo_description: seo.description, seo_keywords: seo.keywords, seo_image_url: seo.imageUrl, updated_by: user.id })
+    .eq("id", pageId);
   if (seoError) return { ok: false, error: "Couldn't save the page settings." };
 
   const { error: publishError } = await supabase.rpc("publish_page", { p_page_id: pageId, p_note: `Published by ${user.fullName || user.email}` });

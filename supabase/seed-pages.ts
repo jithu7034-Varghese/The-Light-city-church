@@ -68,9 +68,9 @@ async function seedPages(images: Record<SeedImageFile, string>) {
     if (existing) {
       const { error } = await db.from("page_sections").delete().eq("page_id", existing.id);
       if (error) throw new Error(`clear ${page.slug}: ${error.message}`);
-      await db.from("pages").update({ title: page.title, seo: page.seo as NonNullable<Json>, sort_order: order }).eq("id", existing.id);
+      await db.from("pages").update({ title: page.title, seo: page.seo as NonNullable<Json>, seo_title: page.seo.title ?? null, seo_description: page.seo.description ?? null, sort_order: order }).eq("id", existing.id);
     } else {
-      const { data, error } = await db.from("pages").insert({ slug: page.slug, title: page.title, seo: page.seo as NonNullable<Json>, sort_order: order }).select("id").single();
+      const { data, error } = await db.from("pages").insert({ slug: page.slug, title: page.title, seo: page.seo as NonNullable<Json>, seo_title: page.seo.title ?? null, seo_description: page.seo.description ?? null, sort_order: order }).select("id").single();
       if (error || !data) throw new Error(`create ${page.slug}: ${error?.message}`);
       pageId = data.id;
     }

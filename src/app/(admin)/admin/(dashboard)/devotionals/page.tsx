@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, Plus, Search } from "lucide-react";
+import { BookOpen, Plus, Search, Tags } from "lucide-react";
 import { Badge, buttonStyles, Card, EmptyState, Input, PageHeader, Select } from "@/components/admin/ui";
 import { NoAccess } from "@/components/admin/no-access";
 import { formatDateTime } from "@/components/admin/format";
@@ -39,11 +39,16 @@ export default async function DevotionalsAdminPage({ searchParams }: PageProps<"
         title="Devotionals"
         description={`${count ?? 0} devotional${count === 1 ? "" : "s"}`}
         actions={
-          can(user, "posts", "edit") && (
-            <Link href="/admin/devotionals/new" className={buttonStyles()}>
-              <Plus className="size-4" aria-hidden /> New devotional
+          <div className="flex gap-2">
+            <Link href="/admin/devotionals/manage" className={buttonStyles("secondary")}>
+              <Tags className="size-4" aria-hidden /> Categories &amp; authors
             </Link>
-          )
+            {can(user, "posts", "edit") && (
+              <Link href="/admin/devotionals/new" className={buttonStyles()}>
+                <Plus className="size-4" aria-hidden /> New devotional
+              </Link>
+            )}
+          </div>
         }
       />
       <Card className="mb-4 p-4">

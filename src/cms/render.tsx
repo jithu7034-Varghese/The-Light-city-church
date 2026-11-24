@@ -6,6 +6,7 @@ import { getSectionDef } from "./registry";
 import { collectMediaIds, type ImageRef } from "./fields";
 import { getGlobal, getMediaByIds, type PublishedPage } from "./queries";
 import type { SectionCtx } from "./define";
+import { splitKeywords } from "./seo";
 
 export async function PageSections({ page }: { page: PublishedPage }) {
   const visible = page.sections.filter((s) => s.visible !== false);
@@ -39,12 +40,13 @@ export async function pageMetadata(page: PublishedPage | null, path: string): Pr
   const siteName = site.name || "The Light City Church";
   const title = page.seo.title || (page.slug === "home" ? siteName : `${page.title} | ${siteName}`);
   const description = page.seo.description || site.tagline || undefined;
-  // Share image: the first image on the page (e.g. its hero), if any.
-  const firstImage = [...collectMediaIds(page.sections.filter((s) => s.visible !== false))][0];
-  const image = firstImage ? (await getMediaByIds([firstImage]))[firstImage] : undefined;
+  // Share image: the page's SEO image, else the first image on the page (e.g. its hero).
+  const firstImage = page.seo.image ? undefined : [...collectMediaIds(page.sections.filter((s) => s.visible !== false))][0];
+  const image = page.seo.image ? { url: page.seo.image, alt: page.title } : firstImage ? (await getMediaByIds([firstImage]))[firstImage] : undefined;
   return {
     title,
     description,
+    keywords: splitKeywords(page.seo.keywords),
     alternates: { canonical: path },
     openGraph: { title, description, type: "website", url: path, siteName, ...(image && { images: [{ url: image.url, alt: image.alt }] }) },
     twitter: { card: image ? "summary_large_image" : "summary", title, description },
