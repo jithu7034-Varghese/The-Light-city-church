@@ -129,7 +129,7 @@
 }
 
 /* ---------- Article hero ---------- */
-.articleHeroCard { width: 100%; }
+.articleHeroCard { width: min(880px, 100%); }
 .categoryList {
   list-style: none;
   display: flex;
@@ -176,6 +176,8 @@
   padding-bottom: var(--section-y);
 }
 .articleColumn {
+  max-width: 800px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

@@ -96,7 +96,7 @@
 
 /* ---------- Pastoral oversight: leader cards ---------- */
 .leaderSingle {
-  max-width: none;
+  max-width: 628px;
 }
 .leaderCard.leaderCard { border-radius: var(--radius-card-lg); }
 .leaderPhoto {

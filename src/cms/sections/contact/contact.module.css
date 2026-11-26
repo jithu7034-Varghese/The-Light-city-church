@@ -13,8 +13,8 @@
   gap: 32px 40px;
 }
 .heroRow .heroCard {
-  width: auto;
-  flex: 1 1 0; /* fills the row up to the service card */
+  width: min(720px, 100%);
+  flex: 0 1 720px;
   min-width: 0;
 }
 

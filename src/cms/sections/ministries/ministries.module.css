@@ -2,7 +2,7 @@
    chips, headings, glass, photo backgrounds, buttons) come from src/components/site/ds. */
 
 /* ---------- Grid ---------- */
-.intro { max-width: none; }
+.intro { max-width: 640px; }
 
 .grid { gap: 24px; }
 
@@ -101,18 +101,19 @@
   flex-direction: column;
   align-items: center;
   gap: 24px;
-  width: 100%;
+  max-width: 904px;
+  margin: 0 auto;
   padding: 64px 72px;
   border-radius: var(--radius-panel);
   text-align: center;
 }
 .ctaTitle {
-  max-width: none;
+  max-width: 760px;
   color: #ffffff;
 }
 .ctaAccent { color: var(--amber); }
 .ctaText {
-  max-width: none;
+  max-width: 680px;
   font-size: var(--fs-body-l);
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.92);
