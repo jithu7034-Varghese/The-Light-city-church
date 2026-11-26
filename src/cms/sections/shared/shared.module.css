@@ -120,9 +120,9 @@
   color: var(--earth);
 }
 
-.article { max-width: 840px; margin-inline: auto; }
+.article { max-width: none; }
 .article .prose { font-size: 1.0625rem; }
-.centerColumn { max-width: 800px; margin-inline: auto; text-align: center; }
+.centerColumn { max-width: none; text-align: center; }
 .richHeading { margin-bottom: 20px; }
 .proseCenter { margin-inline: auto; }
 .proseCenter ul,
@@ -143,8 +143,7 @@
   padding-block: var(--section-y);
 }
 .scriptureCard {
-  max-width: 1080px;
-  margin-inline: auto;
+  max-width: none;
   padding: 64px clamp(24px, 6vw, 88px) 60px;
   border-radius: var(--radius-panel);
   text-align: center;
@@ -185,14 +184,14 @@
   border-radius: var(--radius-panel);
 }
 .ctaCard {
-  width: min(770px, 100%);
+  width: 100%;
   padding: 56px clamp(24px, 5vw, 64px);
   border-radius: var(--radius-panel);
   text-align: center;
 }
 .ctaHeading { color: #ffffff; }
 .ctaText {
-  max-width: 580px;
+  max-width: none;
   margin: 16px auto 0;
   font-size: var(--fs-body);
   line-height: 1.65;
@@ -206,7 +205,7 @@
   gap: 48px 80px;
   align-items: start;
 }
-.splitSolo { grid-template-columns: minmax(0, 1fr); max-width: calc(840px + 2 * var(--gutter)); }
+.splitSolo { grid-template-columns: minmax(0, 1fr); }
 .splitReverse { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
 .splitReverse > .splitText { order: 2; }
 .splitImage {
@@ -237,8 +236,6 @@
 .videoFrame {
   position: relative;
   width: 100%;
-  max-width: 1080px;
-  margin-inline: auto;
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-card-lg);
   overflow: hidden;
@@ -258,7 +255,7 @@
 .servicePanelSolo { grid-template-columns: minmax(0, 1fr); }
 .onPhotoHeading { color: #ffffff; }
 .onPhotoText {
-  max-width: 560px;
+  max-width: none;
   margin-top: 16px;
   font-size: var(--fs-body);
   line-height: 1.65;
@@ -303,14 +300,12 @@
   border-radius: var(--radius-panel);
   background: var(--cream);
 }
-.givingText { display: flex; flex-direction: column; gap: 16px; max-width: 720px; }
+.givingText { display: flex; flex-direction: column; gap: 16px; }
 .givingAction { display: flex; flex-direction: column; align-items: flex-start; }
 .newsletterCard {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 720px;
-  margin-inline: auto;
   padding: 48px clamp(24px, 4vw, 48px);
   border: 1px solid var(--line);
   border-radius: var(--radius-panel);
@@ -387,8 +382,6 @@
 /* ---------- Forms ---------- */
 .formCard {
   position: relative;
-  max-width: 800px;
-  margin-inline: auto;
   padding: 48px;
   border: 1px solid var(--line);
   border-radius: var(--radius-card-lg);
@@ -493,7 +486,7 @@
   gap: 48px 80px;
   align-items: start;
 }
-.podcastSolo { grid-template-columns: minmax(0, 1fr); max-width: calc(760px + 2 * var(--gutter)); }
+.podcastSolo { grid-template-columns: minmax(0, 1fr); }
 .podcastIntro { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
 .podcastIntro .buttons { margin-top: 16px; }
 .episodes { display: flex; flex-direction: column; gap: 12px; list-style: none; }

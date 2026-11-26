@@ -608,7 +608,7 @@ a.serviceCard:hover .serviceImage .fill { transform: scale(1.04); }
 a:hover .arrow { transform: translateX(4px); }
 
 /* ======================= Gallery ======================= */
-.galleryIntro { max-width: 460px; }
+.galleryIntro { max-width: none; }
 .galleryGrid {
   display: grid;
   grid-template-columns: minmax(0, 628fr) minmax(0, 302fr) minmax(0, 302fr);
@@ -777,14 +777,13 @@ a:hover .arrow { transform: translateX(4px); }
   flex-direction: column;
   align-items: center;
   gap: 24px;
-  width: min(904px, 100%);
+  width: 100%;
   padding: 64px 72px;
   border-radius: var(--radius-panel);
   text-align: center;
 }
-.prayerHeading { color: #ffffff; max-width: 760px; }
+.prayerHeading { color: #ffffff; }
 .prayerText {
-  max-width: 760px;
   font-size: var(--fs-body-l);
   line-height: 1.6;
   color: #ffffff;

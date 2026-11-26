@@ -1,7 +1,7 @@
 /* Gallery page (Figma "Gallery" frame). Shared pieces (container, section spacing, headings,
    glass caption, page hero) come from src/components/site/ds. */
 
-.intro { max-width: 640px; }
+.intro { max-width: none; }
 
 /* ---------- Photo grid ---------- */
 .grid {
