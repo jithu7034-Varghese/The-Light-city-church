@@ -74,7 +74,9 @@ const siteFields = {
 };
 
 const navbarFields = {
-  logoImage: f.image("Logo image (optional)", { help: "The crown logo, shown in front of the logo text in the header and footer." }),
+  logoImage: f.image("Logo image (optional)", {
+    help: "Shown in front of the logo text in the header and footer. Leave empty to use the standard crown-of-thorns logo.",
+  }),
   logoText: f.text("Logo text (bold part)", { max: 30, default: "City" }),
   logoAccent: f.text("Logo text (light part)", { max: 30, default: "Light" }),
   items: f.list("Menu items", "Menu item", linkItem, { max: 10, titleKey: "label" }),

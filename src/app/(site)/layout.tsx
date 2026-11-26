@@ -47,7 +47,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     .sort();
   const media = await getMediaByIds(imageIds);
   const logoMedia = navbar.logoImage ? media[navbar.logoImage.mediaId] : undefined;
-  const logo = logoMedia ? { url: logoMedia.url, alt: logoMedia.alt } : null;
+  // Navbar → Logo image, else the standard crown-of-thorns mark (public/logo1.png), so the
+  // header and footer always show the icon in front of the logo text.
+  const logo = logoMedia ? { url: logoMedia.url, alt: logoMedia.alt } : { url: "/logo1.png", alt: "" };
   // Footer scene: Footer → scene photo, else Site settings → "Section background image" (which is
   // also the fallback photo for sections, through ctx.background).
   const sceneMedia =
