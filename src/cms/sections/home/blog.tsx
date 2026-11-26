@@ -1,13 +1,15 @@
 // Home: the latest devotionals (read live from the posts table).
+import Link from "next/link";
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
 import { ViewportSection } from "@/cms/sections/shared/animate";
 import { getLatestPosts } from "@/lib/posts/public";
-import styles from "@/app/(site)/page.module.css";
+import { ds, PillButton, SectionTag } from "@/components/site/ds";
+import h from "./home.module.css";
+import { ArrowRight } from "./social-icons";
 import { dateFormat } from "./util";
 
 const FALLBACK_IMAGE = "/citylights.jpeg";
-const imgStyle = { width: "100%", height: "100%", objectFit: "cover" } as const;
 
 export const homeBlog = defineSection({
   type: "home_blog",
@@ -24,70 +26,62 @@ export const homeBlog = defineSection({
     const [featured, ...rest] = await getLatestPosts(4);
     const buttonLabel = data.buttonLabel || data.buttonLink.label;
     return (
-      <ViewportSection className={styles.blogSection} id="blog">
-        <div className={styles.blogContainer}>
-          {(data.label || data.heading || data.headingItalic) && (
-            <div className={styles.blogHeader}>
-              {data.label && <span className={styles.blogLabel}>{data.label}</span>}
-              <h2 className={styles.blogHeadline}>
-                {data.heading}
-                {data.heading && data.headingItalic && " "}
-                {data.headingItalic && <span className={styles.italicSerif}>{data.headingItalic}</span>}
-              </h2>
+      <ViewportSection className={`${ds.section} ${ds.cream}`} id="blog">
+        <div className={ds.container}>
+          {(data.label || data.heading || data.headingItalic || (buttonLabel && data.buttonLink.href)) && (
+            <div className={ds.sectionHeader}>
+              <div className={ds.sectionHeaderText}>
+                {data.label && <SectionTag>{data.label}</SectionTag>}
+                {(data.heading || data.headingItalic) && (
+                  <h2 className={ds.h2}>
+                    {data.heading}
+                    {data.heading && data.headingItalic && " "}
+                    {data.headingItalic && <span className={ds.accent}>{data.headingItalic}</span>}
+                  </h2>
+                )}
+              </div>
+              <PillButton href={data.buttonLink.href} label={buttonLabel} variant="secondary" />
             </div>
           )}
 
           {featured && (
-            <a href={`/devotionals/${featured.slug}`} className={`${styles.featuredCard} animate-premium-block`} style={{ display: "flex" }}>
-              <div className={styles.featuredImageArea}>
+            <Link href={`/devotionals/${featured.slug}`} className={`${h.featured} ${ds.reveal}`}>
+              <div className={h.featuredImage}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={featured.image?.url ?? FALLBACK_IMAGE} alt={featured.image?.alt ?? ""} loading="lazy" className={styles.blogCardImage} style={imgStyle} />
+                <img src={featured.image?.url ?? FALLBACK_IMAGE} alt={featured.image?.alt ?? ""} loading="lazy" className={h.fill} />
               </div>
-              <div className={styles.featuredTextArea}>
-                <div className={styles.badgeRow}>
-                  <span className={styles.blogPillBadge}>{featured.category ?? "Devotional"}</span>
-                </div>
-                <h3 className={styles.featuredTitle}>{featured.title}</h3>
-                {featured.excerpt && <p className={styles.featuredExcerpt}>{featured.excerpt}</p>}
-                <div className={styles.featuredFooter}>
-                  <div className={styles.authorGroup}>
-                    <span className={styles.authorName}>{featured.authorName}</span>
-                  </div>
-                  <span className={styles.postDate}>{dateFormat.format(new Date(featured.publishedAt))}</span>
+              <div className={h.featuredBody}>
+                <span className={ds.chipCream}>{featured.category ?? "Devotional"}</span>
+                <h3 className={h.featuredTitle}>{featured.title}</h3>
+                {featured.excerpt && <p className={h.featuredExcerpt}>{featured.excerpt}</p>}
+                <div className={h.meta}>
+                  <span className={h.metaText}>
+                    {featured.authorName && <span>{featured.authorName}</span>}
+                    <span>{dateFormat.format(new Date(featured.publishedAt))}</span>
+                  </span>
+                  <span className={h.cardFoot}>
+                    <ArrowRight />
+                  </span>
                 </div>
               </div>
-            </a>
+            </Link>
           )}
 
           {rest.length > 0 && (
-            <div className={styles.blogGrid}>
-              {rest.map((post, idx) => (
-                <a
-                  key={post.slug}
-                  href={`/devotionals/${post.slug}`}
-                  className={`${styles.blogCard} animate-premium-block`}
-                  style={{ animationDelay: `${0.2 + idx * 0.1}s` }}
-                >
-                  <div className={styles.blogCardImageWrapper}>
+            <div className={ds.cardGrid3}>
+              {rest.map((post) => (
+                <Link key={post.slug} href={`/devotionals/${post.slug}`} className={`${ds.card} ${h.postCard} ${ds.reveal}`}>
+                  <div className={h.postImage}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={post.image?.url ?? FALLBACK_IMAGE} alt={post.image?.alt ?? ""} loading="lazy" className={styles.blogCardImage} style={imgStyle} />
+                    <img src={post.image?.url ?? FALLBACK_IMAGE} alt={post.image?.alt ?? ""} loading="lazy" className={h.fill} />
                   </div>
-                  <div className={styles.blogCardContent}>
-                    <div className={styles.badgeRow}>
-                      <span className={styles.blogPillBadge}>{post.category ?? "Devotional"}</span>
-                    </div>
-                    <h3 className={styles.blogCardTitle}>{post.title}</h3>
+                  <div className={h.postBody}>
+                    <span className={ds.chipCream}>{post.category ?? "Devotional"}</span>
+                    <h3 className={h.cardTitle}>{post.title}</h3>
+                    {post.excerpt && <p className={`${h.cardText} ${h.postExcerpt}`}>{post.excerpt}</p>}
                   </div>
-                </a>
+                </Link>
               ))}
-            </div>
-          )}
-
-          {buttonLabel && data.buttonLink.href && (
-            <div className={styles.blogCtaContainer}>
-              <a href={data.buttonLink.href} className={styles.loadMoreBtn} style={{ display: "inline-block", textAlign: "center" }}>
-                {buttonLabel}
-              </a>
             </div>
           )}
         </div>

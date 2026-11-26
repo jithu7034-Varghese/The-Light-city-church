@@ -1,24 +1,25 @@
 // Generic sections used by several pages (and the new pages). Server components.
 import { defineSection } from "@/cms/define";
-import { f, type LinkValue } from "@/cms/fields";
+import { f, type RichText } from "@/cms/fields";
 import { TiptapContent } from "@/lib/tiptap/render";
+import { AccentHeading, PageHero, PhotoBackground, PillButtons, SectionTag, ds } from "@/components/site/ds";
+import { ViewportSection } from "./animate";
 import s from "./shared.module.css";
 
 const buttonFields = { label: f.text("Button label", { max: 80 }), link: f.link("Button link") };
 
-/** Buttons with both a label and a link render; empty ones are skipped. */
-export function Buttons({ items, ghostAfterFirst = true }: { items: { id: string; label: string; link: LinkValue }[]; ghostAfterFirst?: boolean }) {
-  const shown = items.filter((b) => (b.label || b.link.label) && b.link.href);
-  if (shown.length === 0) return null;
-  return (
-    <div className={s.buttons}>
-      {shown.map((b, i) => (
-        <a key={b.id} href={b.link.href} className={i > 0 && ghostAfterFirst ? s.buttonGhost : s.button}>
-          {b.label || b.link.label}
-        </a>
-      ))}
-    </div>
-  );
+type TNode = { type?: string; text?: string; content?: TNode[] };
+const plain = (n: TNode | undefined): string => (n ? (n.text ?? "") + (n.content ?? []).map(plain).join("") : "");
+
+/** A letter-style sign-off: the doc ends with a short "With so much love," line + a short name line. */
+function endsWithSignOff(doc: RichText): boolean {
+  const blocks = (doc?.content ?? []) as TNode[];
+  if (blocks.length < 3) return false;
+  const [closing, name] = blocks.slice(-2);
+  if (closing.type !== "paragraph" || name.type !== "paragraph") return false;
+  const c = plain(closing).trim();
+  const n = plain(name).trim();
+  return c.length > 0 && c.length <= 60 && c.endsWith(",") && n.length > 0 && n.length <= 40 && !/[.!?]$/.test(n);
 }
 
 export const pageHero = defineSection({
@@ -32,21 +33,11 @@ export const pageHero = defineSection({
     image: f.image("Background image (optional)"),
     buttons: f.list("Buttons", "Button", buttonFields, { max: 3, titleKey: "label" }),
   },
-  Component: ({ data, ctx }) => {
-    const img = ctx.image(data.image);
-    return (
-      <section className={s.hero}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {img && <img src={img.url} alt="" aria-hidden className={s.heroImage} />}
-        <div className={s.narrow}>
-          {data.eyebrow && <span className={s.eyebrow}>{data.eyebrow}</span>}
-          {data.heading && <h1 className={s.heroTitle}>{data.heading}</h1>}
-          {data.subheading && <p className={s.lead} style={{ marginTop: 20 }}>{data.subheading}</p>}
-          <Buttons items={data.buttons} />
-        </div>
-      </section>
-    );
-  },
+  Component: ({ data, ctx }) => (
+    <PageHero image={ctx.image(data.image) ?? ctx.background} eyebrow={data.eyebrow} title={data.heading} text={data.subheading || undefined}>
+      <PillButtons items={data.buttons} first="onPhoto" rest="secondaryOnPhoto" className={`${ds.btnRow} ${s.heroButtons}`} />
+    </PageHero>
+  ),
 });
 
 export const richText = defineSection({
@@ -58,14 +49,39 @@ export const richText = defineSection({
     body: f.richtext("Text"),
     align: f.select("Alignment", [{ value: "left", label: "Left" }, { value: "center", label: "Centre" }] as const),
   },
-  Component: ({ data }) => (
-    <section className={s.section}>
-      <div className={`${s.narrow} ${data.align === "center" ? s.center : ""}`}>
-        {data.heading && <h2 className={s.heading}>{data.heading}</h2>}
-        <div className={s.prose}><TiptapContent doc={data.body} /></div>
-      </div>
-    </section>
-  ),
+  Component: ({ data }) => {
+    // Centred: heading over a centred column. Left + heading: heading on the left, text on the
+    // right (Partner "Why become a monthly partner"). Left without heading: a readable article.
+    if (data.align === "center") {
+      return (
+        <section className={`${ds.section} ${s.sec} ${s.white}`}>
+          <div className={ds.container}><div className={s.centerColumn}>
+            {data.heading && <AccentHeading text={data.heading} as="h2" className={`${ds.h2} ${s.richHeading}`} />}
+            <div className={`${s.prose} ${s.proseCenter}`}><TiptapContent doc={data.body} /></div>
+          </div>
+          </div>
+        </section>
+      );
+    }
+    if (data.heading) {
+      return (
+        <section className={`${ds.section} ${s.sec} ${s.white}`}>
+          <div className={`${ds.container} ${s.richSplit}`}>
+            <AccentHeading text={data.heading} as="h2" className={`${ds.h2} ${s.richSplitHeading}`} />
+            <div className={`${s.prose} ${s.proseLead}`}><TiptapContent doc={data.body} /></div>
+          </div>
+        </section>
+      );
+    }
+    return (
+      <section className={`${ds.section} ${s.sec} ${s.white}`}>
+        <div className={ds.container}><div className={s.article}>
+          <div className={s.prose}><TiptapContent doc={data.body} /></div>
+        </div>
+        </div>
+      </section>
+    );
+  },
 });
 
 export const scripture = defineSection({
@@ -77,15 +93,19 @@ export const scripture = defineSection({
     reference: f.text("Reference", { max: 80, placeholder: "ACTS 26:18" }),
     buttons: f.list("Buttons", "Button", buttonFields, { max: 2, titleKey: "label" }),
   },
-  Component: ({ data }) => (
-    <section className={s.section}>
-      <div className={`${s.narrow} ${s.glass} ${s.scripture}`}>
-        {data.heading && <h2 className={s.heading}>{data.heading}</h2>}
-        {data.text && <blockquote className={s.scriptureText}>“{data.text}”</blockquote>}
-        {data.reference && <p className={s.scriptureRef}>{data.reference}</p>}
-        <div className={s.center}><Buttons items={data.buttons} /></div>
+  Component: ({ data, ctx }) => (
+    <ViewportSection className={`${ds.photo} ${s.scripture}`}>
+      <PhotoBackground image={ctx.background} />
+      <div className={ds.container}>
+        <div className={`${ds.glass} ${ds.reveal} ${s.scriptureCard}`}>
+          <span className={s.rule} aria-hidden />
+          {data.heading && <AccentHeading text={data.heading} as="h2" className={`${ds.h2} ${s.scriptureHeading}`} />}
+          {data.text && <blockquote className={s.scriptureText}>“{data.text}”</blockquote>}
+          {data.reference && <p className={s.scriptureRef}>{data.reference}</p>}
+          <PillButtons items={data.buttons} first="onPhoto" rest="secondaryOnPhoto" className={`${ds.btnRow} ${s.buttonsCenter}`} />
+        </div>
       </div>
-    </section>
+    </ViewportSection>
   ),
 });
 
@@ -98,14 +118,19 @@ export const cta = defineSection({
     text: f.textarea("Text", { max: 1200 }),
     buttons: f.list("Buttons", "Button", buttonFields, { max: 3, titleKey: "label" }),
   },
-  Component: ({ data }) => (
-    <section className={s.section}>
-      <div className={`${s.narrow} ${s.center}`}>
-        {data.heading && <h2 className={s.heading}>{data.heading}</h2>}
-        {data.text && <p className={s.lead}>{data.text}</p>}
-        <Buttons items={data.buttons} />
+  Component: ({ data, ctx }) => (
+    <ViewportSection className={`${ds.section} ${s.sec} ${s.white}`}>
+      <div className={ds.container}>
+        <div className={`${ds.photo} ${s.ctaPanel}`}>
+          <PhotoBackground image={ctx.background} />
+          <div className={`${ds.glass} ${ds.reveal} ${s.ctaCard}`}>
+            {data.heading && <AccentHeading text={data.heading} as="h2" className={`${ds.h2} ${s.ctaHeading}`} />}
+            {data.text && <p className={s.ctaText}>{data.text}</p>}
+            <PillButtons items={data.buttons} first="onPhoto" rest="secondaryOnPhoto" className={`${ds.btnRow} ${s.buttonsCenter}`} />
+          </div>
+        </div>
       </div>
-    </section>
+    </ViewportSection>
   ),
 });
 
@@ -122,17 +147,19 @@ export const textImage = defineSection({
   Component: ({ data, ctx }) => {
     const img = ctx.image(data.image);
     return (
-      <section className={s.section}>
-        <div className={`${s.wide} ${s.split} ${data.imageSide === "left" ? s.splitReverse : ""}`}>
-          <div>
-            {data.heading && <h2 className={s.heading}>{data.heading}</h2>}
-            <div className={s.prose}><TiptapContent doc={data.body} /></div>
-            <Buttons items={data.buttons} />
+      <ViewportSection className={`${ds.section} ${s.sec} ${s.white}`}>
+        <div className={`${ds.container} ${s.split} ${img ? "" : s.splitSolo} ${data.imageSide === "left" ? s.splitReverse : ""}`}>
+          <div className={`${ds.reveal} ${s.splitText}`}>
+            {data.heading && <AccentHeading text={data.heading} as="h2" className={`${ds.h2} ${s.richHeading}`} />}
+            <div className={`${s.prose} ${s.proseLead} ${endsWithSignOff(data.body) ? s.signOff : ""}`}>
+              <TiptapContent doc={data.body} />
+            </div>
+            <PillButtons items={data.buttons} className={`${ds.btnRow} ${s.buttons}`} />
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          {img ? <img src={img.url} alt={img.alt} loading="lazy" className={s.splitImage} /> : <div />}
+          {img && <img src={img.url} alt={img.alt} loading="lazy" className={`${ds.reveal} ${s.splitImage}`} />}
         </div>
-      </section>
+      </ViewportSection>
     );
   },
 });
@@ -148,32 +175,38 @@ export const cardsGrid = defineSection({
     items: f.list("Cards", "Card", { title: f.text("Title", { max: 120 }), text: f.textarea("Text", { max: 1200 }), image: f.image("Image (optional)"), link: f.link("Link (optional)") }, { max: 24, titleKey: "title" }),
   },
   Component: ({ data, ctx }) => (
-    <section className={s.section}>
-      <div className={s.wide}>
-        <div className={s.center}>
-          {data.eyebrow && <span className={s.eyebrow}>{data.eyebrow}</span>}
-          {data.heading && <h2 className={s.heading}>{data.heading}</h2>}
-          {data.intro && <p className={s.lead}>{data.intro}</p>}
-        </div>
-        <div className={s.grid3}>
+    <ViewportSection className={`${ds.section} ${s.sec} ${s.white}`}>
+      <div className={ds.container}>
+        {(data.eyebrow || data.heading || data.intro) && (
+          <div className={ds.sectionHeaderCenter}>
+            <div className={ds.sectionHeaderText}>
+              <SectionTag>{data.eyebrow}</SectionTag>
+              {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
+              {data.intro && <p className={ds.lead}>{data.intro}</p>}
+            </div>
+          </div>
+        )}
+        <div className={ds.cardGrid3}>
           {data.items.map((item) => {
             const img = ctx.image(item.image);
             const inner = (
               <>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 {img && <img src={img.url} alt={img.alt} loading="lazy" className={s.cardImage} />}
-                {item.title && <h3 className={s.cardTitle}>{item.title}</h3>}
-                {item.text && <p className={s.cardText}>{item.text}</p>}
+                <div className={s.cardBody}>
+                  {item.title && <h3 className={`${ds.h4} ${s.cardTitle}`}>{item.title}</h3>}
+                  {item.text && <p className={ds.small}>{item.text}</p>}
+                </div>
               </>
             );
             return item.link.href ? (
-              <a key={item.id} href={item.link.href} className={`${s.glass} ${s.card}`} style={{ color: "inherit", textDecoration: "none" }}>{inner}</a>
+              <a key={item.id} href={item.link.href} className={`${ds.card} ${ds.reveal} ${s.cardLink}`}>{inner}</a>
             ) : (
-              <div key={item.id} className={`${s.glass} ${s.card}`}>{inner}</div>
+              <div key={item.id} className={`${ds.card} ${ds.reveal}`}>{inner}</div>
             );
           })}
         </div>
       </div>
-    </section>
+    </ViewportSection>
   ),
 });

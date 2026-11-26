@@ -1,10 +1,12 @@
 "use client";
 // Public site header, driven by the published "navbar" global (passed in by the layout).
-import { useState } from "react";
+// Two looks from the design: "light" (dark text on white pages) and "on photo" (glass nav pill,
+// logo on a white badge) when the page starts with a photo hero (`data-hero-photo`).
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import styles from "@/app/(site)/page.module.css";
-import chrome from "./chrome.module.css";
+import { PillButton } from "./ds";
+import c from "./chrome.module.css";
 
 export type HeaderProps = {
   logoText: string;
@@ -16,75 +18,120 @@ export type HeaderProps = {
 
 const isCurrent = (pathname: string, href: string) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`));
 
+/** True when the first thing under the header is a photo hero. */
+function usePhotoHero(pathname: string) {
+  const [onPhoto, setOnPhoto] = useState(pathname !== "/");
+  useEffect(() => {
+    const check = () => {
+      const hero = document.querySelector("[data-hero-photo]");
+      setOnPhoto(Boolean(hero && hero.getBoundingClientRect().top + window.scrollY < 120));
+    };
+    check();
+    // Sections stream in; check again once the page has settled.
+    const t = window.setTimeout(check, 300);
+    return () => window.clearTimeout(t);
+  }, [pathname]);
+  return onPhoto;
+}
+
+export function Logo({ logoText, logoAccent, logo, className = "" }: Pick<HeaderProps, "logoText" | "logoAccent" | "logo"> & { className?: string }) {
+  return (
+    <Link href="/" className={`${c.logo} ${className}`.trim()} aria-label={`${logoText} ${logoAccent} home`.replace(/\s+/g, " ").trim()}>
+      {logo && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={logo.url} alt="" className={c.logoMark} />
+      )}
+      {(logoText || logoAccent) && (
+        <span className={c.logoWords}>
+          {logoText && <strong>{logoText}</strong>}
+          {logoText && logoAccent ? " " : ""}
+          {logoAccent && <span className={c.logoLight}>{logoAccent}</span>}
+        </span>
+      )}
+    </Link>
+  );
+}
+
 export function SiteHeader({ logoText, logoAccent, logo, items, cta }: HeaderProps) {
-  const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  // The menu belongs to the page it was opened on, so navigating closes it.
+  const [openOn, setOpenOn] = useState<string | null>(null);
+  const open = openOn === pathname;
+  const setOpen = (v: boolean) => setOpenOn(v ? pathname : null);
+  const onPhoto = usePhotoHero(pathname);
   const links = items.filter((i) => i.label && i.href);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpenOn(null);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <>
-      <header className={`${styles.header} animate-fade-in`} style={{ animationDelay: "0.1s" }}>
-        <div className={styles.logoContainer}>
-          <Link href="/" className={`${styles.textLogo} ${chrome.logo}`} aria-label={`${logoText}${logoAccent} home`}>
-            {logo ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={logo.url} alt={logo.alt} className={chrome.logoImage} />
-            ) : (
-              <>
-                {logoText}
-                <span className={styles.textLogoLight}>{logoAccent}</span>
-              </>
+      <header className={`${c.header} ${onPhoto ? c.onPhoto : c.light}`}>
+        <div className={c.headerInner}>
+          <Logo logoText={logoText} logoAccent={logoAccent} logo={logo} className={onPhoto ? c.logoBadge : ""} />
+          {links.length > 0 && (
+            <nav className={c.nav} aria-label="Main Navigation">
+              <ul className={c.navList}>
+                {links.map((n) => {
+                  const current = isCurrent(pathname, n.href);
+                  return (
+                    <li key={n.id}>
+                      <Link href={n.href} className={current ? c.navLinkActive : c.navLink} aria-current={current ? "page" : undefined}>
+                        {n.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          )}
+          <div className={c.headerEnd}>
+            {cta.href && (
+              <PillButton href={cta.href} label={cta.label || "Get Involved"} variant={onPhoto ? "onPhoto" : "primary"} className={c.cta} />
             )}
-          </Link>
+            <button
+              type="button"
+              className={`${c.menuButton} ${open ? c.menuButtonOpen : ""}`}
+              onClick={() => setOpen(!open)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
         </div>
-        <nav className={styles.nav} aria-label="Main Navigation">
-          <ul className={styles.navUl}>
-            {links.map((n) => {
-              const current = isCurrent(pathname, n.href);
-              return (
-                <li key={n.id}>
-                  <Link href={n.href} className={current ? styles.activeNavLink : styles.navLink} aria-current={current ? "page" : undefined}>
-                    {n.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-        {cta.href && (
-          <Link href={cta.href} className={styles.preOrderBtn} id="header-preorder-btn">
-            {cta.label || "Get Involved"}
-          </Link>
-        )}
-        <button
-          className={`${styles.hamburgerButton} ${open ? styles.hamburgerActive : ""}`}
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle Navigation Menu"
-          aria-expanded={open}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
       </header>
-      <div className={`${styles.mobileMenuOverlay} ${open ? styles.mobileMenuOpen : ""}`}>
-        <nav className={styles.mobileNav} aria-label="Mobile Navigation">
-          <ul className={styles.mobileNavUl}>
+      <div id="mobile-menu" className={`${c.mobileMenu} ${open ? c.mobileMenuOpen : ""}`} aria-hidden={!open}>
+        <nav aria-label="Mobile Navigation">
+          <ul className={c.mobileList}>
             {links.map((n) => (
               <li key={n.id}>
-                <Link href={n.href} className={isCurrent(pathname, n.href) ? styles.mobileActiveNavLink : styles.mobileNavLink} onClick={() => setOpen(false)}>
+                <Link
+                  href={n.href}
+                  className={isCurrent(pathname, n.href) ? c.mobileLinkActive : c.mobileLink}
+                  onClick={() => setOpen(false)}
+                  tabIndex={open ? 0 : -1}
+                >
                   {n.label}
                 </Link>
               </li>
             ))}
-            {cta.href && (
-              <li>
-                <Link href={cta.href} className={styles.mobileMenuBtn} onClick={() => setOpen(false)}>
-                  {cta.label || "Get Involved"}
-                </Link>
-              </li>
-            )}
           </ul>
+          {cta.href && (
+            <div className={c.mobileCta} onClick={() => setOpen(false)}>
+              <PillButton href={cta.href} label={cta.label || "Get Involved"} variant="primary" />
+            </div>
+          )}
         </nav>
       </div>
     </>

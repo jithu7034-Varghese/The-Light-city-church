@@ -1,280 +1,132 @@
-/* src/app/ministries/ministries.module.css */
+/* Ministries page (Figma "Ministries" frame). Shared pieces (container, cream panel, cards,
+   chips, headings, glass, photo backgrounds, buttons) come from src/components/site/ds. */
 
-.hero {
-  position: relative;
-  height: 65vh;
-  min-height: 480px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background-color: transparent;
-}
+/* ---------- Grid ---------- */
+.intro { max-width: 640px; }
 
-.heroBackground {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.heroImage {
-  object-fit: cover;
-}
-
-.heroOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.72) 0%,
-    rgba(255, 255, 255, 0.9) 100%
-  );
-  z-index: 2;
-}
-
-.heroContent {
-  position: relative;
-  z-index: 3;
-  max-width: 800px;
-  padding: 0 24px;
-  text-align: center;
-  color: #0e1118;
-}
-
-.heroTag {
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: #5e6675;
-  display: inline-block;
-  margin-bottom: 20px;
-}
-
-.heroTitle {
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  margin-bottom: 20px;
-}
-
-.heroSubtitle {
-  font-size: clamp(1.1rem, 2vw, 1.3rem);
-  line-height: 1.6;
-  color: #5e6675;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Ministries Grid Section */
-.ministriesSection {
-  padding: 100px 24px;
-  background-color: #ffffff;
-}
-
-.container {
-  max-width: var(--container-max);
-  margin: 0 auto;
-}
-
-.sectionHeader {
-  text-align: center;
-  max-width: 680px;
-  margin: 0 auto 64px;
-}
-
-.sectionTitle {
-  font-size: clamp(2rem, 3.5vw, 2.8rem);
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 16px;
-  letter-spacing: -0.02em;
-}
-
-.sectionSubtitle {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 40px;
-}
-
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+.grid { gap: 24px; }
 
 .card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(60px);
-  -webkit-backdrop-filter: blur(60px);
-  border: 1px solid var(--glass-border);
-  border-top: 1.5px solid var(--glass-border-top);
-  border-radius: 32px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--glass-shadow);
-  transition: var(--transition-smooth);
+  border-radius: var(--radius-card-lg);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+}
+.cardLink:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 56px rgba(5, 10, 15, 0.08);
+  border-color: #e6d9c4;
+}
+.cardLink:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 4px;
 }
 
-.card:hover {
-  transform: translateY(-8px);
-  background-color: #ffffff;
-  border-color: rgba(14, 17, 24, 0.14);
-  box-shadow: var(--shadow-md);
-}
-
-.cardImageWrapper {
+.cardMedia {
   position: relative;
-  height: 280px;
-  width: 100%;
+  flex: none;
+  height: 260px;
+  overflow: hidden;
+  background: var(--cream-deep);
 }
-
 .cardImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.8s var(--ease-out);
+}
+.cardLink:hover .cardImage { transform: scale(1.04); }
+.cardIndexChip {
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
 
-.card:hover .cardImage {
-  transform: scale(1.05);
-}
-
-.cardContent {
-  padding: 40px;
+.cardBody {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 32px 32px 36px;
 }
-
 .cardMeta {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  gap: 12px;
 }
-
 .cardIndex {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  font-family: Georgia, serif;
+  font-family: var(--font-serif);
   font-style: italic;
+  font-size: 1.0625rem;
+  color: var(--earth);
 }
+.cardTitle { color: var(--ink); }
 
-.cardBadge {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  background-color: var(--accent-light);
-  color: var(--text-primary);
-  padding: 6px 14px;
-  border-radius: 100px;
+.details {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--ink);
 }
-
-.cardTitle {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 16px;
-  letter-spacing: -0.01em;
-}
-
-.cardDescription {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  margin-bottom: 24px;
-  flex-grow: 1;
-}
-
-.cardDetails {
-  border-top: 1px solid var(--border-color);
-  padding-top: 20px;
-  margin-top: auto;
-}
-
-.detailRow {
+.details li {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
+}
+.details li::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
 }
 
-.detailRow:last-child {
-  margin-bottom: 0;
-}
+.cardFoot { padding-top: 8px; }
 
-.detailIcon {
-  color: var(--text-primary);
-  flex-shrink: 0;
+/* ---------- Community call to action on a nature photo ---------- */
+.cta {
+  padding-block: var(--section-y);
 }
-
-/* Call to Action Section */
-.ctaSection {
-  padding: 120px 24px;
-  background-color: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
+.ctaCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 904px;
+  margin: 0 auto;
+  padding: 64px 72px;
+  border-radius: var(--radius-panel);
   text-align: center;
 }
-
-.ctaContainer {
-  max-width: 720px;
-  margin: 0 auto;
-}
-
 .ctaTitle {
-  font-size: clamp(2.2rem, 4vw, 3.2rem);
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 24px;
-  letter-spacing: -0.02em;
-}
-
-.ctaText {
-  font-size: 1.15rem;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  margin-bottom: 40px;
-}
-
-.ctaButton {
-  background-color: var(--accent);
+  max-width: 760px;
   color: #ffffff;
-  font-weight: 600;
-  font-size: 1.05rem;
-  padding: 16px 36px;
-  border-radius: 100px;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-fast);
+}
+.ctaAccent { color: var(--amber); }
+.ctaText {
+  max-width: 680px;
+  font-size: var(--fs-body-l);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+}
+.ctaButton { margin-top: 12px; }
+
+@media (max-width: 640px) {
+  .cardMedia { height: 220px; }
+  .cardBody { padding: 24px 24px 28px; }
+  .ctaCard { padding: 40px 24px; gap: 20px; }
 }
 
-.ctaButton:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-2px);
-}
-
-.italicSerif {
-  font-family: Georgia, serif;
-  font-style: italic;
-  font-weight: 400;
+@media (prefers-reduced-motion: reduce) {
+  .card, .cardImage { transition: none; }
+  .cardLink:hover, .cardLink:hover .cardImage { transform: none; }
 }

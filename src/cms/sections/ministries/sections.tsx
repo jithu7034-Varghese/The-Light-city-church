@@ -1,8 +1,9 @@
-// Ministries page sections (server components). Design and classes from the old ministries/page.tsx.
+// Ministries page sections (server components). Layout from the Figma "Ministries" frame, built on
+// the shared design system (src/components/site/ds). Every text, image and link comes from the CMS.
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
-import { SplitText, ViewportSection } from "@/cms/sections/shared/animate";
-import { FILL, Icon } from "@/cms/sections/about/icons";
+import { ViewportSection } from "@/cms/sections/shared/animate";
+import { AccentHeading, PageHero, PhotoBackground, PillButton, ds } from "@/components/site/ds";
 import m from "./ministries.module.css";
 
 export const ministriesHero = defineSection({
@@ -14,35 +15,14 @@ export const ministriesHero = defineSection({
     subheading: f.textarea("Subtitle", { max: 400 }),
     image: f.image("Background image"),
   },
-  Component: ({ data, ctx }) => {
-    const img = ctx.image(data.image);
-    return (
-      <section className={m.hero}>
-        <div className={m.heroBackground}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {img && <img src={img.url} alt={img.alt} loading="eager" fetchPriority="high" className={m.heroImage} style={FILL} />}
-          <div className={m.heroOverlay} />
-        </div>
-        <div className={m.heroContent}>
-          {data.tag && (
-            <span className={`${m.heroTag} animate-fade-in-up`} style={{ animationDelay: "0.1s" }}>
-              {data.tag}
-            </span>
-          )}
-          {data.heading && (
-            <h1 className={m.heroTitle}>
-              <SplitText text={data.heading} delayOffset={0.3} />
-            </h1>
-          )}
-          {data.subheading && (
-            <p className={`${m.heroSubtitle} animate-fade-in-up`} style={{ animationDelay: "0.8s" }}>
-              {data.subheading}
-            </p>
-          )}
-        </div>
-      </section>
-    );
-  },
+  Component: ({ data, ctx }) => (
+    <PageHero
+      image={ctx.image(data.image) ?? ctx.background}
+      eyebrow={data.tag}
+      title={data.heading}
+      text={data.subheading ? <p>{data.subheading}</p> : undefined}
+    />
+  ),
 });
 
 export const ministriesGrid = defineSection({
@@ -68,67 +48,62 @@ export const ministriesGrid = defineSection({
     ),
   },
   Component: ({ data, ctx }) => (
-    <ViewportSection as="section" className={m.ministriesSection}>
-      <div className={m.container}>
+    <ViewportSection as="section" className={`${ds.section} ${ds.cream}`}>
+      <div className={ds.container}>
         {(data.heading || data.intro) && (
-          <div className={m.sectionHeader}>
-            {data.heading && (
-              <h2 className={m.sectionTitle}>
-                <SplitText text={data.heading} delayOffset={0.1} />
-              </h2>
-            )}
-            {data.intro && <p className={m.sectionSubtitle}>{data.intro}</p>}
+          <div className={ds.sectionHeader}>
+            <div className={ds.sectionHeaderText}>
+              {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
+              {data.intro && <p className={`${ds.lead} ${m.intro}`}>{data.intro}</p>}
+            </div>
           </div>
         )}
 
-        <div className={m.grid}>
+        <div className={`${ds.cardGrid2} ${m.grid}`}>
           {data.items.map((item, idx) => {
             const img = ctx.image(item.image);
+            const index = String(idx + 1).padStart(2, "0");
             const inner = (
               <>
                 {img && (
-                  <div className={m.cardImageWrapper}>
+                  <div className={m.cardMedia}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={img.url} alt={img.alt || item.title} loading="lazy" className={m.cardImage} style={FILL} />
+                    <img src={img.url} alt={img.alt || item.title} loading="lazy" className={m.cardImage} />
+                    <span className={`${ds.chip} ${m.cardIndexChip}`}>{index}</span>
                   </div>
                 )}
 
-                <div className={m.cardContent}>
+                <div className={m.cardBody}>
                   <div className={m.cardMeta}>
-                    <span className={m.cardIndex}>{String(idx + 1).padStart(2, "0")}</span>
-                    {item.badge && <span className={m.cardBadge}>{item.badge}</span>}
+                    {!img && <span className={m.cardIndex}>{index}</span>}
+                    {item.badge && <span className={ds.chipCream}>{item.badge}</span>}
                   </div>
 
-                  {item.title && <h3 className={m.cardTitle}>{item.title}</h3>}
-                  {item.text && <p className={m.cardDescription}>{item.text}</p>}
+                  {item.title && <h3 className={`${ds.h3} ${m.cardTitle}`}>{item.title}</h3>}
+                  {item.text && <p className={ds.body}>{item.text}</p>}
 
                   {(item.schedule || item.location) && (
-                    <div className={m.cardDetails}>
-                      {item.schedule && (
-                        <div className={m.detailRow}>
-                          <Icon name="clock" size={14} className={m.detailIcon} />
-                          <span>{item.schedule}</span>
-                        </div>
-                      )}
-                      {item.location && (
-                        <div className={m.detailRow}>
-                          <Icon name="pin" size={14} className={m.detailIcon} />
-                          <span>{item.location}</span>
-                        </div>
-                      )}
+                    <ul className={m.details}>
+                      {item.schedule && <li>{item.schedule}</li>}
+                      {item.location && <li>{item.location}</li>}
+                    </ul>
+                  )}
+
+                  {item.link.href && item.link.label && (
+                    <div className={`${ds.cardFoot} ${m.cardFoot}`}>
+                      <span className={ds.textLink}>{item.link.label}</span>
                     </div>
                   )}
                 </div>
               </>
             );
-            const className = `${m.card} animate-premium-block`;
-            const style = { animationDelay: `${0.2 + idx * 0.1}s` };
+            const className = `${ds.card} ${ds.reveal} ${m.card}`;
             return item.link.href ? (
-              <a key={item.id} href={item.link.href} className={className} style={{ ...style, color: "inherit", textDecoration: "none" }}>
+              <a key={item.id} href={item.link.href} className={`${className} ${m.cardLink}`}>
                 {inner}
               </a>
             ) : (
-              <div key={item.id} className={className} style={style}>
+              <div key={item.id} className={className}>
                 {inner}
               </div>
             );
@@ -148,25 +123,21 @@ export const ministriesCta = defineSection({
     text: f.textarea("Text", { max: 1200 }),
     button: f.link("Button"),
   },
-  Component: ({ data }) => (
-    <section className={m.ctaSection}>
-      <div className={m.ctaContainer}>
-        {(data.heading || data.headingHighlight) && (
-          <h2 className={m.ctaTitle}>
-            {data.heading} {data.headingHighlight && <span className={m.italicSerif}>{data.headingHighlight}</span>}
-          </h2>
-        )}
-        {data.text && <p className={m.ctaText}>{data.text}</p>}
-        {data.button.href && data.button.label && (
-          <a href={data.button.href} className={m.ctaButton} style={{ textDecoration: "none" }}>
-            {data.button.label}
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
-        )}
+  // No image field on this section: the photo is the Site settings "Section background image".
+  Component: ({ data, ctx }) => (
+    <ViewportSection as="section" className={`${ds.photo} ${m.cta}`}>
+      <PhotoBackground image={ctx.background} />
+      <div className={ds.container}>
+        <div className={`${ds.glass} ${ds.reveal} ${m.ctaCard}`}>
+          {(data.heading || data.headingHighlight) && (
+            <h2 className={`${ds.h2} ${m.ctaTitle}`}>
+              {data.heading} {data.headingHighlight && <span className={`${ds.accent} ${m.ctaAccent}`}>{data.headingHighlight}</span>}
+            </h2>
+          )}
+          {data.text && <p className={m.ctaText}>{data.text}</p>}
+          <PillButton href={data.button.href} label={data.button.label} variant="onPhoto" className={m.ctaButton} />
+        </div>
       </div>
-    </section>
+    </ViewportSection>
   ),
 });

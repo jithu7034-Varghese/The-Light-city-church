@@ -10,10 +10,15 @@ import { splitKeywords } from "./seo";
 
 export async function PageSections({ page }: { page: PublishedPage }) {
   const visible = page.sections.filter((s) => s.visible !== false);
-  const [media, site] = await Promise.all([getMediaByIds([...collectMediaIds(visible)].sort()), getGlobal("site")]);
+  const site = await getGlobal("site");
+  const bgId = site.sectionBackground?.mediaId;
+  const ids = new Set(collectMediaIds(visible));
+  if (bgId) ids.add(bgId);
+  const media = await getMediaByIds([...ids].sort());
   const ctx: SectionCtx = {
     pageSlug: page.slug,
     site,
+    background: bgId ? (media[bgId] ?? null) : null,
     image: (ref: ImageRef | undefined) => (ref?.mediaId ? (media[ref.mediaId] ?? null) : null),
   };
 

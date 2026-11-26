@@ -1,0 +1,402 @@
+/* Shared design system for the public site (Figma "Home – Redesign" → Components).
+   Use these classes/components from section CSS Modules instead of re-creating them:
+   layout (container, section, cream panel + glows), section tag, headings with the italic
+   accent word, pill buttons with the arrow badge, liquid glass, photo backgrounds, cards. */
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+}
+
+/* Warm cream panel with soft blurred amber (top right) and peach (bottom left) glows. */
+.cream {
+  position: relative;
+  background: var(--cream);
+  overflow: hidden;
+  isolation: isolate;
+}
+.cream::before,
+.cream::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.cream::before {
+  width: 840px;
+  height: 840px;
+  top: -360px;
+  right: -280px;
+  background-image: url("/design/glow-amber.svg");
+  animation: glowDrift 14s ease-in-out infinite;
+}
+.cream::after {
+  width: 760px;
+  height: 760px;
+  bottom: -380px;
+  left: -380px;
+  background-image: url("/design/glow-peach.svg");
+  animation: glowDrift 14s ease-in-out -7s infinite reverse;
+}
+@keyframes glowDrift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(60px, -40px); }
+}
+
+/* ---------- Section tag: amber pill with a dot ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px 7px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--amber-tag);
+  color: var(--earth);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.tag::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--amber);
+}
+/* Plain amber label (used on photos and inside dark/glass panels). */
+.eyebrow {
+  display: block;
+  color: var(--amber);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ---------- Headings ---------- */
+.display,
+.h2,
+.h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: inherit;
+}
+.display { font-size: var(--fs-display); line-height: 1.1; letter-spacing: -0.03em; }
+.h2 { font-size: var(--fs-h2); line-height: 1.15; letter-spacing: -0.025em; }
+.h3 { font-size: var(--fs-h3); line-height: 1.28; letter-spacing: -0.015em; }
+.h4 { font-size: var(--fs-h4); font-weight: 500; line-height: 1.35; letter-spacing: -0.005em; }
+
+/* The last word of a main heading, in Playfair Display Italic. */
+.accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.accentEarth { composes: accent; color: var(--earth); }
+
+.lead { font-size: var(--fs-body-l); line-height: 1.6; color: var(--muted); }
+.body { font-size: var(--fs-body); line-height: 1.6; color: var(--muted); }
+.small { font-size: var(--fs-small); line-height: 1.5; color: var(--muted); }
+
+/* Section header: tag, heading, optional text, optional action on the right. */
+.sectionHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px 40px;
+  flex-wrap: wrap;
+  margin-bottom: 56px;
+}
+.sectionHeaderText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  max-width: 720px;
+}
+.sectionHeaderCenter {
+  composes: sectionHeader;
+  justify-content: center;
+  text-align: center;
+}
+.sectionHeaderCenter .sectionHeaderText { align-items: center; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 50px;
+  padding: 7px 7px 7px 24px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out), border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+.btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.btnBadge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: transform 0.25s var(--ease-out);
+}
+.btnBadge img { display: block; width: 16px; height: 16px; }
+.btn:hover .btnBadge { transform: rotate(45deg); }
+
+/* Dark pill + amber arrow badge (on white/cream). */
+.btnPrimary { composes: btn; background: var(--ink); color: #ffffff; }
+.btnPrimary .btnBadge { background: var(--amber); }
+.btnPrimary:hover { background: #222733; }
+
+/* White pill + dark arrow badge (on photos and dark panels). */
+.btnOnPhoto { composes: btn; background: #ffffff; color: var(--ink); box-shadow: 0 8px 24px rgba(5, 10, 15, 0.12); }
+.btnOnPhoto .btnBadge { background: var(--ink); }
+.btnOnPhoto:hover { background: #f5f1ea; }
+
+/* Outlined pill (secondary). */
+.btnSecondary {
+  composes: btn;
+  padding: 15px 28px;
+  background: #ffffff;
+  color: var(--ink);
+  border: 1.2px solid rgba(14, 17, 24, 0.85);
+}
+.btnSecondary:hover { background: var(--ink); color: #ffffff; }
+
+/* Outlined pill on photos / dark panels. */
+.btnSecondaryOnPhoto {
+  composes: btn;
+  padding: 15px 28px;
+  background: transparent;
+  color: #ffffff;
+  border: 1.2px solid rgba(255, 255, 255, 0.85);
+}
+.btnSecondaryOnPhoto:hover { background: #ffffff; color: var(--ink); }
+
+.btnRow { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+/* Small text link with an arrow ("Learn more →", "Read devotional →"). */
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+}
+.textLink::after {
+  content: "→";
+  transition: transform 0.2s var(--ease-out);
+}
+.textLink:hover::after { transform: translateX(4px); }
+
+/* ---------- Liquid glass ----------
+   White 12–16% fill, 1.5px white 55% border, blur, soft shadow. Chromium also gets the SVG
+   displacement filter (#lg-refract, see LiquidGlassDefs) for the edge refraction; Safari and
+   Firefox keep the plain blur. */
+.glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 16px 40px rgba(5, 10, 15, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  color: #ffffff;
+}
+:global(html.lg-refract) .glass {
+  backdrop-filter: url(#lg-refract) blur(14px) saturate(150%);
+}
+.glassStrong { composes: glass; background: rgba(255, 255, 255, 0.18); }
+@media (prefers-reduced-transparency: reduce) {
+  .glass { background: rgba(14, 17, 24, 0.72); }
+}
+
+/* Glass nav pill on photos. */
+.glassPill { composes: glass; border-radius: var(--radius-pill); }
+
+/* ---------- Photo backgrounds ----------
+   <PhotoBackground> renders these: the photo (or a dark fallback) with a dark gradient over it. */
+.photo {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1d2a33 0%, #0b0f16 100%);
+  color: #ffffff;
+}
+.photoImg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.photoImgZoom {
+  composes: photoImg;
+  animation: kenBurns 4.5s ease-out both;
+}
+.photoShade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(8, 13, 18, 0.25) 0%, rgba(8, 13, 18, 0.5) 100%);
+  pointer-events: none;
+}
+.photoShadeStrong {
+  composes: photoShade;
+  background: linear-gradient(180deg, rgba(8, 13, 18, 0.3) 0%, rgba(8, 13, 18, 0.62) 100%);
+}
+@keyframes kenBurns {
+  from { transform: scale(1.12); }
+  to { transform: scale(1); }
+}
+
+/* ---------- Inner page hero (nature photo + glass title card) ---------- */
+.pageHero {
+  composes: photo;
+  display: flex;
+  align-items: flex-end;
+  min-height: 70vh;
+  min-height: 70svh;
+  padding-top: 136px;
+  padding-bottom: 64px;
+}
+.pageHeroCard {
+  composes: glass;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: min(760px, 100%);
+  padding: 44px 48px;
+  border-radius: var(--radius-panel);
+  animation: glassIn 0.9s var(--ease-out) 0.15s both;
+}
+.pageHeroTitle {
+  composes: display;
+  color: #ffffff;
+}
+.pageHeroText {
+  font-size: var(--fs-body-l);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+}
+/* Keeps white text legible when the CMS hero photo is a light one. */
+.pageHeroCard .pageHeroTitle,
+.pageHeroCard .pageHeroText,
+.pageHeroCard .eyebrow { text-shadow: 0 1px 2px rgba(5, 10, 15, 0.35), 0 4px 20px rgba(5, 10, 15, 0.35); }
+@keyframes glassIn {
+  from { opacity: 0; transform: translateY(36px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@media (max-width: 640px) {
+  .pageHero { padding-top: 112px; padding-bottom: 32px; }
+  .pageHeroCard { padding: 28px 24px; }
+}
+
+/* ---------- Cards ---------- */
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+/* Push links/buttons to the bottom so cards in a row line up. */
+.cardFoot { margin-top: auto; }
+.cardGrid {
+  display: grid;
+  gap: 24px;
+  align-items: stretch;
+}
+.cardGrid2 { composes: cardGrid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cardGrid3 { composes: cardGrid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cardGrid4 { composes: cardGrid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1024px) {
+  .cardGrid3, .cardGrid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .cardGrid2, .cardGrid3, .cardGrid4 { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Small number / label chip on a photo ("01", "Our Pastors"). */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+/* Soft cream chip ("DEVOTIONAL", "DAILY LIGHT"). */
+.chipCream {
+  composes: chip;
+  background: #f8ecd8;
+  color: var(--ink);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Glass caption on a photo ("Christ in you", "Ronnie & Annalene Dube"). */
+.photoCaption {
+  composes: glass;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 22px;
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ---------- Reveal on scroll (pairs with ViewportSection's viewport-hidden/active) ---------- */
+:global(.viewport-hidden) .reveal { opacity: 0; transform: translateY(36px); }
+:global(.viewport-active) .reveal { animation: revealUp 0.8s var(--ease-out) both; }
+:global(.viewport-active) .reveal:nth-child(2) { animation-delay: 0.08s; }
+:global(.viewport-active) .reveal:nth-child(3) { animation-delay: 0.16s; }
+:global(.viewport-active) .reveal:nth-child(4) { animation-delay: 0.24s; }
+:global(.viewport-active) .reveal:nth-child(n + 5) { animation-delay: 0.3s; }
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(36px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cream::before, .cream::after, .photoImgZoom, .pageHeroCard { animation: none; }
+  :global(.viewport-hidden) .reveal { opacity: 1; transform: none; }
+  :global(.viewport-active) .reveal { animation: none; }
+  .btn:hover .btnBadge { transform: none; }
+}

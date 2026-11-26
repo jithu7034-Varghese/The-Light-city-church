@@ -1,64 +1,74 @@
 /* src/app/globals.css */
 
 :root {
-  /* Colors - White theme: white page, dark text, light cards */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f7f8fa;
-  --text-primary: #0e1118;
-  --text-secondary: #5e6675;
-  --accent: #0e1118; /* dark fill for buttons and highlights; text on it is white */
-  --accent-light: #f1f3f6;
-  --accent-hover: #2b303b;
-  --border-color: rgba(14, 17, 24, 0.10);
-  --border-glow: rgba(14, 17, 24, 0.06);
-  --glass-bg: #ffffff;
-  --glass-border: rgba(14, 17, 24, 0.08);
-  --glass-border-top: rgba(14, 17, 24, 0.08);
-  --glass-blur: 0px;
-  --glass-shadow:
-    0 1px 2px rgba(14, 17, 24, 0.04),
-    0 12px 32px rgba(14, 17, 24, 0.06);
+  /* Colours (Figma "Home – Redesign") */
+  --page: #ffffff;
+  --ink: #0e1118;
+  --muted: #5e6675;
+  --cream: #fbf6ee;          /* soft panels (replaces the old grey #f7f8fa) */
+  --cream-deep: #f7f1ea;     /* icon chips on cream/white cards */
+  --line: #efe6d8;           /* borders */
+  --earth: #7c4212;          /* accent brown */
+  --amber: #f2a516;          /* accent amber */
+  --amber-tag: #fce9c4;      /* section label tag */
+  --footer: #0b0f16;         /* footer dark */
 
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(14, 17, 24, 0.06);
-  --shadow-md: 0 12px 28px rgba(14, 17, 24, 0.08);
-  --shadow-lg: 0 24px 56px rgba(14, 17, 24, 0.10);
+  /* Legacy names, mapped onto the new palette so older rules stay consistent */
+  --bg-primary: var(--page);
+  --bg-secondary: var(--cream);
+  --text-primary: var(--ink);
+  --text-secondary: var(--muted);
+  --accent: var(--ink);
+  --accent-light: var(--cream-deep);
+  --accent-hover: #2b303b;
+  --border-color: var(--line);
+  --border-glow: rgba(124, 66, 18, 0.08);
+  --glass-bg: #ffffff;
+  --glass-border: var(--line);
+  --glass-border-top: var(--line);
+  --glass-blur: 0px;
+  --glass-shadow: 0 16px 40px rgba(5, 10, 15, 0.06);
+  --shadow-sm: 0 2px 8px rgba(5, 10, 15, 0.05);
+  --shadow-md: 0 16px 40px rgba(5, 10, 15, 0.06);
+  --shadow-lg: 0 24px 56px rgba(5, 10, 15, 0.1);
 
   /* Fonts */
   --font-sans: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-heading: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif; /* italic accent word */
 
-  /* Spacing */
+  /* Type scale (desktop; sizes clamp down on small screens) */
+  --fs-display: clamp(2.5rem, 4.2vw + 0.6rem, 3.5rem);   /* 56 */
+  --fs-h2: clamp(2rem, 3vw + 0.6rem, 2.75rem);           /* 44 */
+  --fs-h3: clamp(1.5rem, 1.4vw + 0.8rem, 1.875rem);      /* 30 */
+  --fs-h4: 1.25rem;                                      /* 20 */
+  --fs-body-l: 1.125rem;                                 /* 18 */
+  --fs-body: 1rem;                                       /* 16 */
+  --fs-small: 0.875rem;                                  /* 14 */
+  --fs-eyebrow: 0.75rem;                                 /* 12 */
+
+  /* Grid */
   --container-max: 1280px;
-  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --gutter: 80px;
+  --section-y: 112px;
+  --radius-card: 28px;
+  --radius-card-lg: 32px;
+  --radius-panel: 36px;
+  --radius-pill: 999px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: all 0.4s var(--ease-out);
+  --transition-fast: all 0.2s var(--ease-out);
 
   color-scheme: light;
 }
 
-[data-theme="dark"] {
-  /* The public site is light only: same values as :root */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f7f8fa;
-  --text-primary: #0e1118;
-  --text-secondary: #5e6675;
-  --accent: #0e1118; /* dark fill for buttons and highlights; text on it is white */
-  --accent-light: #f1f3f6;
-  --accent-hover: #2b303b;
-  --border-color: rgba(14, 17, 24, 0.10);
-  --border-glow: rgba(14, 17, 24, 0.06);
-  --glass-bg: #ffffff;
-  --glass-border: rgba(14, 17, 24, 0.08);
-  --glass-border-top: rgba(14, 17, 24, 0.08);
-  --glass-blur: 0px;
-  --glass-shadow:
-    0 1px 2px rgba(14, 17, 24, 0.04),
-    0 12px 32px rgba(14, 17, 24, 0.06);
-
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(14, 17, 24, 0.06);
-  --shadow-md: 0 12px 28px rgba(14, 17, 24, 0.08);
-  --shadow-lg: 0 24px 56px rgba(14, 17, 24, 0.10);
+/* Container gutter: 80px desktop, 40px tablet, 20px mobile (content max 1280px). */
+@media (max-width: 1024px) {
+  :root { --gutter: 40px; --section-y: 88px; }
+}
+@media (max-width: 767px) {
+  :root { --gutter: 20px; --section-y: 64px; --radius-panel: 28px; --radius-card-lg: 28px; }
 }
 
 /* Reset */
@@ -71,8 +81,7 @@
 html, body {
   max-width: 100vw;
   overflow-x: hidden;
-  /* Plain white page. (The "Section background image" site setting is no longer shown.) */
-  background: #ffffff;
+  background: var(--page);
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 16px;
@@ -94,6 +103,35 @@ button {
   font: inherit;
   cursor: pointer;
   outline: none;
+}
+
+/* ---------- Full-screen sections ----------
+   Every top-level section of a page fills at least one screen, content centred vertically; taller
+   content simply grows the section. Backgrounds stay full width; content sits in ds.container.
+   Not applied to: the header, announcement bar and footer (outside <main>), sections marked
+   data-screen="off" (e.g. the contact details bar), and nested sections. Zero-specificity
+   :where() so a section's own display/alignment rules still win. */
+:where(.site-main section:not(section section, [data-screen="off"])) {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+}
+/* Inner-page heroes (start the page on a photo). */
+.site-main [data-hero-photo]:not([data-home-hero]) {
+  min-height: 70vh;
+  min-height: 70svh;
+}
+/* Home hero: exactly one screen, on every device. */
+.site-main [data-home-hero] {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+@media (max-width: 767px) {
+  :where(.site-main section:not(section section, [data-screen="off"], [data-hero-photo], [data-home-hero])) {
+    min-height: 0;
+  }
 }
 
 /* Typography Utility */

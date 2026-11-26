@@ -48,9 +48,6 @@ export function Icon({ name, size = 24, strokeWidth = 2.5, className }: { name: 
   );
 }
 
-/** Same box next/image `fill` produced, so the old CSS (object-fit etc.) still applies. */
-export const FILL: React.CSSProperties = { position: "absolute", inset: 0, width: "100%", height: "100%" };
-
 /** Plain-text paragraphs: blank lines separate paragraphs. */
 export function paragraphsOf(text: string): string[] {
   return text

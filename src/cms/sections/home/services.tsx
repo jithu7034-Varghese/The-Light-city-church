@@ -1,9 +1,10 @@
 // Home: numbered cards for ministries and ways to connect.
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
-import { SplitText, ViewportSection } from "@/cms/sections/shared/animate";
-import styles from "@/app/(site)/page.module.css";
+import { ViewportSection } from "@/cms/sections/shared/animate";
+import { AccentHeading, ds } from "@/components/site/ds";
 import h from "./home.module.css";
+import { ArrowRight } from "./social-icons";
 import { externalProps } from "./util";
 
 export const homeServices = defineSection({
@@ -25,33 +26,41 @@ export const homeServices = defineSection({
     ),
   },
   Component: ({ data, ctx }) => (
-    <ViewportSection className={styles.servicesSection} id="services">
-      <div className={styles.servicesContainer}>
+    <ViewportSection className={`${ds.section} ${ds.cream}`} id="services">
+      <div className={ds.container}>
         {data.heading && (
-          <div className={styles.servicesHeader}>
-            <h2 className={styles.servicesTitle}>
-              <SplitText text={data.heading} delayOffset={0.1} />
-            </h2>
+          <div className={ds.sectionHeader}>
+            <div className={ds.sectionHeaderText}>
+              <AccentHeading text={data.heading} as="h2" className={ds.h2} />
+            </div>
           </div>
         )}
 
-        <div className={styles.servicesGrid}>
+        <div className={ds.cardGrid4}>
           {data.items.map((item, idx) => {
             const img = ctx.image(item.image);
             const inner = (
               <>
-                <div className={styles.serviceCardImageArea}>
-                  <span className={styles.serviceCardIndex}>{String(idx + 1).padStart(2, "0")}</span>
+                <div className={h.serviceImage}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {img ? <img src={img.url} alt={img.alt} loading="lazy" className={`${styles.serviceCardImage} ${h.fill}`} /> : <div className={h.placeholder} />}
+                  {img && <img src={img.url} alt={img.alt} loading="lazy" className={h.fill} />}
+                  <span className={`${ds.chip} ${h.indexChip}`}>{String(idx + 1).padStart(2, "0")}</span>
                 </div>
-                {item.title && <h3 className={styles.serviceCardTitle}>{item.title}</h3>}
-                {item.text && <p className={styles.serviceCardText}>{item.text}</p>}
+                <div className={h.serviceBody}>
+                  {item.title && <h3 className={h.cardTitle}>{item.title}</h3>}
+                  {item.text && <p className={h.cardText}>{item.text}</p>}
+                  {item.link.href && (
+                    <span className={h.cardFoot}>
+                      {item.link.label}
+                      <ArrowRight />
+                    </span>
+                  )}
+                </div>
               </>
             );
-            const cls = `${styles.serviceCard} animate-premium-block${idx > 0 ? ` delay-${Math.min(idx * 2, 6)}` : ""}`;
+            const cls = `${ds.card} ${h.serviceCard} ${ds.reveal}`;
             return item.link.href ? (
-              <a key={item.id} href={item.link.href} {...externalProps(item.link.href)} className={`${cls} ${h.cardLink}`}>
+              <a key={item.id} href={item.link.href} {...externalProps(item.link.href)} className={cls}>
                 {inner}
               </a>
             ) : (

@@ -1,17 +1,26 @@
 // Root layout #1: the public website (CSS Modules only, no Tailwind). Header, footer,
 // announcement bar and default metadata all come from the published CMS globals (cached).
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Outfit, Playfair_Display } from "next/font/google";
 import { SiteHeader } from "@/components/site/SiteChrome";
+import { LiquidGlassDefs } from "@/components/site/LiquidGlass";
 import { AnnouncementBar, SiteFooter } from "@/components/site/SiteFooter";
 import { getGlobal, getMediaByIds } from "@/cms/queries";
-import { cssImageUrl } from "@/lib/media/url";
 import "./globals.css";
 
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
   weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+// Accent word at the end of main headings (Playfair Display Italic).
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  style: ["italic"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -36,27 +45,33 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const imageIds = [navbar.logoImage?.mediaId, site.sectionBackground?.mediaId].filter((id): id is string => Boolean(id)).sort();
   const media = await getMediaByIds(imageIds);
   const logoMedia = navbar.logoImage ? media[navbar.logoImage.mediaId] : undefined;
-  // Site settings → "Section background image", exposed as --section-bg-image. The white theme
-  // no longer paints it behind the page; kept so a section can opt back in.
-  const sectionBg = cssImageUrl(site.sectionBackground ? media[site.sectionBackground.mediaId]?.url : null);
-  const htmlStyle = sectionBg ? ({ "--section-bg-image": sectionBg } as React.CSSProperties) : undefined;
+  const logo = logoMedia ? { url: logoMedia.url, alt: logoMedia.alt } : null;
+  // Site settings → "Section background image": the footer's scene (sections use it as the
+  // fallback photo through ctx.background).
+  const sceneMedia = site.sectionBackground ? media[site.sectionBackground.mediaId] : undefined;
 
   return (
-    <html lang="en-GB" className={outfit.variable} style={htmlStyle}>
+    <html lang="en-GB" className={`${outfit.variable} ${playfair.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
+        <LiquidGlassDefs />
         <AnnouncementBar data={announcement} />
         <SiteHeader
           logoText={navbar.logoText}
           logoAccent={navbar.logoAccent}
-          logo={logoMedia ? { url: logoMedia.url, alt: logoMedia.alt } : null}
+          logo={logo}
           items={navbar.items}
           cta={navbar.cta}
         />
-        {children}
-        <SiteFooter footer={footer} site={site} />
+        <main id="main" className="site-main">{children}</main>
+        <SiteFooter
+          footer={footer}
+          site={site}
+          brand={{ logoText: navbar.logoText, logoAccent: navbar.logoAccent, logo }}
+          background={sceneMedia ? { url: sceneMedia.url } : null}
+        />
       </body>
     </html>
   );

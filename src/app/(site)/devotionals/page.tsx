@@ -1,11 +1,13 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import styles from "../page.module.css";
-import blogStyles from "./devotionals.module.css";
+import { PageHero, ds } from "@/components/site/ds";
+import { ViewportSection } from "@/cms/sections/shared/animate";
+import d from "./devotionals.module.css";
 import { getPostCategories, getPublishedPosts, POSTS_PER_PAGE } from "@/lib/posts/public";
 import { isValidSlug } from "@/lib/slug";
 import { PostCard } from "./post-card";
+import { getSiteBackground } from "./site-background";
 
 export const metadata: Metadata = {
   title: "Daily Light Devotionals | The Light City Church",
@@ -13,26 +15,24 @@ export const metadata: Metadata = {
   alternates: { canonical: "/devotionals" },
 };
 
-export default function DevotionalsPage({ searchParams }: PageProps<"/devotionals">) {
+export default async function DevotionalsPage({ searchParams }: PageProps<"/devotionals">) {
+  const background = await getSiteBackground();
   return (
-    <div className={styles.container} style={{ background: "transparent" }}>
-      <section className={blogStyles.blogHeaderContainer}>
-        <h1 className={blogStyles.blogTitle}>
-          Daily Light <span className={blogStyles.italicSerif}>Devotionals</span>
-        </h1>
-        <p className={blogStyles.blogSubtitle}>
-          Grow in the accurate teaching of the Gospel of grace. Read, reflect and pray with Pastor Ronnie Dube.
-        </p>
-      </section>
-      <section className={styles.blogSection} style={{ paddingTop: 0 }}>
-        <div className={styles.blogContainer}>
+    <>
+      <PageHero
+        image={background}
+        title="Daily Light Devotionals"
+        text={<p>Grow in the accurate teaching of the Gospel of grace. Read, reflect and pray with Pastor Ronnie Dube.</p>}
+      />
+      <ViewportSection as="section" className={`${ds.section} ${ds.cream} ${d.listSection}`}>
+        <div className={ds.container}>
           {/* The page number and category are request data, so the list streams in after the static shell */}
-          <Suspense fallback={<p style={{ textAlign: "center", color: "var(--text-secondary)" }}>Loading devotionals…</p>}>
+          <Suspense fallback={<p className={d.notice}>Loading devotionals…</p>}>
             <PostList searchParams={searchParams} />
           </Suspense>
         </div>
-      </section>
-    </div>
+      </ViewportSection>
+    </>
   );
 }
 
@@ -54,15 +54,15 @@ async function PostList({ searchParams }: { searchParams: PageProps<"/devotional
   };
 
   const filters = categories.length > 1 && (
-    <nav aria-label="Filter by category" className={blogStyles.categoryFilters}>
-      <Link href="/devotionals" className={`${blogStyles.filterPill} ${!rawCategory ? blogStyles.filterPillActive : ""}`} aria-current={!rawCategory ? "page" : undefined}>
+    <nav aria-label="Filter by category" className={d.categoryFilters}>
+      <Link href="/devotionals" className={`${d.filterPill} ${!rawCategory ? d.filterPillActive : ""}`} aria-current={!rawCategory ? "page" : undefined}>
         All
       </Link>
       {categories.map((c) => (
         <Link
           key={c.slug}
           href={`/devotionals?category=${encodeURIComponent(c.slug)}`}
-          className={`${blogStyles.filterPill} ${active?.slug === c.slug ? blogStyles.filterPillActive : ""}`}
+          className={`${d.filterPill} ${active?.slug === c.slug ? d.filterPillActive : ""}`}
           aria-current={active?.slug === c.slug ? "page" : undefined}
         >
           {c.name}
@@ -75,7 +75,7 @@ async function PostList({ searchParams }: { searchParams: PageProps<"/devotional
     return (
       <>
         {filters}
-        <p style={{ textAlign: "center", color: "var(--text-secondary)" }}>
+        <p className={d.notice}>
           {unknownCategory ? (
             <>That category doesn&apos;t exist. <Link href="/devotionals">See all devotionals</Link></>
           ) : page > 1 ? (
@@ -91,18 +91,18 @@ async function PostList({ searchParams }: { searchParams: PageProps<"/devotional
   return (
     <>
       {filters}
-      <div className={styles.blogGrid}>
-        {posts.map((p, i) => <PostCard key={p.slug} post={p} delay={0.05 + i * 0.03} />)}
+      <div className={ds.cardGrid3}>
+        {posts.map((p) => <PostCard key={p.slug} post={p} />)}
       </div>
-      <nav aria-label="Devotional pages" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "16px", marginTop: "48px" }}>
+      <nav aria-label="Devotional pages" className={d.pagination}>
         {page > 1 && (
-          <Link href={href(page - 1)} className={styles.loadMoreBtn} rel="prev">
+          <Link href={href(page - 1)} className={d.pageButton} rel="prev">
             ← Newer
           </Link>
         )}
-        <span style={{ color: "var(--text-secondary)" }}>Page {page} of {pages}</span>
+        <span className={d.pageStatus}>Page {page} of {pages}</span>
         {page < pages && (
-          <Link href={href(page + 1)} className={styles.loadMoreBtn} rel="next">
+          <Link href={href(page + 1)} className={d.pageButton} rel="next">
             Older →
           </Link>
         )}

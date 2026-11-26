@@ -1,340 +1,195 @@
-/* src/app/gallery/gallery.module.css */
+/* Gallery page (Figma "Gallery" frame). Shared pieces (container, section spacing, headings,
+   glass caption, page hero) come from src/components/site/ds. */
 
-.hero {
-  position: relative;
-  height: 65vh;
-  min-height: 480px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background-color: transparent;
-}
+.intro { max-width: 640px; }
 
-.heroBackground {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.heroImage {
-  object-fit: cover;
-}
-
-.heroOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.72) 0%,
-    rgba(255, 255, 255, 0.9) 100%
-  );
-  z-index: 2;
-}
-
-.heroContent {
-  position: relative;
-  z-index: 3;
-  max-width: 800px;
-  padding: 0 24px;
-  text-align: center;
-  color: #0e1118;
-}
-
-.heroTag {
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: #5e6675;
-  display: inline-block;
-  margin-bottom: 20px;
-}
-
-.heroTitle {
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  margin-bottom: 20px;
-}
-
-.heroSubtitle {
-  font-size: clamp(1.1rem, 2vw, 1.3rem);
-  line-height: 1.6;
-  color: #5e6675;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Gallery Section */
-.gallerySection {
-  padding: 100px 24px;
-  background-color: transparent;
-}
-
-.container {
-  max-width: var(--container-max);
-  margin: 0 auto;
-}
-
-.sectionHeader {
-  text-align: center;
-  max-width: 680px;
-  margin: 0 auto 64px;
-}
-
-.sectionTitle {
-  font-size: clamp(2rem, 3.5vw, 2.8rem);
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 16px;
-  letter-spacing: -0.02em;
-}
-
-.sectionSubtitle {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
+/* ---------- Photo grid ---------- */
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 32px;
-}
-
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
 }
 
 .card {
   position: relative;
-  background: var(--glass-bg);
-  backdrop-filter: blur(60px);
-  -webkit-backdrop-filter: blur(60px);
-  border: 1px solid var(--glass-border);
-  border-top: 1.5px solid var(--glass-border-top);
-  border-radius: 24px;
-  overflow: hidden;
-  height: 380px;
-  box-shadow: var(--glass-shadow);
-  cursor: pointer;
-  transition: var(--transition-smooth);
-}
-
-.card:hover {
-  transform: translateY(-6px);
-  background-color: #ffffff;
-  border-color: rgba(14, 17, 24, 0.14);
-  box-shadow: var(--shadow-md);
-}
-
-.cardImageWrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: block;
   width: 100%;
-  height: 100%;
-  z-index: 1;
+  aspect-ratio: 410 / 520;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(160deg, #1d2a33 0%, #0b0f16 100%);
+  color: #ffffff;
+  font: inherit;
+  text-align: left;
+  cursor: zoom-in;
+}
+/* Soft dark fade at the bottom so the glass caption stays readable on light photos. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(8, 13, 18, 0) 50%, rgba(8, 13, 18, 0.55) 100%);
+  pointer-events: none;
+}
+.card:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 4px;
 }
 
 .cardImage {
-  object-fit: cover;
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.card:hover .cardImage {
-  transform: scale(1.06);
-}
-
-.cardOverlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(255, 255, 255, 0.92) 100%
-  );
-  z-index: 2;
-  transition: background-color 0.4s ease;
-}
-
-.card:hover .cardOverlay {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.1) 30%,
-    rgba(255, 255, 255, 0.95) 100%
-  );
-}
-
-.cardContent {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  inset: 0;
+  z-index: -2;
   width: 100%;
-  padding: 32px;
-  z-index: 3;
-  color: #0e1118;
-  transform: translateY(10px);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s var(--ease-out);
 }
+.card:hover .cardImage { transform: scale(1.05); }
 
-.card:hover .cardContent {
-  transform: translateY(0);
-}
-
-.cardTag {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: #5e6675;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.cardTitle {
-  font-size: 1.35rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.cardZoomIcon {
+.caption {
   position: absolute;
-  top: 24px;
-  right: 24px;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  gap: 2px;
+  padding: 12px 20px 14px;
+  border-radius: 20px;
+}
+.captionTag { font-size: 0.6875rem; }
+.captionTitle {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #ffffff;
+}
+
+.zoomIcon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(14, 17, 24, 0.08);
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 3;
-  color: #0e1118;
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: 0 8px 24px rgba(5, 10, 15, 0.12);
   opacity: 0;
   transform: scale(0.85);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
 }
-
-.card:hover .cardZoomIcon {
+.card:hover .zoomIcon,
+.card:focus-visible .zoomIcon {
   opacity: 1;
   transform: scale(1);
 }
 
-/* Lightbox Modal */
+@media (max-width: 1024px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+}
+
+/* ---------- Lightbox ---------- */
 .lightbox {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: 9999;
-  background-color: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(16px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
-  opacity: 0;
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  background: rgba(11, 15, 22, 0.9);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  animation: fadeIn 0.35s var(--ease-out) both;
 }
-
 @keyframes fadeIn {
+  from { opacity: 0; }
   to { opacity: 1; }
 }
 
 .lightboxClose {
   position: absolute;
-  top: 30px;
-  right: 30px;
+  top: 28px;
+  right: 28px;
+  z-index: 1;
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #f7f8fa;
-  border: 1px solid rgba(14, 17, 24, 0.10);
-  color: #0e1118;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #ffffff;
+  border: 0;
+  color: var(--ink);
   cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 10001;
+  transition: transform 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
 }
-
-.lightboxClose:hover {
-  background: #f1f3f6;
-  transform: scale(1.05);
-}
+.lightboxClose:hover { background: #f5f1ea; transform: scale(1.05); }
+.lightboxClose:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 
 .lightboxContent {
-  max-width: 1000px;
   width: 100%;
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: scaleUp 0.4s var(--ease-out) both;
 }
-
 @keyframes scaleUp {
-  from { transform: scale(0.95) translateY(10px); }
-  to { transform: scale(1) translateY(0); }
+  from { transform: scale(0.96) translateY(10px); }
+  to { transform: none; }
 }
 
 .lightboxImageWrapper {
-  position: relative;
   width: 100%;
   height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .lightboxImage {
-  object-fit: contain;
   max-width: 100%;
   max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-card);
 }
 
 .lightboxCaption {
-  text-align: center;
-  color: #0e1118;
-  margin-top: 24px;
   max-width: 600px;
+  margin-top: 24px;
+  text-align: center;
+  color: #ffffff;
 }
-
 .lightboxTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  line-height: 1.35;
   margin-bottom: 8px;
-  letter-spacing: -0.01em;
+}
+.lightboxDesc {
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
 }
 
-.lightboxDesc {
-  font-size: 0.95rem;
-  color: #5e6675;
-  line-height: 1.5;
+@media (max-width: 640px) {
+  .lightbox { padding: 80px 16px 24px; }
+  .lightboxClose { top: 16px; right: 16px; }
+  .lightboxImageWrapper { height: 60vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardImage, .zoomIcon { transition: none; }
+  .card:hover .cardImage { transform: none; }
+  .lightbox, .lightboxContent { animation: none; }
 }

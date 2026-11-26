@@ -1,25 +1,23 @@
-// Home: three-column photo collage (intro + up to 4 photos + a button).
+// Home: photo collage (intro + up to 4 photos + a button).
 import { defineSection } from "@/cms/define";
 import { f, type ImageRef } from "@/cms/fields";
 import type { SectionCtx } from "@/cms/define";
 import { ViewportSection } from "@/cms/sections/shared/animate";
-import styles from "@/app/(site)/page.module.css";
+import { AccentHeading, ds, PillButton } from "@/components/site/ds";
 import h from "./home.module.css";
 
 type Photo = { id: string; image: ImageRef; caption: string };
 
-function PhotoCard({ photo, ctx, cardClass, wrapperClass, delay }: { photo: Photo | undefined; ctx: SectionCtx; cardClass: string; wrapperClass: string; delay: string }) {
+function PhotoCard({ photo, ctx, className }: { photo: Photo | undefined; ctx: SectionCtx; className: string }) {
   if (!photo) return null;
   const img = ctx.image(photo.image);
   if (!img) return null;
   return (
-    <div className={`${styles.portfolioCard} ${cardClass} animate-premium-block ${delay}`}>
-      <div className={`${styles.portfolioImageWrapper} ${wrapperClass}`}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={img.url} alt={img.alt} loading="lazy" className={`${styles.portfolioCardImage} ${h.fill}`} />
-        {photo.caption && <span className={styles.portfolioCardTextBadge}>{photo.caption}</span>}
-      </div>
-    </div>
+    <figure className={`${h.galleryPhoto} ${className} ${ds.reveal}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={img.url} alt={img.alt} loading="lazy" className={h.fill} />
+      {photo.caption && <figcaption className={h.caption}>{photo.caption}</figcaption>}
+    </figure>
   );
 }
 
@@ -38,32 +36,23 @@ export const homeGallery = defineSection({
     const [p1, p2, p3, p4] = data.photos;
     const label = data.buttonLabel || data.buttonLink.label;
     return (
-      <ViewportSection className={styles.portfolioSection} id="gallery">
-        <div className={styles.portfolioContainer}>
-          <div className={styles.portfolioColumn}>
-            {(data.heading || data.text) && (
-              <div className={styles.portfolioIntro}>
-                {data.heading && <h2 className={styles.portfolioIntroTitle}>{data.heading}</h2>}
-                {data.text && <p className={styles.portfolioIntroText}>{data.text}</p>}
+      <ViewportSection className={ds.section} id="gallery">
+        <div className={ds.container}>
+          {(data.heading || data.text || (label && data.buttonLink.href)) && (
+            <div className={ds.sectionHeader}>
+              <div className={ds.sectionHeaderText}>
+                {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
+                {data.text && <p className={`${ds.body} ${h.galleryIntro}`}>{data.text}</p>}
               </div>
-            )}
-            <PhotoCard photo={p1} ctx={ctx} cardClass={styles.stretchCard} wrapperClass={styles.stretchImage} delay="" />
-          </div>
+              <PillButton href={data.buttonLink.href} label={label} variant="secondary" />
+            </div>
+          )}
 
-          <div className={styles.portfolioColumn}>
-            <PhotoCard photo={p2} ctx={ctx} cardClass={styles.middleCard} wrapperClass="" delay="delay-1" />
-            <PhotoCard photo={p3} ctx={ctx} cardClass={styles.middleCard} wrapperClass="" delay="delay-2" />
-          </div>
-
-          <div className={styles.portfolioColumn}>
-            <PhotoCard photo={p4} ctx={ctx} cardClass={`${styles.tallCard} ${styles.stretchCard}`} wrapperClass={styles.stretchImage} delay="delay-3" />
-            {label && data.buttonLink.href && (
-              <div className={styles.portfolioCta}>
-                <a href={data.buttonLink.href} className={styles.portfolioBtn}>
-                  {label}
-                </a>
-              </div>
-            )}
+          <div className={h.galleryGrid}>
+            <PhotoCard photo={p1} ctx={ctx} className={h.galleryPhoto1} />
+            <PhotoCard photo={p2} ctx={ctx} className={h.galleryPhoto2} />
+            <PhotoCard photo={p3} ctx={ctx} className={h.galleryPhoto3} />
+            <PhotoCard photo={p4} ctx={ctx} className={h.galleryPhoto4} />
           </div>
         </div>
       </ViewportSection>

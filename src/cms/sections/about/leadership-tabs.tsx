@@ -1,6 +1,7 @@
-"use client";
-// Tab switcher for the about_leadership section. Receives plain, already-resolved data only.
-import { useState } from "react";
+// Leader cards for the about_leadership section (Figma "Pastoral Oversight"): every leader is shown
+// side by side as a card (photo on top, role, name, biography, optional quote), so no tabs are needed.
+// Server-safe; receives plain, already-resolved data only.
+import { ds } from "@/components/site/ds";
 import a from "./about.module.css";
 
 export type Leader = {
@@ -13,57 +14,30 @@ export type Leader = {
   image: { url: string; alt: string } | null;
 };
 
-const FILL: React.CSSProperties = { position: "absolute", inset: 0, width: "100%", height: "100%" };
-
-export function LeadershipTabs({ tag, heading, leaders }: { tag: string; heading: string; leaders: Leader[] }) {
-  const [activeId, setActiveId] = useState(leaders[0]?.id);
-  const current = leaders.find((l) => l.id === activeId) ?? leaders[0];
-
+export function LeaderCards({ leaders }: { leaders: Leader[] }) {
+  if (leaders.length === 0) return null;
   return (
-    <>
-      <div className={a.leadershipHeader}>
-        {tag && <span className={a.sectionTag}>{tag}</span>}
-        {heading && <h2 className={a.valuesTitle}>{heading}</h2>}
-
-        {leaders.length > 1 && (
-          <div className={a.tabSwitcher} role="tablist">
-            {leaders.map((l) => (
-              <button
-                key={l.id}
-                type="button"
-                role="tab"
-                aria-selected={l.id === current?.id}
-                className={`${a.tabBtn} ${l.id === current?.id ? a.tabBtnActive : ""}`}
-                onClick={() => setActiveId(l.id)}
-              >
-                {l.tabLabel}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {current && (
-        <div className={a.magazineGrid}>
-          {current.image && (
-            <div className={`${a.pastorImageWrapper} animate-premium-block`}>
+    <div className={leaders.length === 1 ? a.leaderSingle : ds.cardGrid2}>
+      {leaders.map((l) => (
+        <article key={l.id} className={`${ds.card} ${a.leaderCard} ${ds.reveal}`} aria-label={l.name || l.tabLabel || undefined}>
+          {l.image && (
+            <div className={a.leaderPhoto}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img key={current.id} src={current.image.url} alt={current.image.alt} loading="lazy" className={a.pastorImage} style={FILL} />
+              <img src={l.image.url} alt={l.image.alt} loading="lazy" />
             </div>
           )}
-
-          <div className={a.pastorDetailsArea} key={`details-${current.id}`}>
-            {current.name && <h3 className={a.pastorName}>{current.name}</h3>}
-            {current.role && <span className={a.pastorRole}>{current.role}</span>}
-            {current.bio.map((p, i) => (
-              <p key={i} className={a.pastorBio}>
+          <div className={a.leaderBody}>
+            {l.role && <p className={a.leaderRole}>{l.role}</p>}
+            {l.name && <h3 className={ds.h3}>{l.name}</h3>}
+            {l.bio.map((p, i) => (
+              <p key={i} className={ds.body}>
                 {p}
               </p>
             ))}
-            {current.quote && <blockquote className={a.pastorQuote}>{current.quote}</blockquote>}
+            {l.quote && <blockquote className={a.leaderQuote}>{l.quote}</blockquote>}
           </div>
-        </div>
-      )}
-    </>
+        </article>
+      ))}
+    </div>
   );
 }

@@ -5,6 +5,7 @@
 import { useRef, useState } from "react";
 import { submitForm } from "@/cms/actions/submit-form";
 import { Turnstile, type TurnstileHandle } from "@/components/site/Turnstile";
+import { ds } from "@/components/site/ds";
 import c from "./contact.module.css";
 
 export type ContactFormText = {
@@ -97,7 +98,7 @@ export function ContactForm({ text, sourcePage }: { text: ContactFormText; sourc
           </svg>
           <div>
             {text.successTitle && <strong>{text.successTitle}</strong>}
-            {serverMessage && <p style={{ marginTop: "2px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>{serverMessage}</p>}
+            {serverMessage && <p className={c.alertText}>{serverMessage}</p>}
           </div>
         </div>
       )}
@@ -111,12 +112,12 @@ export function ContactForm({ text, sourcePage }: { text: ContactFormText; sourc
           </svg>
           <div>
             {text.errorTitle && <strong>{text.errorTitle}</strong>}
-            <p style={{ marginTop: "2px", fontSize: "0.9rem", color: "inherit", opacity: 0.9 }}>{serverMessage ?? text.errorText}</p>
+            <p className={c.alertText}>{serverMessage ?? text.errorText}</p>
           </div>
         </div>
       )}
 
-      <div className={c.formRow}>
+      <div className={c.fieldRow}>
         <div className={c.formGroup}>
           <label htmlFor="name" className={c.formLabel}>{text.nameLabel}</label>
           <input
@@ -127,6 +128,7 @@ export function ContactForm({ text, sourcePage }: { text: ContactFormText; sourc
             onChange={handleChange}
             className={c.formInput}
             style={errors.name ? ERROR_BORDER : undefined}
+            aria-invalid={errors.name ? true : undefined}
             placeholder={text.namePlaceholder}
             autoComplete="name"
             required
@@ -143,6 +145,7 @@ export function ContactForm({ text, sourcePage }: { text: ContactFormText; sourc
             onChange={handleChange}
             className={c.formInput}
             style={errors.email ? ERROR_BORDER : undefined}
+            aria-invalid={errors.email ? true : undefined}
             placeholder={text.emailPlaceholder}
             autoComplete="email"
             required
@@ -150,7 +153,7 @@ export function ContactForm({ text, sourcePage }: { text: ContactFormText; sourc
         </div>
       </div>
 
-      <div className={c.formRow}>
+      <div className={c.fieldRow}>
         <div className={c.formGroup}>
           <label htmlFor="phone" className={c.formLabel}>{text.phoneLabel}</label>
           <input
@@ -161,6 +164,7 @@ export function ContactForm({ text, sourcePage }: { text: ContactFormText; sourc
             onChange={handleChange}
             className={c.formInput}
             style={errors.phone ? ERROR_BORDER : undefined}
+            aria-invalid={errors.phone ? true : undefined}
             placeholder={text.phonePlaceholder}
             autoComplete="tel"
           />
@@ -176,6 +180,7 @@ export function ContactForm({ text, sourcePage }: { text: ContactFormText; sourc
             onChange={handleChange}
             className={c.formInput}
             style={errors.subject ? ERROR_BORDER : undefined}
+            aria-invalid={errors.subject ? true : undefined}
             placeholder={text.subjectPlaceholder}
           />
         </div>
@@ -190,6 +195,7 @@ export function ContactForm({ text, sourcePage }: { text: ContactFormText; sourc
           onChange={handleChange}
           className={c.formTextarea}
           style={errors.message ? ERROR_BORDER : undefined}
+          aria-invalid={errors.message ? true : undefined}
           placeholder={text.messagePlaceholder}
           required
         />
@@ -203,19 +209,15 @@ export function ContactForm({ text, sourcePage }: { text: ContactFormText; sourc
 
       <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
 
-      <button type="submit" disabled={submitStatus === "submitting"} className={c.formBtn}>
-        {submitStatus === "submitting" ? (
-          <>{text.sendingLabel}</>
-        ) : (
-          <>
-            {text.buttonLabel}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </>
-        )}
-      </button>
+      <div className={c.formActions}>
+        <button type="submit" disabled={submitStatus === "submitting"} aria-busy={submitStatus === "submitting"} className={`${ds.btnPrimary} ${c.formBtn}`}>
+          <span>{submitStatus === "submitting" ? text.sendingLabel : text.buttonLabel}</span>
+          <span className={ds.btnBadge} aria-hidden>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/arrow-up-right-dark.svg" alt="" width={16} height={16} />
+          </span>
+        </button>
+      </div>
     </form>
   );
 }

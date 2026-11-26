@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import styles from "../../page.module.css";
-import blogStyles from "../devotionals.module.css";
+import { AccentHeading, PhotoBackground, SectionTag, ds } from "@/components/site/ds";
+import { ViewportSection } from "@/cms/sections/shared/animate";
+import d from "../devotionals.module.css";
 import { getLatestPosts, getPostBySlug, getPublishedPostSlugs, type PublicPost } from "@/lib/posts/public";
 import { getGlobal } from "@/cms/queries";
 import { splitKeywords } from "@/cms/seo";
 import { articleJsonLd, JsonLd } from "@/lib/seo/jsonld";
-import { TiptapContent, tiptapToText } from "@/lib/tiptap/render";
+import { tiptapToText } from "@/lib/tiptap/render";
 import { isValidSlug } from "@/lib/slug";
 import { formatPostDate, PostCard } from "../post-card";
+import { getSiteBackground } from "../site-background";
+import { ArticleBody } from "./article-body";
 
 // Known slugs are prerendered; new ones render on first visit. `ensureStatic = "navigation"`
 // makes that first visit wait for the complete page instead of streaming an App Shell with a
@@ -57,72 +60,77 @@ export async function generateMetadata({ params }: PageProps<"/devotionals/[slug
 export default async function DevotionalPage({ params }: PageProps<"/devotionals/[slug]">) {
   const { slug } = await params;
   if (!isValidSlug(slug)) notFound();
-  const [post, latest, site] = await Promise.all([getPostBySlug(slug), getLatestPosts(4), getGlobal("site")]);
+  const [post, latest, site, background] = await Promise.all([getPostBySlug(slug), getLatestPosts(4), getGlobal("site"), getSiteBackground()]);
   if (!post) notFound();
   const related = latest.filter((p) => p.slug !== post.slug).slice(0, 3);
 
   return (
-    <div className={styles.container} style={{ background: "transparent" }}>
+    <>
       <JsonLd data={articleJsonLd(post, site, describe(post))} />
-      <article className={blogStyles.articleWrapper}>
-        <Link href="/devotionals" className={blogStyles.backButton}>← All devotionals</Link>
-        <div className={blogStyles.articleCard}>
-          <header className={blogStyles.articleHeader}>
-            {post.categories.length > 0 ? (
-              <ul className={blogStyles.chipList} aria-label="Categories">
-                {post.categories.map((c) => (
-                  <li key={c.slug}>
-                    <Link href={`/devotionals?category=${encodeURIComponent(c.slug)}`} className={blogStyles.articleCategory}>{c.name}</Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <span className={blogStyles.articleCategory}>Devotional</span>
-            )}
-            <h1 className={blogStyles.articleTitle}>{post.title}</h1>
-            <div className={blogStyles.metaRow}>
-              <div className={blogStyles.authorMeta}>
+      <article>
+        <header className={`${ds.pageHero} ${d.articleHero}`} data-hero-photo>
+          <PhotoBackground image={post.image ?? background} zoom priority />
+          <div className={ds.container}>
+            <div className={`${ds.pageHeroCard} ${d.articleHeroCard}`}>
+              {post.categories.length > 0 ? (
+                <ul className={d.categoryList} aria-label="Categories">
+                  {post.categories.map((c) => (
+                    <li key={c.slug}>
+                      <Link href={`/devotionals?category=${encodeURIComponent(c.slug)}`} className={`${ds.eyebrow} ${d.categoryLink}`}>
+                        {c.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <SectionTag plain>Devotional</SectionTag>
+              )}
+              <h1 className={ds.pageHeroTitle}>{post.title}</h1>
+              <div className={d.byline}>
                 {post.author?.photo && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={post.author.photo.url} alt="" width={44} height={44} className={blogStyles.authorAvatar} />
+                  <img src={post.author.photo.url} alt="" width={44} height={44} className={d.authorAvatar} />
                 )}
-                <span className={blogStyles.authorText}>
-                  <span className={blogStyles.authorName}>{post.author?.name ?? post.authorName}</span>
-                  {post.author?.position && <span className={blogStyles.authorPosition}>{post.author.position}</span>}
-                </span>
+                <div className={d.bylineText}>
+                  <p>
+                    <span className={d.authorName}>{post.author?.name ?? post.authorName}</span>
+                    {" · "}
+                    <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
+                  </p>
+                  {post.author?.position && <p className={d.bylineSmall}>{post.author.position}</p>}
+                  {post.updatedDisplayAt && (
+                    <p className={d.bylineSmall}>
+                      Last updated <time dateTime={post.updatedDisplayAt}>{formatPostDate(post.updatedDisplayAt)}</time>
+                    </p>
+                  )}
+                </div>
               </div>
-              <span className={blogStyles.dates}>
-                <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
-                {post.updatedDisplayAt && (
-                  <span>
-                    Last updated <time dateTime={post.updatedDisplayAt}>{formatPostDate(post.updatedDisplayAt)}</time>
-                  </span>
-                )}
-              </span>
             </div>
-          </header>
-          {post.image && (
-            <div className={blogStyles.heroImageContainer}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={post.image.url} alt={post.image.alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            </div>
-          )}
-          <div className={blogStyles.articleBody}>
-            <TiptapContent doc={post.content} />
           </div>
-        </div>
-      </article>
+        </header>
 
-      {related.length > 0 && (
-        <section className={blogStyles.relatedSection}>
-          <div className={blogStyles.relatedContainer}>
-            <h2 className={blogStyles.relatedTitle}>More devotionals</h2>
-            <div className={blogStyles.relatedGrid}>
-              {related.map((p, i) => <PostCard key={p.slug} post={p} delay={0.1 + i * 0.1} showExcerpt={false} />)}
+        <section className={d.articleSection}>
+          <div className={ds.container}>
+            <div className={d.articleColumn}>
+              <Link href="/devotionals" className={d.backLink}>← All devotionals</Link>
+              <div className={d.articleBody}>
+                <ArticleBody doc={post.content} />
+              </div>
             </div>
           </div>
         </section>
+      </article>
+
+      {related.length > 0 && (
+        <ViewportSection as="section" className={`${ds.cream} ${d.relatedSection}`}>
+          <div className={ds.container}>
+            <AccentHeading text="More devotionals" as="h2" className={`${ds.h2} ${d.relatedTitle}`} />
+            <div className={ds.cardGrid3}>
+              {related.map((p) => <PostCard key={p.slug} post={p} />)}
+            </div>
+          </div>
+        </ViewportSection>
       )}
-    </div>
+    </>
   );
 }

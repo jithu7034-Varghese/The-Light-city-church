@@ -1,5 +1,7 @@
-// Social network icons (decorative SVG, keyed by network name from site settings).
+// Small decorative icons for the home sections: social networks (keyed by network name from site
+// settings) and the "→" on linked cards.
 import type { ReactNode } from "react";
+import h from "./home.module.css";
 
 const svg = (children: ReactNode) => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -15,7 +17,11 @@ const ICONS: Record<string, ReactNode> = {
       <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
     </>,
   ),
-  x: svg(<path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>),
+  x: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3zm-1.08 16.17h1.7L7.4 4.73H5.58l11.09 14.44z" />
+    </svg>
+  ),
   facebook: svg(<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>),
   youtube: svg(
     <>
@@ -24,8 +30,24 @@ const ICONS: Record<string, ReactNode> = {
     </>,
   ),
 };
+ICONS.podcast = svg(
+  <>
+    <rect x="9" y="2" width="6" height="12" rx="3"></rect>
+    <path d="M5 11a7 7 0 0 0 14 0"></path>
+    <line x1="12" y1="18" x2="12" y2="22"></line>
+  </>,
+);
 ICONS.twitter = ICONS.x;
 
 export function socialIcon(network: string): ReactNode {
   return ICONS[network.trim().toLowerCase()] ?? <span style={{ fontSize: "0.8rem", fontWeight: 600 }}>{network.slice(0, 1).toUpperCase()}</span>;
+}
+
+/** Small "→" used at the foot of linked cards (decorative). */
+export function ArrowRight() {
+  return (
+    <svg className={h.arrow} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  );
 }

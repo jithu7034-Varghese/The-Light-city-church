@@ -1,14 +1,9 @@
-// Home: big photo-backed call to action (prayer requests).
+// Home: call to action (prayer requests) on a calm photo panel with a liquid-glass card.
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
-import styles from "@/app/(site)/page.module.css";
+import { ViewportSection } from "@/cms/sections/shared/animate";
+import { AccentHeading, ds, PhotoBackground, PillButton } from "@/components/site/ds";
 import h from "./home.module.css";
-import { cssImageUrl } from "@/lib/media/url";
-
-// White wash over the photo so the dark text stays readable (the site uses a white theme).
-const SHADE = "linear-gradient(rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.72))";
-// Without its own photo, the section is a plain soft-grey panel.
-const NO_IMAGE = "linear-gradient(#f7f8fa, #f7f8fa)";
 
 export const homePrayer = defineSection({
   type: "home_prayer",
@@ -22,32 +17,25 @@ export const homePrayer = defineSection({
     buttonLink: f.link("Button link"),
   },
   Component: ({ data, ctx }) => {
-    const img = ctx.image(data.image);
-    const own = cssImageUrl(img?.url);
-    const background = own ? `${SHADE}, ${own}` : NO_IMAGE;
+    const img = ctx.image(data.image) ?? ctx.background;
     const label = data.buttonLabel || data.buttonLink.label;
     return (
-      <section className={styles.ctaFooterSection} id="contact">
-        <div className={`${styles.ctaFooterContainer} ${h.prayer}`} style={{ backgroundImage: background }}>
-          <div className={styles.ctaContent}>
-            {data.heading && <h2 className={styles.ctaHeadline}>{data.heading}</h2>}
-            {data.text && <p className={styles.ctaSubtext}>{data.text}</p>}
-            {label && data.buttonLink.href && (
-              <div className={styles.ctaButtonWrapper}>
-                <a href={data.buttonLink.href} className={styles.ctaButton}>
-                  <span className={styles.ctaButtonText}>{label}</span>
-                  <span className={styles.ctaButtonIcon} aria-hidden>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="7" y1="17" x2="17" y2="7"></line>
-                      <polyline points="7 7 17 7 17 17"></polyline>
-                    </svg>
-                  </span>
-                </a>
-              </div>
-            )}
+      <ViewportSection className={h.prayerSection} id="contact">
+        <div className={ds.container}>
+          <div className={`${ds.photo} ${h.prayerPanel}`}>
+            <PhotoBackground image={img} strong />
+            <div className={`${ds.glass} ${h.prayerCard} ${ds.reveal}`}>
+              {data.heading && <AccentHeading text={data.heading} as="h2" className={`${ds.h2} ${h.prayerHeading}`} />}
+              {data.text && <p className={h.prayerText}>{data.text}</p>}
+              {label && data.buttonLink.href && (
+                <div className={h.prayerButton}>
+                  <PillButton href={data.buttonLink.href} label={label} variant="onPhoto" />
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </section>
+      </ViewportSection>
     );
   },
 });

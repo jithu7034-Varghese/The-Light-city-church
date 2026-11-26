@@ -1,14 +1,7 @@
 // Small helpers shared by the home sections.
-import { f, type LinkValue } from "@/cms/fields";
+import { f } from "@/cms/fields";
 
 export const buttonFields = { label: f.text("Button label", { max: 80 }), link: f.link("Button link") };
-
-/** Buttons that have a link and some label; empty ones are skipped. */
-export function shownButtons(items: { id: string; label: string; link: LinkValue }[]) {
-  return items
-    .filter((b) => (b.label || b.link.label) && b.link.href)
-    .map((b) => ({ id: b.id, label: b.label || b.link.label, href: b.link.href }));
-}
 
 /** External links open in a new tab. */
 export function externalProps(href: string) {

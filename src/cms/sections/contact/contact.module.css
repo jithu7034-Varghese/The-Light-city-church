@@ -1,667 +1,370 @@
-/* src/app/contact/contact.module.css */
+/* Contact page (Figma "Contact — Desktop 1440", 13:159). Layout, type, buttons, glass and photo
+   treatments come from the shared design system (src/components/site/ds.*); this file only holds
+   the Contact-specific layout. */
 
-.hero {
-  position: relative;
-  height: 90vh;
-  min-height: 620px;
-  width: 100%;
+/* ---------- Hero: nature photo, glass title card + glass "next service" card ---------- */
+.hero.hero {
+  min-height: 640px;
+}
+.heroRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px 40px;
+}
+.heroRow .heroCard {
+  width: min(720px, 100%);
+  flex: 0 1 720px;
+  min-width: 0;
+}
+
+.heroRow .serviceCard {
+  flex: 0 0 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  width: 380px;
+  max-width: 100%;
+  padding: 32px;
+  border-radius: var(--radius-card-lg);
+  background: rgba(255, 255, 255, 0.16);
+  animation: cardIn 0.9s var(--ease-out) 0.3s both;
+}
+.serviceTop {
   display: flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background-color: transparent;
-}
-
-.heroMap {
-  position: absolute;
-  top: 0;
-  left: 0;
+  justify-content: space-between;
+  gap: 12px;
   width: 100%;
-  height: 100%;
-  border: 0;
-  z-index: 1;
-  filter: grayscale(0.25) contrast(1.02) brightness(0.98);
 }
-
-[data-theme="dark"] .heroMap {
-  filter: grayscale(0.25) contrast(1.02) brightness(0.98);
-}
-
-/* Faded header white overlay at the top of the map */
-.heroHeaderBg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 380px;
-  background: linear-gradient(
-    to bottom,
-    var(--bg-primary) 10%,
-    rgba(255, 255, 255, 0.8) 60%,
-    transparent 100%
-  );
-  z-index: 2;
-  pointer-events: none;
-}
-
-[data-theme="dark"] .heroHeaderBg {
-  background: linear-gradient(
-    to bottom,
-    var(--bg-primary) 10%,
-    rgba(255, 255, 255, 0.8) 60%,
-    transparent 100%
-  );
-}
-
-.heroHeader {
-  position: absolute;
-  top: 90px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
-  text-align: center;
-  color: var(--text-primary);
-  max-width: 800px;
-  width: 100%;
-  padding: 0 24px;
-}
-
-.heroTag {
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: #dc2626;
+.serviceBadge {
   display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.heroTagIcon {
-  display: inline-flex;
-  color: #dc2626;
-  animation: pulseSoft 2s infinite;
-}
-
-.heroTitle {
-  font-size: clamp(2.4rem, 5.5vw, 3.8rem);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  margin-bottom: 18px;
-}
-
-.heroSubtitle {
-  font-size: 1.05rem;
-  color: var(--text-secondary);
-  max-width: 580px;
-  margin: 0 auto;
-  line-height: 1.5;
-}
-
-/* Floating Sunday Service Invite Card */
-.floatingCard {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  max-width: 380px;
-  background: #ffffff;
-  border-radius: 28px;
-  box-shadow: 0 32px 72px rgba(14, 17, 24, 0.1);
-  border: 1px solid rgba(14, 17, 24, 0.04);
-  overflow: hidden;
-  margin-top: 240px;
-  transition: var(--transition-smooth);
-}
-
-[data-theme="dark"] .floatingCard {
-  background: #ffffff;
-  border-color: rgba(14, 17, 24, 0.08);
-  box-shadow: 0 32px 72px rgba(14, 17, 24, 0.1);
-}
-
-.floatingCard:hover {
-  transform: translateY(-4px);
-}
-
-.cardImageWrapper {
-  position: relative;
-  height: 180px;
-  width: 100%;
-}
-
-.cardImage {
-  object-fit: cover;
-}
-
-.cardBadge {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  background: #0e1118;
-  color: #ffffff;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
   padding: 6px 12px;
-  border-radius: 100px;
-  box-shadow: var(--shadow-sm);
-  z-index: 2;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  color: var(--ink);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
-
-.cardContent {
-  padding: 24px;
+.serviceThumb {
+  flex: none;
+  width: 64px;
+  height: 44px;
+  margin-left: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.85);
 }
-
-.cardHeader {
-  margin-bottom: 14px;
+.serviceWhen {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.015em;
 }
-
-.cardTitle {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 6px;
+.serviceWhere {
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
 }
-
-.cardSubtitle {
-  font-size: 0.88rem;
-  color: var(--text-secondary);
+.serviceMap {
+  display: block;
+  width: 100%;
+  height: 150px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  filter: grayscale(0.2) contrast(1.02);
+}
+.serviceWelcome {
+  color: var(--amber);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+.serviceDivider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.25);
+}
+.serviceFooter {
   display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.cardSubtitleIcon {
-  color: var(--text-primary);
-  flex-shrink: 0;
-}
-
-.cardStats {
-  display: flex;
-  gap: 16px;
-  margin-top: 14px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 14px;
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-}
-
-.cardStatItem {
-  display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 4px;
 }
-
-.cardFooter {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 16px;
-}
-
-.cardLabel {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  letter-spacing: 0.08em;
-  display: block;
-}
-
-.cardVal {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-top: 2px;
-}
-
-.cardBtn {
-  background-color: var(--text-primary);
-  color: var(--bg-primary);
-  font-size: 0.85rem;
+.serviceLabel {
+  font-size: var(--fs-eyebrow);
   font-weight: 600;
-  padding: 10px 20px;
-  border-radius: 100px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: var(--transition-fast);
-}
-
-.cardBtn:hover {
-  background-color: var(--text-secondary);
-  transform: translateY(-1px);
-}
-
-/* Stats Divider Bar */
-.statsBar {
-  display: grid;
-  grid-template-columns: 1fr;
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-  padding: 40px 24px;
-  width: 100%;
-}
-
-@media (min-width: 576px) {
-  .statsBar {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px 0;
-  }
-}
-
-@media (min-width: 992px) {
-  .statsBar {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.statColumn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 0 16px;
-}
-
-@media (min-width: 992px) {
-  .statColumn {
-    border-right: 1px solid var(--border-color);
-  }
-  .statColumn:last-child {
-    border-right: none;
-  }
-}
-
-.statVal {
-  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 6px;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.statLabel {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--text-secondary);
+  line-height: 1.4;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+.serviceValue {
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+.serviceButton { padding-top: 8px; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(36px) scale(0.96); }
+  to { opacity: 1; transform: none; }
 }
 
-/* Split Form/Bento Details Section */
-.splitSection {
-  padding: 120px 24px;
-  background-color: transparent;
+/* ---------- Details bar: four white cards on cream ---------- */
+.details {
+  padding-block: 48px;
 }
-
-.splitGrid {
+.detailsGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 80px;
-  align-items: start;
-  max-width: var(--container-max);
-  margin: 0 auto;
-}
-
-@media (min-width: 992px) {
-  .splitGrid {
-    grid-template-columns: 1.05fr 0.95fr;
-  }
-}
-
-/* Form Area Styles */
-.formArea {
-  display: flex;
-  flex-direction: column;
-}
-
-.formTag {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #dc2626;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 16px;
-}
-
-.formTitle {
-  font-size: clamp(2rem, 3.5vw, 2.6rem);
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 24px;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-}
-
-.formParagraph {
-  font-size: 1.05rem;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  margin-bottom: 40px;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
 }
-
-.formRow {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-@media (min-width: 576px) {
-  .formRow {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.formGroup {
+.detailsGrid1 { grid-template-columns: minmax(0, 1fr); }
+.detailsGrid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.detailsGrid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.detailCard {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
 }
-
-.formLabel {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+.detailLink {
+  color: inherit;
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out), transform 0.2s var(--ease-out);
 }
-
-.formInput, .formTextarea {
-  background-color: var(--bg-secondary);
-  border: 1px solid rgba(14, 17, 24, 0.14);
-  border-radius: 14px;
-  padding: 15px 20px;
-  font-family: inherit;
-  font-size: 0.98rem;
-  color: var(--text-primary);
-  outline: none;
-  transition: var(--transition-fast);
-}
-
-.formTextarea {
-  resize: vertical;
-  min-height: 150px;
-}
-
-.formInput::placeholder, .formTextarea::placeholder {
-  color: #98a2b3;
-  opacity: 1;
-}
-
-.formInput:focus, .formTextarea:focus {
-  background-color: #ffffff;
-  border-color: var(--text-primary);
-  box-shadow: 0 0 0 4px rgba(14, 17, 24, 0.05);
-}
-
-[data-theme="dark"] .formInput:focus, 
-[data-theme="dark"] .formTextarea:focus {
-  box-shadow: 0 0 0 4px rgba(14, 17, 24, 0.05);
-}
-
-.formBtn {
-  background-color: var(--text-primary);
-  color: var(--bg-primary);
-  font-weight: 600;
-  font-size: 0.98rem;
-  padding: 16px 36px;
-  border-radius: 100px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  align-self: flex-start;
-  transition: var(--transition-fast);
-  border: none;
-}
-
-.formBtn:hover:not(:disabled) {
-  background-color: var(--text-secondary);
+.detailLink:hover {
+  border-color: var(--amber);
+  box-shadow: 0 12px 28px rgba(124, 66, 18, 0.08);
   transform: translateY(-2px);
 }
-
-.formBtn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+.detailLink:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.detailLabel {
+  color: var(--earth);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.detailValue {
+  color: var(--ink);
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  overflow-wrap: anywhere;
 }
 
-/* Feedback Alerts */
-.successAlert {
-  background-color: rgba(34, 197, 94, 0.08);
-  border: 1px solid rgba(34, 197, 94, 0.15);
-  color: #067647;
-  padding: 18px 24px;
-  border-radius: 16px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-.errorAlert {
-  background-color: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.15);
-  color: #b42318;
-  padding: 18px 24px;
-  border-radius: 16px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-/* Bento Grid */
-.bentoGrid {
+/* ---------- Get involved: copy + info cards left, form card right ---------- */
+.formRow {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
+  grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
+  align-items: start;
+  gap: 80px;
 }
-
-@media (min-width: 640px) {
-  .bentoGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.bentoCard {
-  background: var(--glass-bg);
-  backdrop-filter: blur(60px);
-  -webkit-backdrop-filter: blur(60px);
-  border: 1px solid var(--glass-border);
-  border-top: 1.5px solid var(--glass-border-top);
-  border-radius: 28px;
-  padding: 36px;
-  box-shadow: var(--glass-shadow);
+.formCopy {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+}
+.formHeading { color: var(--ink); }
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
-  transition: var(--transition-smooth);
+  width: 100%;
 }
-
-.bentoCard:hover {
-  transform: translateY(-6px);
-  background-color: #ffffff;
-  border-color: rgba(14, 17, 24, 0.14);
-  box-shadow: var(--shadow-md);
-}
-
-.bentoIconWrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
+.infoCard {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 32px;
+  border-radius: var(--radius-card-lg);
+  background: var(--cream);
+}
+.infoCardWide { grid-column: 1 / -1; }
+.infoIcon {
+  display: inline-flex;
+  flex: none;
   align-items: center;
   justify-content: center;
-  color: var(--text-primary);
-  font-size: 1.2rem;
-  box-shadow: var(--shadow-sm);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--ink);
+}
+.infoTitle { color: var(--ink); }
+.infoPhoto {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 260px;
+  margin-top: 6px;
+  padding: 16px;
+  border-radius: var(--radius-card);
+}
+.infoPhotoBadge { align-self: flex-start; }
+.infoPhotoCaption { margin-top: auto; max-width: 100%; }
+.infoPhotoTitle {
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  line-height: 1.35;
+}
+.infoPhotoText {
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  opacity: 0.9;
 }
 
-.bentoCardTitle {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
+.formCard {
+  padding: 40px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card-lg);
 }
 
-.bentoCardText {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-/* Wide Bento Card matching the stacked layout */
-.bentoCardWide {
-  grid-column: span 1;
+/* ---------- The form ---------- */
+.form {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-
-@media (min-width: 640px) {
-  .bentoCardWide {
-    grid-column: span 2;
-  }
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
 }
-
-/* Overlapping stacked image layout matching the BrickWise map trace card */
-.bentoStackContainer {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  margin-top: 10px;
-  background-color: var(--bg-primary);
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid var(--border-color);
+.formGroup {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
 }
-
-.bentoGridPattern {
-  position: absolute;
-  top: 0;
-  left: 0;
+.formLabel {
+  color: var(--ink);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+.formInput,
+.formTextarea {
   width: 100%;
-  height: 100%;
-  opacity: 0.15;
-  background-image: radial-gradient(var(--text-secondary) 1px, transparent 1px);
-  background-size: 16px 16px;
-  z-index: 1;
-}
-
-/* Red marker and dotted line like the reference map trace */
-.bentoTraceMarker {
-  position: absolute;
-  top: 40%;
-  left: 20%;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #dc2626;
-  box-shadow: 0 0 0 6px rgba(220, 38, 38, 0.15);
-  z-index: 2;
-}
-
-.bentoTraceBadge {
-  position: absolute;
-  top: 22%;
-  left: 17%;
-  background-color: #dc2626;
-  color: #ffffff;
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 6px;
-  z-index: 2;
-  box-shadow: var(--shadow-sm);
-}
-
-.bentoTraceLine {
-  position: absolute;
-  top: 42%;
-  left: 21%;
-  width: 140px;
-  height: 40px;
-  border-bottom: 2px dashed rgba(220, 38, 38, 0.4);
-  border-right: 2px dashed rgba(220, 38, 38, 0.4);
-  border-bottom-right-radius: 40px;
-  z-index: 2;
-}
-
-.stackedPhotoCard {
-  position: absolute;
-  right: 15%;
-  bottom: -20px;
-  width: 240px;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(14, 17, 24, 0.06);
-  border: 1px solid rgba(14, 17, 24, 0.06);
-  padding: 10px;
-  z-index: 3;
-  transform: rotate(2deg);
-  transition: var(--transition-smooth);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
-
-[data-theme="dark"] .stackedPhotoCard {
-  background: #ffffff;
-  border-color: rgba(14, 17, 24, 0.06);
+.formInput {
+  height: 52px;
+  padding: 0 20px;
+  border-radius: var(--radius-pill);
 }
-
-.bentoCardWide:hover .stackedPhotoCard {
-  transform: rotate(0deg) translateY(-8px);
+.formTextarea {
+  min-height: 140px;
+  padding: 16px 20px;
+  border-radius: var(--radius-card);
+  resize: vertical;
 }
-
-.stackedPhoto {
-  position: relative;
-  height: 120px;
-  width: 100%;
-  border-radius: 10px;
-  overflow: hidden;
+.formInput::placeholder,
+.formTextarea::placeholder { color: var(--muted); opacity: 1; }
+.formInput:hover,
+.formTextarea:hover { border-color: #e2d5c0; }
+.formInput:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: var(--amber);
+  box-shadow: 0 0 0 4px rgba(242, 165, 22, 0.18);
 }
+.formInput[aria-invalid="true"],
+.formTextarea[aria-invalid="true"] { box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); }
 
-.stackedPhotoTitle {
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin-top: 10px;
-  color: var(--text-primary);
+.formActions { display: flex; }
+.formActions .formBtn { border: none; }
+.formBtn:disabled { opacity: 0.65; cursor: wait; }
+
+.successAlert,
+.errorAlert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 20px;
+  font-size: var(--fs-small);
+  line-height: 1.5;
 }
-
-.stackedPhotoMeta {
-  font-size: 0.72rem;
-  color: var(--text-secondary);
+.successAlert {
+  background: #ecfdf3;
+  border: 1px solid #abefc6;
+  color: #05603a;
+}
+.errorAlert {
+  background: #fef3f2;
+  border: 1px solid #fecdca;
+  color: #b42318;
+}
+.alertText {
   margin-top: 2px;
+  font-size: var(--fs-small);
+  opacity: 0.9;
 }
 
-/* CMS: the details bar hides columns that aren't set (e.g. no phone), so fit the grid to what's shown */
-@media (min-width: 640px) {
-  .statsBar1 { grid-template-columns: 1fr; }
-}
-@media (min-width: 992px) {
-  .statsBar2 { grid-template-columns: repeat(2, 1fr); }
-  .statsBar3 { grid-template-columns: repeat(3, 1fr); }
+/* ---------- Responsive ---------- */
+@media (max-width: 1180px) {
+  .heroRow { flex-direction: column; align-items: stretch; }
+  .heroRow .heroCard { flex: none; }
+  .heroRow .serviceCard { flex: none; width: min(480px, 100%); }
 }
 
+@media (max-width: 1024px) {
+  .detailsGrid,
+  .detailsGrid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .formRow { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+}
+
+@media (max-width: 640px) {
+  .hero.hero { min-height: 0; }
+  .heroRow .serviceCard { width: 100%; padding: 24px; }
+  .details { padding-block: 32px; }
+  .detailsGrid,
+  .detailsGrid2,
+  .detailsGrid3 { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .detailCard { padding: 20px; }
+  .infoCard { padding: 24px; }
+  .formCard { padding: 24px 20px; }
+  .fieldRow { grid-template-columns: minmax(0, 1fr); }
+  /* 16px stops iOS zooming into the field on focus */
+  .formInput,
+  .formTextarea { font-size: var(--fs-body); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .serviceCard { animation: none; }
+  .detailLink, .formInput, .formTextarea { transition: none; }
+  .detailLink:hover { transform: none; }
+}

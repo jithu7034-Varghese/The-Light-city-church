@@ -1,32 +1,25 @@
 import Link from "next/link";
-import styles from "../page.module.css";
+import { ds } from "@/components/site/ds";
 import type { PublicPostCard } from "@/lib/posts/public";
+import d from "./devotionals.module.css";
 
 const FALLBACK_IMAGE = "/citylights.jpeg";
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/London" });
 export const formatPostDate = (iso: string) => dateFmt.format(new Date(iso));
 
-const imgStyle = { width: "100%", height: "100%", objectFit: "cover" } as const;
-
-export function PostCard({ post, delay = 0, showExcerpt = true }: { post: PublicPostCard; delay?: number; showExcerpt?: boolean }) {
+export function PostCard({ post, showExcerpt = true }: { post: PublicPostCard; showExcerpt?: boolean }) {
   return (
-    <Link href={`/devotionals/${post.slug}`} className={`${styles.blogCard} animate-premium-block`} style={{ animationDelay: `${delay}s` }}>
-      <div className={styles.blogCardImageWrapper}>
+    <Link href={`/devotionals/${post.slug}`} className={`${ds.card} ${ds.reveal} ${d.postCard}`}>
+      <div className={d.postCardMedia}>
         {/* Plain <img> for CMS media (no next/image; responsive variants come later) */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={post.image?.url ?? FALLBACK_IMAGE} alt={post.image?.alt ?? ""} loading="lazy" decoding="async" className={styles.blogCardImage} style={imgStyle} />
+        <img src={post.image?.url ?? FALLBACK_IMAGE} alt={post.image?.alt ?? ""} loading="lazy" decoding="async" className={d.postCardImage} />
       </div>
-      <div className={styles.blogCardContent}>
-        <div className={styles.badgeRow}>
-          <span className={styles.blogPillBadge}>{post.category ?? "Devotional"}</span>
-        </div>
-        <h3 className={styles.blogCardTitle}>{post.title}</h3>
-        {showExcerpt && post.excerpt && (
-          <p className={styles.blogCardExcerpt} style={{ fontSize: "0.95rem", color: "var(--text-secondary)", marginTop: "12px", lineHeight: 1.5 }}>
-            {post.excerpt}
-          </p>
-        )}
-        <p style={{ marginTop: "16px", fontSize: "0.85rem", color: "var(--text-secondary)" }}>
+      <div className={d.postCardBody}>
+        <span className={ds.chipCream}>{post.category ?? "Devotional"}</span>
+        <h3 className={`${ds.h4} ${d.postCardTitle}`}>{post.title}</h3>
+        {showExcerpt && post.excerpt && <p className={`${ds.small} ${d.postCardExcerpt}`}>{post.excerpt}</p>}
+        <p className={d.postCardMeta}>
           {post.authorName} · <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
         </p>
       </div>

@@ -3,7 +3,7 @@
 // (no streamed App Shell), so a missing page returns a real 404 status.
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import styles from "../page.module.css";
+import s from "@/cms/sections/shared/shared.module.css";
 import { getPublishedPage, getPublishedPageSlugs } from "@/cms/queries";
 import { PageSections, pageMetadata } from "@/cms/render";
 import { isValidSlug } from "@/lib/slug";
@@ -28,7 +28,7 @@ export default async function CmsPage({ params }: PageProps<"/[slug]">) {
   const page = await getPublishedPage(slug);
   if (!page) notFound();
   return (
-    <div className={styles.container} style={{ background: "transparent" }}>
+    <div className={s.page}>
       <PageSections page={page} />
     </div>
   );

@@ -31,17 +31,20 @@ export function ViewportSection({
   className = "",
   id,
   as: Component = "section",
+  fullScreen = true,
 }: {
   children: React.ReactNode;
   className?: string;
   id?: string;
   as?: "section" | "main" | "div";
+  /** false = opt out of the site's one-screen minimum height (globals.css). */
+  fullScreen?: boolean;
 }) {
   const { ref, mounted, inView } = useInView<HTMLElement>(0.08, "0px 0px -40px 0px");
   const cls = mounted ? `${className} ${inView ? "viewport-active" : "viewport-hidden"}` : className;
   return (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <Component ref={ref as any} className={cls} id={id}>
+    <Component ref={ref as any} className={cls} id={id} data-screen={fullScreen ? undefined : "off"}>
       {children}
     </Component>
   );

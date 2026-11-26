@@ -1,9 +1,10 @@
-// Contact page sections (server components). Design and classes from the old contact/page.tsx.
+// Contact page sections (server components), Figma "Contact — Desktop 1440" (13:159).
 // Venue, service times, email and phone come from Site settings (ctx.site), never from here.
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
-import { SplitText, ViewportSection } from "@/cms/sections/shared/animate";
-import { FILL, Icon, iconField, paragraphsOf } from "@/cms/sections/about/icons";
+import { ViewportSection } from "@/cms/sections/shared/animate";
+import { Icon, iconField, paragraphsOf } from "@/cms/sections/about/icons";
+import { ds, AccentHeading, SectionTag, PillButton, PhotoBackground } from "@/components/site/ds";
 import { ContactForm } from "./contact-form";
 import c from "./contact.module.css";
 
@@ -39,107 +40,57 @@ export const contactMapHero = defineSection({
     const img = ctx.image(data.cardImage);
     const mapUrl = MAP_EMBED.test(data.mapEmbedUrl) ? data.mapEmbedUrl : "";
     const when = service ? [service.day, service.time].filter(Boolean).join(" ") : "";
-    const hasFooter = data.footerLabel || data.footerValue || (data.directions.href && data.directions.label);
+    const where = service ? [service.venue, service.address].filter(Boolean).join(", ") : "";
+    const title = [data.headingLine1, data.headingLine2].filter(Boolean).join(" ");
+    const hasFooter = data.footerLabel || data.footerValue;
+    const hasButton = data.directions.href && data.directions.label;
     return (
-      <section className={c.hero}>
-        {mapUrl && (
-          <iframe
-            src={mapUrl}
-            className={c.heroMap}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title={service?.venue ? `${service.venue} location map` : "Location map"}
-          ></iframe>
-        )}
+      <section className={`${ds.pageHero} ${c.hero}`} data-hero-photo>
+        <PhotoBackground image={ctx.background} zoom priority />
+        <div className={`${ds.container} ${c.heroRow}`}>
+          <div className={`${ds.pageHeroCard} ${c.heroCard}`}>
+            {data.tag && <SectionTag plain>{data.tag}</SectionTag>}
+            {title && <h1 className={ds.pageHeroTitle}>{title}</h1>}
+            {data.subheading && <p className={ds.pageHeroText}>{data.subheading}</p>}
+          </div>
 
-        <div className={c.heroHeaderBg} />
-
-        <div className={c.heroHeader}>
-          {data.tag && (
-            <span className={`${c.heroTag} animate-fade-in-up`} style={{ animationDelay: "0.1s" }}>
-              <span className={c.heroTagIcon}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polygon points="10 8 16 12 10 16 10 8"></polygon>
-                </svg>
-              </span>
-              {data.tag}
-            </span>
-          )}
-
-          {(data.headingLine1 || data.headingLine2) && (
-            <h1 className={c.heroTitle}>
-              {data.headingLine1 && <SplitText text={data.headingLine1} delayOffset={0.3} />}
-              {data.headingLine1 && data.headingLine2 && <br />}
-              {data.headingLine2 && <SplitText text={data.headingLine2} delayOffset={0.8} />}
-            </h1>
-          )}
-
-          {data.subheading && (
-            <p className={`${c.heroSubtitle} animate-fade-in-up`} style={{ animationDelay: "1.2s" }}>
-              {data.subheading}
-            </p>
+          {(service || mapUrl) && (
+            <aside className={`${ds.glass} ${c.serviceCard}`} aria-label={data.cardBadge || service?.venue || undefined}>
+              {(data.cardBadge || img) && (
+                <div className={c.serviceTop}>
+                  {data.cardBadge && <span className={c.serviceBadge}>{data.cardBadge}</span>}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  {img && <img src={img.url} alt={img.alt} loading="lazy" className={c.serviceThumb} />}
+                </div>
+              )}
+              {when && <p className={c.serviceWhen}>{when}</p>}
+              {where && <p className={c.serviceWhere}>{where}</p>}
+              {mapUrl && (
+                <iframe
+                  src={mapUrl}
+                  className={c.serviceMap}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title={service?.venue ? `${service.venue} location map` : "Location map"}
+                ></iframe>
+              )}
+              {data.welcomeText && <p className={c.serviceWelcome}>{data.welcomeText}</p>}
+              {(hasFooter || hasButton) && <span className={c.serviceDivider} aria-hidden />}
+              {hasFooter && (
+                <div className={c.serviceFooter}>
+                  {data.footerLabel && <span className={c.serviceLabel}>{data.footerLabel}</span>}
+                  {data.footerValue && <span className={c.serviceValue}>{data.footerValue}</span>}
+                </div>
+              )}
+              {hasButton && (
+                <div className={c.serviceButton}>
+                  <PillButton href={data.directions.href} label={data.directions.label} variant="onPhoto" external />
+                </div>
+              )}
+            </aside>
           )}
         </div>
-
-        {service && (
-          <div className={`${c.floatingCard} animate-fade-in-up`} style={{ animationDelay: "1.4s" }}>
-            {(img || data.cardBadge) && (
-              <div className={c.cardImageWrapper} style={img ? undefined : { height: 64 }}>
-                {data.cardBadge && <span className={c.cardBadge}>{data.cardBadge}</span>}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                {img && <img src={img.url} alt={img.alt} loading="lazy" className={c.cardImage} style={FILL} />}
-              </div>
-            )}
-
-            <div className={c.cardContent}>
-              <div className={c.cardHeader}>
-                {service.venue && <h3 className={c.cardTitle}>{service.venue}</h3>}
-                {service.address && (
-                  <p className={c.cardSubtitle}>
-                    <Icon name="pin" size={12} className={c.cardSubtitleIcon} />
-                    {service.address}
-                  </p>
-                )}
-              </div>
-
-              {(when || data.welcomeText) && (
-                <div className={c.cardStats}>
-                  {when && (
-                    <div className={c.cardStatItem}>
-                      <Icon name="clock" size={12} />
-                      <span>{when}</span>
-                    </div>
-                  )}
-                  {data.welcomeText && (
-                    <div className={c.cardStatItem}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                      </svg>
-                      <span>{data.welcomeText}</span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {hasFooter && (
-                <div className={c.cardFooter}>
-                  <div>
-                    {data.footerLabel && <span className={c.cardLabel}>{data.footerLabel}</span>}
-                    {data.footerValue && <span className={c.cardVal}>{data.footerValue}</span>}
-                  </div>
-                  {data.directions.href && data.directions.label && (
-                    <a href={data.directions.href} target="_blank" rel="noopener noreferrer" className={c.cardBtn}>
-                      {data.directions.label}
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </section>
     );
   },
@@ -162,35 +113,34 @@ export const contactDetailsBar = defineSection({
     const cols = [
       service?.time ? { key: "time", value: service.time, label: data.serviceLabel } : null,
       venue ? { key: "venue", value: venue, label: data.venueLabel } : null,
-      ctx.site.email ? { key: "email", value: ctx.site.email, label: data.emailLabel, href: `mailto:${ctx.site.email}`, small: true } : null,
-      ctx.site.phone ? { key: "phone", value: ctx.site.phone, label: data.phoneLabel, href: `tel:${ctx.site.phone.replace(/[^\d+]/g, "")}`, small: true } : null,
+      ctx.site.email ? { key: "email", value: ctx.site.email, label: data.emailLabel, href: `mailto:${ctx.site.email}` } : null,
+      ctx.site.phone ? { key: "phone", value: ctx.site.phone, label: data.phoneLabel, href: `tel:${ctx.site.phone.replace(/[^\d+]/g, "")}` } : null,
     ].filter((x) => x !== null);
     if (cols.length === 0) return null;
     return (
-      <section className={`${c.statsBar} ${c[`statsBar${cols.length}`] ?? ""}`}>
-        {cols.map((col) => {
-          const val = (
-            <span
-              className={c.statVal}
-              style={col.small ? { fontSize: "1.2rem", fontWeight: "800", height: "40px", display: "flex", alignItems: "center", overflowWrap: "anywhere" } : undefined}
-            >
-              {col.value}
-            </span>
-          );
-          const label = col.label && <span className={c.statLabel}>{col.label}</span>;
-          return col.href ? (
-            <a key={col.key} href={col.href} className={c.statColumn} style={{ color: "inherit", textDecoration: "none" }}>
-              {val}
-              {label}
-            </a>
-          ) : (
-            <div key={col.key} className={c.statColumn}>
-              {val}
-              {label}
-            </div>
-          );
-        })}
-      </section>
+      <ViewportSection className={`${ds.cream} ${c.details}`} fullScreen={false}>
+        <div className={ds.container}>
+          <div className={`${c.detailsGrid} ${c[`detailsGrid${cols.length}`] ?? ""}`}>
+            {cols.map((col) => {
+              const inner = (
+                <>
+                  {col.label && <span className={c.detailLabel}>{col.label}</span>}
+                  <span className={c.detailValue}>{col.value}</span>
+                </>
+              );
+              return col.href ? (
+                <a key={col.key} href={col.href} className={`${c.detailCard} ${c.detailLink} ${ds.reveal}`}>
+                  {inner}
+                </a>
+              ) : (
+                <div key={col.key} className={`${c.detailCard} ${ds.reveal}`}>
+                  {inner}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </ViewportSection>
     );
   },
 });
@@ -237,69 +187,57 @@ export const contactForm = defineSection({
   Component: ({ data, ctx }) => {
     const { tag, heading, text, cards, ...formText } = data;
     return (
-      <ViewportSection as="section" className={c.splitSection}>
-        <div className={c.splitGrid}>
-          <div className={c.formArea}>
-            {tag && <span className={c.formTag}>{tag}</span>}
-            {heading && <h2 className={c.formTitle}>{heading}</h2>}
+      <ViewportSection className={ds.section}>
+        <div className={`${ds.container} ${c.formRow}`}>
+          <div className={c.formCopy}>
+            <SectionTag>{tag}</SectionTag>
+            {heading && <AccentHeading text={heading} as="h2" className={`${ds.h2} ${c.formHeading}`} />}
             {paragraphsOf(text).map((p, i) => (
-              <p key={i} className={c.formParagraph}>
+              <p key={i} className={ds.lead}>
                 {p}
               </p>
             ))}
-            <ContactForm text={formText} sourcePage={`/${ctx.pageSlug}`.replace(/\/+$/, "") || "/"} />
-          </div>
 
-          {cards.length > 0 && (
-            <div className={c.bentoGrid}>
-              {cards.map((card) => {
-                const img = card.wide ? ctx.image(card.image) : null;
-                const icon = card.icon !== "none" && (
-                  <div className={c.bentoIconWrapper}>
-                    <Icon name={card.icon} size={18} />
-                  </div>
-                );
-                if (!card.wide) {
+            {cards.length > 0 && (
+              <div className={c.infoGrid}>
+                {cards.map((card) => {
+                  const img = card.wide ? ctx.image(card.image) : null;
                   return (
-                    <div key={card.id} className={c.bentoCard}>
-                      {icon}
-                      {card.title && <h3 className={c.bentoCardTitle}>{card.title}</h3>}
-                      {card.text && <p className={c.bentoCardText}>{card.text}</p>}
-                    </div>
-                  );
-                }
-                return (
-                  <div key={card.id} className={`${c.bentoCard} ${c.bentoCardWide}`}>
-                    <div>
-                      {icon}
-                      {card.title && <h3 className={c.bentoCardTitle}>{card.title}</h3>}
+                    <div key={card.id} className={`${c.infoCard} ${card.wide ? c.infoCardWide : ""} ${ds.reveal}`}>
+                      {card.icon !== "none" && (
+                        <span className={c.infoIcon} aria-hidden>
+                          <Icon name={card.icon} size={24} strokeWidth={1.75} />
+                        </span>
+                      )}
+                      {card.title && <h3 className={`${ds.h4} ${c.infoTitle}`}>{card.title}</h3>}
                       {paragraphsOf(card.text).map((p, i) => (
-                        <p key={i} className={c.bentoCardText}>
+                        <p key={i} className={ds.body}>
                           {p}
                         </p>
                       ))}
-                    </div>
-                    {img && (
-                      <div className={c.bentoStackContainer}>
-                        <div className={c.bentoGridPattern} />
-                        {card.badge && <span className={c.bentoTraceBadge}>{card.badge}</span>}
-                        <div className={c.bentoTraceMarker} />
-                        <div className={c.bentoTraceLine} />
-                        <div className={c.stackedPhotoCard}>
-                          <div className={c.stackedPhoto}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={img.url} alt={img.alt} loading="lazy" className={c.cardImage} style={FILL} />
-                          </div>
-                          {card.imageTitle && <h4 className={c.stackedPhotoTitle}>{card.imageTitle}</h4>}
-                          {card.imageCaption && <p className={c.stackedPhotoMeta}>{card.imageCaption}</p>}
+                      {img && (
+                        <div className={`${ds.photo} ${c.infoPhoto}`}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={img.url} alt={img.alt} loading="lazy" className={ds.photoImg} />
+                          {card.badge && <span className={`${ds.chip} ${c.infoPhotoBadge}`}>{card.badge}</span>}
+                          {(card.imageTitle || card.imageCaption) && (
+                            <div className={`${ds.photoCaption} ${c.infoPhotoCaption}`}>
+                              {card.imageTitle && <p className={c.infoPhotoTitle}>{card.imageTitle}</p>}
+                              {card.imageCaption && <p className={c.infoPhotoText}>{card.imageCaption}</p>}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className={`${c.formCard} ${ds.reveal}`}>
+            <ContactForm text={formText} sourcePage={`/${ctx.pageSlug}`.replace(/\/+$/, "") || "/"} />
+          </div>
         </div>
       </ViewportSection>
     );

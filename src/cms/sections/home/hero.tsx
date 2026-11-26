@@ -1,10 +1,10 @@
-// Home: full-screen welcome hero.
+// Home: full-screen welcome hero. The CMS artwork covers it; the intro sits on its left and a
+// "this Sunday" card (from Site settings → service times) on its right.
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
-import { SplitText, ViewportSection } from "@/cms/sections/shared/animate";
-import styles from "@/app/(site)/page.module.css";
+import { ds, PillButtons, SectionTag } from "@/components/site/ds";
 import h from "./home.module.css";
-import { buttonFields, shownButtons } from "./util";
+import { buttonFields } from "./util";
 
 export const homeHero = defineSection({
   type: "home_hero",
@@ -20,40 +20,41 @@ export const homeHero = defineSection({
   },
   Component: ({ data, ctx }) => {
     const img = ctx.image(data.image);
-    const buttons = shownButtons(data.buttons);
+    const service = ctx.site.serviceTimes[0];
     return (
-      <ViewportSection className={styles.hero} id="hero">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {img && <img src={img.url} alt="" aria-hidden className={h.fill} />}
-        <div className={styles.heroContent}>
-          {data.eyebrow && (
-            <span className={`${styles.heroTag} animate-fade-in-up`} style={{ animationDelay: "0.1s" }}>
-              {data.eyebrow}
-            </span>
-          )}
-          {(data.heading || data.headingLine2) && (
-            <h1 className={styles.heroTitle}>
-              {data.heading && <SplitText text={data.heading} delayOffset={0.3} />}
-              {data.heading && data.headingLine2 && <br />}
-              {data.headingLine2 && <SplitText text={data.headingLine2} delayOffset={0.8} />}
-            </h1>
-          )}
-          {data.text && (
-            <p className={`${h.heroText} animate-fade-in-up`} style={{ animationDelay: "1.1s" }}>
-              {data.text}
-            </p>
-          )}
-          {buttons.length > 0 && (
-            <div className={`${styles.heroButtons} animate-fade-in-up`} style={{ animationDelay: "1.3s" }}>
-              {buttons.map((b, i) => (
-                <a key={b.id} href={b.href} className={i === 0 ? styles.exploreBtn : styles.demoBtn}>
-                  {b.label}
-                </a>
-              ))}
+      <section className={h.hero} id="hero" data-home-hero>
+        <div className={h.heroLayer}>
+          <div className={`${ds.container} ${h.heroInner}`}>
+            <div className={h.heroIntro}>
+              {data.eyebrow && <SectionTag className={h.rise}>{data.eyebrow}</SectionTag>}
+              {(data.heading || data.headingLine2 || data.text) && (
+                <div className={`${h.heroLead} ${h.rise} ${h.rise2}`}>
+                  {(data.heading || data.headingLine2) && (
+                    <h1 className={h.heroTitle}>
+                      {data.heading && <span>{data.heading}</span>}
+                      {data.headingLine2 && <span>{data.headingLine2}</span>}
+                    </h1>
+                  )}
+                  {data.text && <p className={h.heroText}>{data.text}</p>}
+                </div>
+              )}
+              <PillButtons items={data.buttons} className={`${ds.btnRow} ${h.heroButtons} ${h.rise} ${h.rise3}`} />
             </div>
-          )}
+
+            {service && (service.time || service.venue || service.day) && (
+              <div className={`${h.sundayCard} ${h.rise} ${h.rise4}`}>
+                {service.day && <p className={h.sundayDay}>{service.day}</p>}
+                {service.time && <p className={h.sundayTime}>{service.time}</p>}
+                {service.venue && <p className={h.sundayVenue}>{service.venue}</p>}
+                {service.address && <p className={h.sundayAddress}>{service.address}</p>}
+              </div>
+            )}
+          </div>
         </div>
-      </ViewportSection>
+        {/* Decorative artwork (its words repeat the title above). */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {img && <img src={img.url} alt="" aria-hidden className={h.heroArt} fetchPriority="high" />}
+      </section>
     );
   },
 });

@@ -1,8 +1,9 @@
-// Gallery page sections (server components). Design and classes from the old gallery/page.tsx.
+// Gallery page sections (server components). Layout from the Figma "Gallery" frame, built on the
+// shared design system (src/components/site/ds). Every text and photo comes from the CMS.
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
-import { SplitText, ViewportSection } from "@/cms/sections/shared/animate";
-import { FILL } from "@/cms/sections/about/icons";
+import { ViewportSection } from "@/cms/sections/shared/animate";
+import { AccentHeading, PageHero, ds } from "@/components/site/ds";
 import { GalleryGrid, type GalleryPhoto } from "./gallery-grid";
 import g from "./gallery.module.css";
 
@@ -15,35 +16,14 @@ export const galleryHero = defineSection({
     subheading: f.textarea("Subtitle", { max: 400 }),
     image: f.image("Background image"),
   },
-  Component: ({ data, ctx }) => {
-    const img = ctx.image(data.image);
-    return (
-      <section className={g.hero}>
-        <div className={g.heroBackground}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {img && <img src={img.url} alt={img.alt} loading="eager" fetchPriority="high" className={g.heroImage} style={FILL} />}
-          <div className={g.heroOverlay} />
-        </div>
-        <div className={g.heroContent}>
-          {data.tag && (
-            <span className={`${g.heroTag} animate-fade-in-up`} style={{ animationDelay: "0.1s" }}>
-              {data.tag}
-            </span>
-          )}
-          {data.heading && (
-            <h1 className={g.heroTitle}>
-              <SplitText text={data.heading} delayOffset={0.3} />
-            </h1>
-          )}
-          {data.subheading && (
-            <p className={`${g.heroSubtitle} animate-fade-in-up`} style={{ animationDelay: "0.8s" }}>
-              {data.subheading}
-            </p>
-          )}
-        </div>
-      </section>
-    );
-  },
+  Component: ({ data, ctx }) => (
+    <PageHero
+      image={ctx.image(data.image) ?? ctx.background}
+      eyebrow={data.tag}
+      title={data.heading}
+      text={data.subheading ? <p>{data.subheading}</p> : undefined}
+    />
+  ),
 });
 
 export const galleryGrid = defineSection({
@@ -72,16 +52,14 @@ export const galleryGrid = defineSection({
       return [{ id: item.id, url: img.url, alt: img.alt || item.title, tag: item.tag, title: item.title, caption: item.caption }];
     });
     return (
-      <ViewportSection as="section" className={g.gallerySection}>
-        <div className={g.container}>
+      <ViewportSection as="section" className={ds.section}>
+        <div className={ds.container}>
           {(data.heading || data.intro) && (
-            <div className={g.sectionHeader}>
-              {data.heading && (
-                <h2 className={g.sectionTitle}>
-                  <SplitText text={data.heading} delayOffset={0.1} />
-                </h2>
-              )}
-              {data.intro && <p className={g.sectionSubtitle}>{data.intro}</p>}
+            <div className={ds.sectionHeader}>
+              <div className={ds.sectionHeaderText}>
+                {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
+                {data.intro && <p className={`${ds.lead} ${g.intro}`}>{data.intro}</p>}
+              </div>
             </div>
           )}
           <GalleryGrid photos={photos} />

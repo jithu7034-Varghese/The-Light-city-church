@@ -1,9 +1,11 @@
-// About page sections (server components). Design and classes from the old about/page.tsx.
+// About page sections (server components), Figma "About — Desktop 1440" (12:61).
+// Every text, image and link comes from the section's fields or Site settings.
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
-import { SplitText, ViewportSection } from "@/cms/sections/shared/animate";
-import { FILL, Icon, iconField, paragraphsOf } from "./icons";
-import { LeadershipTabs } from "./leadership-tabs";
+import { ViewportSection } from "@/cms/sections/shared/animate";
+import { ds, AccentHeading, SectionTag, PillButton, PhotoBackground, PageHero } from "@/components/site/ds";
+import { Icon, iconField, paragraphsOf } from "./icons";
+import { LeaderCards } from "./leadership-tabs";
 import a from "./about.module.css";
 
 export const aboutHero = defineSection({
@@ -15,35 +17,9 @@ export const aboutHero = defineSection({
     subheading: f.textarea("Subtitle", { max: 400 }),
     image: f.image("Background image"),
   },
-  Component: ({ data, ctx }) => {
-    const img = ctx.image(data.image);
-    return (
-      <section className={a.hero}>
-        <div className={a.heroBackground}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {img && <img src={img.url} alt={img.alt} loading="eager" fetchPriority="high" className={a.heroImage} style={FILL} />}
-          <div className={a.heroOverlay} />
-        </div>
-        <div className={a.heroContent}>
-          {data.tag && (
-            <span className={`${a.heroTag} animate-fade-in-up`} style={{ animationDelay: "0.1s" }}>
-              {data.tag}
-            </span>
-          )}
-          {data.heading && (
-            <h1 className={a.heroTitle}>
-              <SplitText text={data.heading} delayOffset={0.3} />
-            </h1>
-          )}
-          {data.subheading && (
-            <p className={`${a.heroSubtitle} animate-fade-in-up`} style={{ animationDelay: "0.8s" }}>
-              {data.subheading}
-            </p>
-          )}
-        </div>
-      </section>
-    );
-  },
+  Component: ({ data, ctx }) => (
+    <PageHero image={ctx.image(data.image) ?? ctx.background} eyebrow={data.tag} title={data.heading} text={data.subheading || undefined} className={a.hero} />
+  ),
 });
 
 export const aboutStory = defineSection({
@@ -62,41 +38,39 @@ export const aboutStory = defineSection({
   Component: ({ data, ctx }) => {
     const img = ctx.image(data.image);
     const hasBadge = data.badgeTitle || data.badgeText;
+    const heading = data.headingHighlight ? (
+      <h2 className={ds.h2}>
+        {data.heading && `${data.heading} `}
+        <span className={ds.accentEarth}>{data.headingHighlight}</span>
+      </h2>
+    ) : (
+      data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} accentClassName={ds.accentEarth} />
+    );
     return (
-      <ViewportSection className={a.storySection} id="story">
-        <div className={a.storyContainer}>
-          <div className={a.storyGrid}>
-            {(img || hasBadge) && (
-              <div className={`${a.storyImageWrapper} animate-premium-block`}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                {img && <img src={img.url} alt={img.alt} loading="lazy" className={a.storyImage} style={FILL} />}
-                {hasBadge && (
-                  <div className={a.storyFloatingBadge}>
-                    {data.badgeTitle && <h4 className={a.storyBadgeTitle}>&ldquo;{data.badgeTitle}&rdquo;</h4>}
-                    {data.badgeText && <p className={a.storyBadgeSub}>{data.badgeText}</p>}
-                  </div>
-                )}
-              </div>
-            )}
-
-            <div className={a.storyTextContent}>
-              {data.tag && (
-                <span className={`${a.sectionTag} animate-fade-in-up`} style={{ animationDelay: "0.1s" }}>
-                  {data.tag}
-                </span>
-              )}
-              {(data.heading || data.headingHighlight) && (
-                <h2 className={`${a.storyTitle} animate-fade-in-up`} style={{ animationDelay: "0.2s" }}>
-                  {data.heading} {data.headingHighlight && <span className={a.italicSerif}>{data.headingHighlight}</span>}
-                </h2>
-              )}
-              {paragraphsOf(data.body).map((p, i) => (
-                <p key={i} className={`${a.storyParagraph} animate-fade-in-up`} style={{ animationDelay: `${0.4 + i * 0.2}s` }}>
-                  {p}
-                </p>
-              ))}
-            </div>
+      <ViewportSection className={ds.section} id="story">
+        <div className={`${ds.container} ${a.storyRow}`}>
+          <div className={`${a.storyCopy} ${ds.reveal}`}>
+            <SectionTag>{data.tag}</SectionTag>
+            {heading}
+            {paragraphsOf(data.body).map((p, i) => (
+              <p key={i} className={ds.lead}>
+                {p}
+              </p>
+            ))}
           </div>
+
+          {(img || hasBadge) && (
+            <div className={`${ds.photo} ${a.storyPhoto} ${ds.reveal}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {img && <img src={img.url} alt={img.alt} loading="lazy" className={ds.photoImg} />}
+              {hasBadge && (
+                <div className={`${ds.photoCaption} ${a.storyCaption}`}>
+                  {data.badgeTitle && <p className={a.captionTitle}>{data.badgeTitle}</p>}
+                  {data.badgeText && <p className={a.captionText}>{data.badgeText}</p>}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </ViewportSection>
     );
@@ -123,54 +97,31 @@ export const aboutValues = defineSection({
     ),
   },
   Component: ({ data, ctx }) => (
-    <ViewportSection className={a.valuesSection} id="values">
-      <div className={a.valuesContainer}>
-        <div className={a.valuesHeader}>
-          {data.tag && (
-            <span className={`${a.sectionTag} animate-fade-in-up`} style={{ animationDelay: "0.1s" }}>
-              {data.tag}
-            </span>
-          )}
-          {data.heading && (
-            <h2 className={`${a.valuesTitle} animate-fade-in-up`} style={{ animationDelay: "0.2s" }}>
-              {data.heading}
-            </h2>
-          )}
-        </div>
+    <ViewportSection className={`${ds.section} ${ds.cream}`} id="values">
+      <div className={ds.container}>
+        {(data.tag || data.heading) && (
+          <div className={ds.sectionHeader}>
+            <div className={ds.sectionHeaderText}>
+              <SectionTag>{data.tag}</SectionTag>
+              {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
+            </div>
+          </div>
+        )}
 
-        <div className={a.bentoGrid}>
+        <div className={ds.cardGrid3}>
           {data.items.map((item, i) => {
-            const delay = { animationDelay: `${0.3 + i * 0.2}s` };
-            if (i === 0) {
-              const img = ctx.image(item.image);
-              return (
-                <div key={item.id} className={`${a.bentoCard} ${a.bentoCardLarge} animate-premium-block`} style={delay}>
-                  <div className={`${a.cardBgImage} ${img ? "" : a.cardBgFallback}`}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    {img && <img src={img.url} alt={img.alt} loading="lazy" className={a.cardImage} style={FILL} />}
-                    <div className={a.heroOverlay} />
-                  </div>
-                  <div className={a.cardContentOverlay}>
-                    {item.icon !== "none" && (
-                      <div className={`${a.valueIcon} ${a.largeIcon}`}>
-                        <Icon name={item.icon} />
-                      </div>
-                    )}
-                    {item.title && <h3 className={`${a.valueTitle} ${a.largeTitle}`}>{item.title}</h3>}
-                    {item.text && <p className={`${a.valueText} ${a.largeText}`}>{item.text}</p>}
-                  </div>
-                </div>
-              );
-            }
+            // The first value keeps its own photo (when one is set), as a photo card in the same grid.
+            const img = i === 0 ? ctx.image(item.image) : null;
             return (
-              <div key={item.id} className={`${a.bentoCard} animate-premium-block`} style={delay}>
+              <div key={item.id} className={`${img ? `${ds.photo} ${a.valueCardPhoto}` : `${ds.card} ${a.valueCard}`} ${ds.reveal}`}>
+                {img && <PhotoBackground image={img} strong />}
                 {item.icon !== "none" && (
-                  <div className={a.valueIcon}>
-                    <Icon name={item.icon} />
-                  </div>
+                  <span className={img ? `${ds.glass} ${a.iconChipGlass}` : a.iconChip} aria-hidden>
+                    <Icon name={item.icon} size={24} strokeWidth={1.75} />
+                  </span>
                 )}
-                {item.title && <h3 className={a.valueTitle}>{item.title}</h3>}
-                {item.text && <p className={a.valueText}>{item.text}</p>}
+                {item.title && <h3 className={`${ds.h4} ${a.valueTitle}`}>{item.title}</h3>}
+                {item.text && <p className={img ? a.valueTextOnPhoto : ds.body}>{item.text}</p>}
               </div>
             );
           })}
@@ -215,9 +166,17 @@ export const aboutLeadership = defineSection({
       };
     });
     return (
-      <ViewportSection className={a.leadershipSection} id="leadership">
-        <div className={a.leadershipContainer}>
-          <LeadershipTabs tag={data.tag} heading={data.heading} leaders={leaders} />
+      <ViewportSection className={ds.section} id="leadership">
+        <div className={ds.container}>
+          {(data.tag || data.heading) && (
+            <div className={ds.sectionHeader}>
+              <div className={ds.sectionHeaderText}>
+                <SectionTag>{data.tag}</SectionTag>
+                {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
+              </div>
+            </div>
+          )}
+          <LeaderCards leaders={leaders} />
         </div>
       </ViewportSection>
     );
@@ -238,61 +197,45 @@ export const aboutVisit = defineSection({
     image: f.image("Image"),
   },
   Component: ({ data, ctx }) => {
-    const img = ctx.image(data.image);
+    const img = ctx.image(data.image) ?? ctx.background;
     const times = data.showServiceTimes ? ctx.site.serviceTimes : [];
+    const rows = times.flatMap((t) => {
+      const when = [t.day, t.time].filter(Boolean).join(" ");
+      const where = [t.venue, t.address].filter(Boolean).join(", ");
+      return [
+        { key: `time-${t.id}`, title: data.serviceLabel, value: when },
+        { key: `place-${t.id}`, title: data.locationLabel, value: where },
+      ].filter((r) => r.value);
+    });
     return (
       <ViewportSection className={a.visitSection} id="visit">
-        <div className={a.visitContainer}>
-          <div className={a.visitBento}>
-            <div className={`${a.visitImageWrapper} ${img ? "" : a.cardBgFallback}`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              {img && <img src={img.url} alt={img.alt} loading="lazy" className={a.visitImage} style={FILL} />}
-            </div>
-
-            <div className={a.visitContent}>
-              {data.heading && <h2 className={a.visitTitle}>{data.heading}</h2>}
+        <div className={ds.container}>
+          <div className={`${ds.photo} ${a.visitPanel} ${ds.reveal}`}>
+            <PhotoBackground image={img} strong />
+            <div className={a.visitCopy}>
+              {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
               {paragraphsOf(data.text).map((p, i) => (
                 <p key={i} className={a.visitText}>
                   {p}
                 </p>
               ))}
-
-              {times.length > 0 && (
-                <div className={a.visitDetailsList}>
-                  {times.flatMap((t) => {
-                    const when = [t.day, t.time].filter(Boolean).join(" ");
-                    const where = [t.venue, t.address].filter(Boolean).join(", ");
-                    const rows = [
-                      { key: `time-${t.id}`, icon: "clock" as const, title: data.serviceLabel, value: when },
-                      { key: `place-${t.id}`, icon: "pin" as const, title: data.locationLabel, value: where },
-                    ];
-                    return rows
-                      .filter((r) => r.value)
-                      .map((r) => (
-                        <div key={r.key} className={a.visitRow}>
-                          <div className={a.visitRowIcon}>
-                            <Icon name={r.icon} size={20} />
-                          </div>
-                          <div>
-                            <h4 className={a.visitRowTitle}>{r.title}</h4>
-                            <span className={a.visitRowValue}>{r.value}</span>
-                          </div>
-                        </div>
-                      ));
-                  })}
+              {data.button.href && data.button.label && (
+                <div className={a.visitButton}>
+                  <PillButton href={data.button.href} label={data.button.label} variant="onPhoto" />
                 </div>
               )}
-
-              {data.button.href && data.button.label && (
-                <a href={data.button.href} className={a.visitCtaBtn} style={{ textDecoration: "none" }}>
-                  {data.button.label}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </a>
-              )}
             </div>
+
+            {rows.length > 0 && (
+              <dl className={`${ds.glass} ${a.visitDetails}`}>
+                {rows.map((r) => (
+                  <div key={r.key} className={a.visitRow}>
+                    {r.title && <dt className={a.visitLabel}>{r.title}</dt>}
+                    <dd className={a.visitValue}>{r.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
           </div>
         </div>
       </ViewportSection>

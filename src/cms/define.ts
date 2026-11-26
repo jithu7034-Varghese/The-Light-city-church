@@ -15,6 +15,8 @@ export type SectionCtx = {
   /** Resolve an image field to its URL + alt text (null if missing or deleted). */
   image: (ref: ImageRef | undefined) => MediaInfo | null;
   site: SiteSettings;
+  /** Site settings "Section background image": the fallback photo for photo-backed sections. */
+  background: MediaInfo | null;
 };
 
 export type SectionComponent<F extends Fields> = (props: { data: FieldsValue<F>; ctx: SectionCtx }) => ReactNode | Promise<ReactNode>;
