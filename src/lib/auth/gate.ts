@@ -20,8 +20,16 @@ export function isPublicAdminPath(pathname: string): boolean {
   return PUBLIC_ADMIN_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
 }
 
+/**
+ * Master switch for authenticator-app (TOTP) 2FA on the admin. While false, nobody is asked
+ * to enrol or to enter a code: email + password is enough, even for accounts that already
+ * have a factor. Set back to true to turn 2FA on again.
+ */
+export const MFA_ENABLED = false;
+
 /** Super Admins and Admins must use TOTP 2FA; anyone else can be required to via profiles.require_mfa. */
-export function isMfaRequired(role: AppRole, requireMfa: boolean): boolean {
+export function isMfaRequired(role: AppRole, requireMfa: boolean, mfaEnabled = MFA_ENABLED): boolean {
+  if (!mfaEnabled) return false;
   return requireMfa || role === "super_admin" || role === "admin";
 }
 
@@ -43,12 +51,13 @@ export type GateResult = "ok" | "login" | "inactive" | "mfa-verify" | "mfa-enrol
  * complete the challenge (even when 2FA is optional for their role), otherwise a stolen
  * password alone would be enough.
  */
-export function authGate(input: GateInput): GateResult {
+export function authGate(input: GateInput, mfaEnabled = MFA_ENABLED): GateResult {
   if (!input.hasUser) return "login";
   if (!input.isActive) return "inactive";
+  if (!mfaEnabled) return "ok";
   if (input.currentLevel === "aal2") return "ok";
   if (input.nextLevel === "aal2") return "mfa-verify";
-  if (isMfaRequired(input.role, input.requireMfa)) return "mfa-enroll";
+  if (isMfaRequired(input.role, input.requireMfa, mfaEnabled)) return "mfa-enroll";
   return "ok";
 }
 
