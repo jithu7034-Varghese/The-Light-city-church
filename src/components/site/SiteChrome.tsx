@@ -5,7 +5,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PillButton } from "./ds";
 import c from "./chrome.module.css";
 
 export type HeaderProps = {
@@ -34,6 +33,7 @@ function usePhotoHero(pathname: string) {
   return onPhoto;
 }
 
+/** Crown mark + the navbar wording, no badge behind it. */
 export function Logo({ logoText, logoAccent, logo, className = "" }: Pick<HeaderProps, "logoText" | "logoAccent" | "logo"> & { className?: string }) {
   return (
     <Link href="/" className={`${c.logo} ${className}`.trim()} aria-label={`${logoText} ${logoAccent} home`.replace(/\s+/g, " ").trim()}>
@@ -75,7 +75,7 @@ export function SiteHeader({ logoText, logoAccent, logo, items, cta }: HeaderPro
     <>
       <header className={`${c.header} ${onPhoto ? c.onPhoto : c.light}`}>
         <div className={c.headerInner}>
-          <Logo logoText={logoText} logoAccent={logoAccent} logo={logo} className={onPhoto ? c.logoBadge : ""} />
+          <Logo logoText={logoText} logoAccent={logoAccent} logo={logo} />
           {links.length > 0 && (
             <nav className={c.nav} aria-label="Main Navigation">
               <ul className={c.navList}>
@@ -94,7 +94,7 @@ export function SiteHeader({ logoText, logoAccent, logo, items, cta }: HeaderPro
           )}
           <div className={c.headerEnd}>
             {cta.href && (
-              <PillButton href={cta.href} label={cta.label || "Get Involved"} variant={onPhoto ? "onPhoto" : "primary"} className={c.cta} />
+              <Link href={cta.href} className={c.cta}>{cta.label || "Get Involved"}</Link>
             )}
             <button
               type="button"
@@ -128,8 +128,10 @@ export function SiteHeader({ logoText, logoAccent, logo, items, cta }: HeaderPro
             ))}
           </ul>
           {cta.href && (
-            <div className={c.mobileCta} onClick={() => setOpen(false)}>
-              <PillButton href={cta.href} label={cta.label || "Get Involved"} variant="primary" />
+            <div className={c.mobileCta}>
+              <Link href={cta.href} className={c.mobileCtaButton} onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
+                {cta.label || "Get Involved"}
+              </Link>
             </div>
           )}
         </nav>

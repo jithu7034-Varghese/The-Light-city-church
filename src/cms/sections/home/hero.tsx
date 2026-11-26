@@ -1,5 +1,6 @@
-// Home: full-screen welcome hero. The CMS artwork covers it; the intro sits on its left and a
-// "this Sunday" card (from Site settings → service times) on its right.
+// Home: full-screen welcome hero. The CMS artwork is its background (bottom-anchored, full width);
+// the intro sits left of the artwork's title and a "this Sunday" card (Site settings → service
+// times) right of it. The h1 is visually hidden because the artwork shows the same words.
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
 import { ds, PillButtons, SectionTag } from "@/components/site/ds";
@@ -30,9 +31,10 @@ export const homeHero = defineSection({
               {(data.heading || data.headingLine2 || data.text) && (
                 <div className={`${h.heroLead} ${h.rise} ${h.rise2}`}>
                   {(data.heading || data.headingLine2) && (
-                    <h1 className={h.heroTitle}>
-                      {data.heading && <span>{data.heading}</span>}
-                      {data.headingLine2 && <span>{data.headingLine2}</span>}
+                    <h1 className={h.srOnly}>
+                      {data.heading}
+                      {data.heading && data.headingLine2 ? " " : ""}
+                      {data.headingLine2}
                     </h1>
                   )}
                   {data.text && <p className={h.heroText}>{data.text}</p>}
@@ -51,7 +53,7 @@ export const homeHero = defineSection({
             )}
           </div>
         </div>
-        {/* Decorative artwork (its words repeat the title above). */}
+        {/* Decorative artwork (its words repeat the visually hidden h1). */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         {img && <img src={img.url} alt="" aria-hidden className={h.heroArt} fetchPriority="high" />}
       </section>

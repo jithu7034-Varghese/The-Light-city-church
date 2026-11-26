@@ -1,5 +1,6 @@
 // Globals seed (navbar, footer, site settings, announcement), from old-site-content.json.
 import old from "../old-site-content.json";
+import { img } from "./helpers";
 
 const st = old.site.serviceTimes[0];
 const item = (id: string, label: string, href: string) => ({ id, label, href });
@@ -24,9 +25,9 @@ export const GLOBAL_SEED = {
     ],
   },
   navbar: {
-    logoText: "City",
-    logoAccent: "Light",
-    logoImage: null,
+    logoText: "The Light City Church",
+    logoAccent: "",
+    logoImage: img("logo1.png"),
     items: [
       item("home", "Home", "/"),
       item("about", "About", "/about"),

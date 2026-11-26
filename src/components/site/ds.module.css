@@ -48,6 +48,20 @@
   background-image: url("/design/glow-peach.svg");
   animation: glowDrift 14s ease-in-out -7s infinite reverse;
 }
+/* Full screen on tablets and desktops, content centred vertically (not data-screen="off"
+   panels such as the contact details bar). The display/alignment has zero specificity so a
+   section's own layout rules still win. */
+@media (min-width: 768px) {
+  .cream:not([data-screen="off"]) {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+  :where(.cream:not([data-screen="off"])) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+  }
+}
 @keyframes glowDrift {
   0%, 100% { transform: translate(0, 0); }
   50% { transform: translate(60px, -40px); }
@@ -284,8 +298,7 @@
   composes: photo;
   display: flex;
   align-items: flex-end;
-  min-height: 70vh;
-  min-height: 70svh;
+  min-height: 560px; /* Figma page hero height */
   padding-top: 136px;
   padding-bottom: 64px;
 }
@@ -317,7 +330,7 @@
   to { opacity: 1; transform: none; }
 }
 @media (max-width: 640px) {
-  .pageHero { padding-top: 112px; padding-bottom: 32px; }
+  .pageHero { min-height: 480px; padding-top: 112px; padding-bottom: 32px; }
   .pageHeroCard { padding: 28px 24px; }
 }
 

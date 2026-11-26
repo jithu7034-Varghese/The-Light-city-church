@@ -28,7 +28,7 @@
   flex: none;
   color: var(--ink);
   text-decoration: none;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -39,47 +39,24 @@
   object-fit: contain;
 }
 .logoWords { white-space: nowrap; }
-.logoWords strong { font-weight: 700; }
+.logoWords strong { font-weight: 600; }
 .logoLight { font-weight: 400; }
-/* On photos: white rounded badge behind mark + words. */
-.logoBadge {
-  padding: 8px 18px 8px 12px;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 8px 24px rgba(5, 10, 15, 0.18);
-}
-.logoBadge .logoMark { width: 56px; height: 28px; }
+/* On photos the wording and crown turn white so they stay readable (no badge behind them). */
+.onPhoto .logo { color: #ffffff; text-shadow: 0 1px 12px rgba(5, 10, 15, 0.35); }
+.onPhoto .logoMark { filter: brightness(0) invert(1) drop-shadow(0 1px 6px rgba(5, 10, 15, 0.35)); }
 
 .nav { flex: 0 1 auto; min-width: 0; }
 .navList {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 6px;
   list-style: none;
-  border-radius: var(--radius-pill);
-}
-.light .navList {
-  background: rgba(248, 236, 216, 0.7);
-  border: 1.5px solid var(--line);
-  box-shadow: 0 16px 40px rgba(5, 10, 15, 0.06);
-}
-/* Liquid glass pill on photos (same recipe as ds .glass). */
-.onPhoto .navList {
-  background: rgba(255, 255, 255, 0.16);
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 16px 40px rgba(5, 10, 15, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  backdrop-filter: blur(18px) saturate(150%);
-}
-:global(html.lg-refract) .onPhoto .navList {
-  backdrop-filter: url(#lg-refract) blur(14px) saturate(150%);
 }
 .navLink,
 .navLinkActive {
   display: block;
-  padding: 9px 16px;
-  border-radius: var(--radius-pill);
+  padding: 8px 18px;
+  border-radius: 20px;
   font-size: var(--fs-small);
   font-weight: 500;
   line-height: 1.2;
@@ -89,13 +66,33 @@
   transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
 }
 .light .navLink { color: var(--ink); }
-.light .navLink:hover { background: rgba(255, 255, 255, 0.8); }
+.light .navLink:hover { background: var(--cream); }
 .light .navLinkActive { background: var(--ink); color: #ffffff; }
-.onPhoto .navLink { color: #ffffff; }
-.onPhoto .navLink:hover { background: rgba(255, 255, 255, 0.18); }
+.onPhoto .navLink { color: #ffffff; text-shadow: 0 1px 10px rgba(5, 10, 15, 0.35); }
+.onPhoto .navLink:hover { background: rgba(255, 255, 255, 0.16); }
 .onPhoto .navLinkActive { background: #ffffff; color: var(--ink); }
 .navLink:focus-visible,
-.navLinkActive:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.navLinkActive:focus-visible,
+.cta:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+/* Plain rounded call-to-action (no arrow badge). */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+}
+.light .cta { background: var(--ink); color: #ffffff; }
+.light .cta:hover { background: #2b303b; }
+.onPhoto .cta { background: #ffffff; color: var(--ink); }
+.onPhoto .cta:hover { background: rgba(255, 255, 255, 0.86); }
 
 .headerEnd { display: flex; align-items: center; gap: 12px; flex: none; }
 
@@ -153,17 +150,27 @@
 .mobileLink { opacity: 0.7; }
 .mobileLinkActive { color: var(--earth); }
 .mobileCta { margin-top: 32px; }
+.mobileCtaButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 26px;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: #ffffff;
+  font-size: var(--fs-body);
+  font-weight: 500;
+  text-decoration: none;
+}
 
-@media (max-width: 1180px) {
+@media (max-width: 1240px) {
   .nav { display: none; }
   .menuButton { display: block; }
 }
 @media (max-width: 640px) {
   .header { height: 76px; }
   .cta { display: none; }
-  .logo { font-size: 19px; }
-  .logoMark { width: 48px; height: 24px; }
-  .logoBadge .logoMark { width: 44px; height: 22px; }
+  .logo { font-size: 17px; gap: 8px; }
+  .logoMark { width: 44px; height: 22px; }
 }
 
 /* ---------- Footer ---------- */

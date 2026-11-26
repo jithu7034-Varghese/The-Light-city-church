@@ -105,33 +105,14 @@ button {
   outline: none;
 }
 
-/* ---------- Full-screen sections ----------
-   Every top-level section of a page fills at least one screen, content centred vertically; taller
-   content simply grows the section. Backgrounds stay full width; content sits in ds.container.
-   Not applied to: the header, announcement bar and footer (outside <main>), sections marked
-   data-screen="off" (e.g. the contact details bar), and nested sections. Zero-specificity
-   :where() so a section's own display/alignment rules still win. */
-:where(.site-main section:not(section section, [data-screen="off"])) {
-  min-height: 100vh;
-  min-height: 100svh;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-content: center;
-}
-/* Inner-page heroes (start the page on a photo). */
-.site-main [data-hero-photo]:not([data-home-hero]) {
-  min-height: 70vh;
-  min-height: 70svh;
-}
-/* Home hero: exactly one screen, on every device. */
+/* ---------- Section heights ----------
+   Sections keep their natural height (Figma spacing: 112px top and bottom on desktop). Only two
+   kinds fill the screen: the home hero (here, on every device) and the cream panels with the
+   amber/peach glows (ds.cream in src/components/site/ds.module.css, 768px and wider). Taller
+   content always grows the section. */
 .site-main [data-home-hero] {
   min-height: 100vh;
   min-height: 100svh;
-}
-@media (max-width: 767px) {
-  :where(.site-main section:not(section section, [data-screen="off"], [data-hero-photo], [data-home-hero])) {
-    min-height: 0;
-  }
 }
 
 /* Typography Utility */
