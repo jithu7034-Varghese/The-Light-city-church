@@ -1,0 +1,12 @@
+<!-- Supabase "Invite user" email. Paste into Authentication -> Email Templates -> Invite user. -->
+<div style="font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; color: #14161a;">
+  <h2 style="font-size: 20px;">You're invited to The Light City Church admin</h2>
+  <p>You've been given access to manage The Light City Church website. Click the button below to set up your account. The link works once. If it has expired, ask an administrator to send a new invite.</p>
+  <p style="margin: 28px 0;">
+    <a href="{{ .SiteURL }}/api/auth/confirm?token_hash={{ .TokenHash }}&type=invite"
+       style="background: #1f4fd8; color: #ffffff; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+      Accept invite
+    </a>
+  </p>
+  <p style="color: #5f6775; font-size: 13px;">If you weren't expecting this, you can ignore this email.</p>
+</div>

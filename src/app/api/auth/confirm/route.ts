@@ -1,0 +1,30 @@
+// Landing point for Supabase email links (invite + password reset). The email templates in
+// supabase/templates/ link here with a token_hash; verifying it on the server sets the
+// session cookie, then we continue to the page that finishes the flow.
+import { NextResponse, type NextRequest } from "next/server";
+import type { EmailOtpType } from "@supabase/supabase-js";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { safeAdminRedirect } from "@/lib/auth/gate";
+
+const FLOWS: Partial<Record<EmailOtpType, string>> = {
+  invite: "/admin/accept-invite",
+  recovery: "/admin/reset-password",
+};
+
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl;
+  const tokenHash = searchParams.get("token_hash");
+  const type = searchParams.get("type") as EmailOtpType | null;
+  const destination = type ? FLOWS[type] : undefined;
+
+  if (tokenHash && type && destination) {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
+    if (!error) {
+      const next = safeAdminRedirect(searchParams.get("next"), destination);
+      return NextResponse.redirect(new URL(next, request.url));
+    }
+  }
+
+  return NextResponse.redirect(new URL("/admin/login?error=link-expired", request.url));
+}

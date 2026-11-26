@@ -1,0 +1,27 @@
+/* The header sits on top of each page's hero, and some heroes are light. A dark glass pill
+   keeps the logo readable on any background (the "City" text was invisible on white). */
+.logo {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(11, 12, 14, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #f5f6f8;
+}
+.logoImage {
+  display: block;
+  height: 32px;
+  width: auto;
+}
+
+.socials { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 18px; }
+.socials a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; }
+.socials a:hover { color: var(--text-primary); }
+.contactRow { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: center; margin-top: 20px; color: var(--text-secondary); font-size: 0.9rem; }
+.contactRow a { color: inherit; }
+.columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; margin: 32px auto 0; max-width: 900px; text-align: left; }
+.columnHeading { font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 12px; }
+.columnLinks { list-style: none; display: grid; gap: 8px; }
+.columnLinks a { color: var(--text-primary); text-decoration: none; opacity: 0.85; }
+.columnLinks a:hover { opacity: 1; text-decoration: underline; }

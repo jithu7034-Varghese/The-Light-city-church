@@ -1,0 +1,12 @@
+<!-- Supabase "Reset password" email. Paste into Authentication -> Email Templates -> Reset password. -->
+<div style="font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; color: #14161a;">
+  <h2 style="font-size: 20px;">Reset your password</h2>
+  <p>Someone asked to reset the password for your Light City Church admin account. Click the button below to choose a new one. The link works once and expires in 1 hour.</p>
+  <p style="margin: 28px 0;">
+    <a href="{{ .SiteURL }}/api/auth/confirm?token_hash={{ .TokenHash }}&type=recovery"
+       style="background: #1f4fd8; color: #ffffff; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+      Choose a new password
+    </a>
+  </p>
+  <p style="color: #5f6775; font-size: 13px;">If you didn't ask for this, you can ignore this email. Your password won't change.</p>
+</div>

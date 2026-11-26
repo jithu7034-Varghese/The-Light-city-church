@@ -1,0 +1,121 @@
+/* Admin styles: Tailwind v4, loaded ONLY by the (admin) root layout, never on the public site.
+   Class names are scanned from the admin folders below only. If you add Tailwind classes
+   somewhere else, add an @source line for it. */
+@import "tailwindcss" source(none);
+@source "./";
+@source "../../components/admin";
+
+/* Semantic colour tokens. Components use these (bg-surface, text-muted, border-border …)
+   instead of raw palette colours, so dark mode and a future re-skin are one place. */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-subtle: var(--c-subtle);
+  --color-border: var(--c-border);
+  --color-fg: var(--c-fg);
+  --color-muted: var(--c-muted);
+  --color-primary: var(--c-primary);
+  --color-primary-hover: var(--c-primary-hover);
+  --color-primary-fg: var(--c-primary-fg);
+  --color-danger: var(--c-danger);
+  --color-danger-soft: var(--c-danger-soft);
+  --color-success: var(--c-success);
+  --color-success-soft: var(--c-success-soft);
+  --color-warning: var(--c-warning);
+  --color-warning-soft: var(--c-warning-soft);
+  --color-info-soft: var(--c-info-soft);
+  --color-ring: var(--c-ring);
+  /* Chart marks: validated with the dataviz palette checks against each mode's surface */
+  --color-chart: var(--c-chart);
+}
+
+:root {
+  color-scheme: light;
+  --c-bg: #f6f7f9;
+  --c-surface: #ffffff;
+  --c-subtle: #f0f2f5;
+  --c-border: #e3e6eb;
+  --c-fg: #14161a;
+  --c-muted: #5f6775;
+  --c-primary: #1f4fd8;
+  --c-primary-hover: #1a43b8;
+  --c-primary-fg: #ffffff;
+  --c-danger: #c62828;
+  --c-danger-soft: #fdecec;
+  --c-success: #1e7a46;
+  --c-success-soft: #e6f4ec;
+  --c-warning: #9a5b00;
+  --c-warning-soft: #fdf3e1;
+  --c-info-soft: #e8eefc;
+  --c-ring: #1f4fd8;
+  --c-chart: #1f4fd8;
+}
+
+/* Same dark values twice: explicit choice, and "system" when the OS is dark. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --c-bg: #0d0f12;
+  --c-surface: #15181d;
+  --c-subtle: #1c2027;
+  --c-border: #2a2f38;
+  --c-fg: #eef0f3;
+  --c-muted: #9aa3b2;
+  --c-primary: #6b92ff;
+  --c-primary-hover: #86a6ff;
+  --c-primary-fg: #0d0f12;
+  --c-danger: #ff7a7a;
+  --c-danger-soft: #3a1a1c;
+  --c-success: #5fd394;
+  --c-success-soft: #14301f;
+  --c-warning: #f5b649;
+  --c-warning-soft: #342812;
+  --c-info-soft: #18233d;
+  --c-ring: #86a6ff;
+  --c-chart: #5b82f5;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    color-scheme: dark;
+    --c-bg: #0d0f12;
+    --c-surface: #15181d;
+    --c-subtle: #1c2027;
+    --c-border: #2a2f38;
+    --c-fg: #eef0f3;
+    --c-muted: #9aa3b2;
+    --c-primary: #6b92ff;
+    --c-primary-hover: #86a6ff;
+    --c-primary-fg: #0d0f12;
+    --c-danger: #ff7a7a;
+    --c-danger-soft: #3a1a1c;
+    --c-success: #5fd394;
+    --c-success-soft: #14301f;
+    --c-warning: #f5b649;
+    --c-warning-soft: #342812;
+    --c-info-soft: #18233d;
+    --c-ring: #86a6ff;
+    --c-chart: #5b82f5;
+  }
+}
+
+/* Rich-text editor content (devotionals) */
+.tiptap > * + * { margin-top: 0.75em; }
+.tiptap h2 { font-size: 1.35rem; font-weight: 600; }
+.tiptap h3 { font-size: 1.125rem; font-weight: 600; }
+.tiptap ul { list-style: disc; padding-left: 1.5rem; }
+.tiptap ol { list-style: decimal; padding-left: 1.5rem; }
+.tiptap blockquote { border-left: 3px solid var(--c-border); padding-left: 1rem; color: var(--c-muted); font-style: italic; }
+.tiptap a { color: var(--c-primary); text-decoration: underline; }
+.tiptap p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--c-muted); float: left; height: 0; pointer-events: none; }
+
+@layer base {
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+  dialog::backdrop {
+    background: rgb(0 0 0 / 0.5);
+  }
+}

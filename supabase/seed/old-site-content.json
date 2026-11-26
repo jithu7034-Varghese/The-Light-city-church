@@ -1,0 +1,153 @@
+{
+  "_about": "Verbatim content captured from the old GoDaddy site https://thelightcitychurch.org on 2026-11-23. Source material for supabase/seed.ts (section-shaped seed data is built from this). Do not edit wording here; edit in the CMS after seeding.",
+  "site": {
+    "name": "The Light City Church",
+    "shortName": "Lightcity",
+    "tagline": "Without miracles Christianity is reduced to philosophy. Believe in God in you! Christ in you the hope of glory!",
+    "mission": "We are passionate about empowering every man, woman, and child to live in the fulness of their inheritance in Christ.",
+    "serviceTimes": [
+      { "day": "Sunday", "time": "10:30am", "venue": "The Motorpoint Arena", "address": "Bolero Square, Nottingham, NG1 1LA", "addressFull": "Motorpoint Arena Nottingham, Bolero Sq, Nottingham, England NG1 1LA, United Kingdom" }
+    ],
+    "whatsapp": "https://wa.me/447878393146",
+    "social": {
+      "facebook": "https://www.facebook.com/102820662239782",
+      "instagram": "https://www.instagram.com/thelovedcircle",
+      "x": "https://www.x.com/thelightcitychurch",
+      "youtube": "https://www.youtube.com/thelightcitychurch"
+    },
+    "podcast": { "name": "The Loved Circle", "rss": "https://rss.com/podcasts/thelovedcircle" },
+    "giving": {
+      "provider": "paypal",
+      "type": "donation",
+      "paypalBusiness": "ronnie.dube@outlook.com",
+      "itemName": "lightcity",
+      "currency": "GBP",
+      "buttonLabel": "PARTNERSHIP AND OFFERING",
+      "note": "Old site used a PayPal Donate form (cmd=_donations). Confirm with the church before reusing this account."
+    },
+    "copyright": "Copyright © 2025 lightcity - All Rights Reserved.",
+    "oldNav": ["Home", "About", "dailylightdevotional", "Freedom from Religion", "The Loved Circle", "Contact Us", "Partner with us", "Partner with TLCC (members only)"]
+  },
+  "pages": {
+    "home": {
+      "oldUrl": "/",
+      "seoTitle": "Lightcity - Prayer, Church Service, Prayer for Healing",
+      "sections": [
+        { "kind": "hero", "eyebrow": "WHAT WE DO", "heading": "Welcome to The Light City Church", "text": "We are passionate about empowering every man, woman, and child to live in the fulness of their inheritance in Christ.", "buttons": [{ "label": "GET INVOLVED", "href": "/contact-us" }] },
+        { "kind": "gallery", "heading": "PHOTO GALLERY" },
+        { "kind": "latest_posts", "heading": "My Daily Light" },
+        { "kind": "video", "heading": "Without miracles Christianity is reduced to philosophy. Believe in God in you! Christ in you the hope of glory!", "youtubeId": "QiJN-zZk-hI" },
+        { "kind": "scripture", "text": "to open their eyes and to turn them from darkness to light, and from the power of Satan unto God, that they may receive forgiveness of sins and an inheritance among those who are sanctified by faith that is in Me.", "reference": "ACTS 26: 18" },
+        { "kind": "service_times", "heading": "Worship with us this Sunday", "text": "Every Sunday, we get together for Jesus-centred praise and worship, and an anointed time in the Word preached by Pastor Ronnie Dube. We meet every Sunday 10: 30am at The Motorpoint Arena in the City of Nottingham. We look forward to receiving you!", "buttons": [{ "label": "FIND OUT MORE", "href": "/contact-us" }] },
+        { "kind": "giving", "heading": "Tithes and Offerings", "text": "The Bible speaks of giving to God through our tithes and offerings. We believe giving is an act of worship and thanksgiving to the Lord, and our response to Him for all that He has done for us.", "buttonLabel": "PARTNERSHIP AND OFFERING" },
+        { "kind": "newsletter", "heading": "Subscribe", "text": "Sign up to receive our Daily Devotional, monthly newsletter and to hear from us about special conferences and events.", "fields": ["Email"], "buttonLabel": "SIGN UP" },
+        { "kind": "cta", "heading": "Prayer", "text": "Whatever the need we would like to join our faith with yours and stand in agreement with you in prayer. Please send through your prayer requests and testimonies, we look forward to hearing from you.", "buttons": [{ "label": "SEND US YOUR PRAYER REQUEST", "href": "/contact-us" }] }
+      ]
+    },
+    "about": {
+      "oldUrl": "/about",
+      "sections": [
+        { "kind": "text", "heading": "Our Mission", "text": "To empower every man, woman, and child to live in the fulness of their inheritance in Christ through the accurate teaching of the Gospel. To bring light where there was once darkness and to prepare the church for the coming of our Lord and Saviour." },
+        { "kind": "cards_grid", "heading": "OUR CORE VALUES", "items": [
+          { "title": "Love above all", "text": "The love of God is shed abroad in our hearts and it is when we love that we demonstrate the divine nature of God in our lives. We love and value every person because of the price tag God put on their life, which is His own blood." },
+          { "title": "Standard of excellence", "text": "We seek to excel in everything we do because Christ is made unto us wisdom and we have the mind of Christ." },
+          { "title": "Honour", "text": "We treat each other with respect and integrity, we honour and submit to our leaders as unto the Lord." }
+        ] },
+        { "kind": "people", "items": [
+          { "name": "Pastor Ronnie Dube", "bio": "Pastor Ronnie is co-founder and senior pastor at The Light City Church, his ministry as a pastor, teacher, author and healing minister, continues to transform many lives around the world helping them to experience a victorious and purposeful life in God’s word." },
+          { "name": "Pastor Annalene Dube", "bio": "A devoted wife to Pastor Ronnie and a loving mother to Ronnie Jnr, Ariel and Christian, Pastor Annalene is a seasoned minister of the word and worship leader. Her humility, warmth and genuine love for God and people have led to her touching many lives around the world through her music and teaching ministry." }
+        ] },
+        { "kind": "cta", "heading": "Learn More", "text": "The Light City Church is located in the metropolitan city of Nottingham in the United Kingdom. With services every Sunday 10: 30 am at The Motorpoint Arena in the heart of the city. Come and visit whenever you are in the area or become part of our global community by joining our online Light Groups.", "buttons": [{ "label": "FIND OUT MORE", "href": "/" }] }
+      ]
+    },
+    "freedom-from-religion": {
+      "oldUrl": "/freedom-from-religion",
+      "sections": [
+        { "kind": "hero", "heading": "Be free from religion!", "subheading": "Find freedom from religion" },
+        { "kind": "rich_text", "paragraphs": [
+          "Have you ever noticed that whenever there is any mention of Christianity or the church, for most people what comes to mind is the ten commandments, the rules and regulations? Especially the ones you struggle to observe, immediately many cower away from God fearing the condemnation and perceived wrath of God to come.",
+          "What if I told you today that Jesus came to undo that very same religious mentality and view of God that had been created by the teaching of the law? Did you know that the salvation and relationship with God that we are offered through Christ has nothing to do with your ability to adhere to any part of the law? This is why it is good news!",
+          { "scripture": "I do not treat the grace of God as meaningless. For if keeping the law could make us right with God, then there was no need for Christ to die.", "reference": "Galatians 2: 21 ( NLT )" },
+          "Above are the words of the Apostle Paul, he emphatically declares that there is no amount of keeping the law that can make you right with God. This is why Jesus came to do what you could not do, so that on His account you can now have that right standing with God when you choose to accept and acknowledge that His sacrifice was for you.",
+          { "scripture": "Therefore, since we have been made right in God’s sight by faith, we have peace with God because of what Jesus Christ our Lord has done for us.", "reference": "Romans 5: 1" },
+          "Freedom and peace with God is actually FREE! The only requirement is faith in Jesus Christ, there is no longer a burden to keep the law, when Christ came it was done away with. Isn’t that such a relief? It is good news indeed! You can now be free from religion and enjoy the life that Christ came to give without any fear or condemnation.",
+          { "scripture": "He did this by ending the system of law with its commandments and regulations. He made peace between Jews and Gentiles by creating in himself one new people from the two groups.", "reference": "Ephesians 2: 15" },
+          "When you accept Jesus as the Lord of your life there is only one law that applies to you and that is love and faith. There is nothing done in love that can ever be sin, there is nothing done in faith that can ever be sin. I know that this is exactly what you have been waiting for and yes it is in your bible! This is the good news that many gave their lives to get to you and you do not have to wait another moment.",
+          "Right now with a very simple and short prayer you too can make Jesus the Lord of your life and enjoy this freedom from sin and religion, here is what the scripture says;",
+          { "scripture": "If you declare with your mouth, “Jesus is Lord,” and believe in your heart that God raised him from the dead, you will be saved.", "reference": "Romans 10: 9" },
+          "Right now, I what you to say this prayer from your heart and mean every word and God almighty in heaven will record this day as the day of your salvation."
+        ] },
+        { "kind": "scripture", "heading": "Prayer of Salvation", "text": "Father God, I believe in my heart Jesus Christ died for me and my sins and that you raised him from the dead. I make him Lord of my life today and receive the free gift of eternal life into my spirit. I am a child of God, I am now born again. Amen!" },
+        { "kind": "text", "heading": "Congratulations!", "text": "Welcome to the family of God. We would like to help you learn more about this new life you have received and answer any questions you might have. If you have just prayed to receive salvation please take a moment to fill in the contact form below. We would love to hear from you and help you grow in faith and in your new found journey." },
+        { "kind": "form", "form": "salvation", "heading": "CONTACT US", "subheading": "We want to hear from you!" },
+        { "kind": "cta", "heading": "Better yet, see us in person!", "text": "Join us every Sunday 10:30am at The Motorpoint Arena, Bolero Square, Nottingham, NG1 1LA", "buttons": [{ "label": "Message us on WhatsApp", "href": "https://wa.me/447878393146" }] }
+      ]
+    },
+    "the-loved-circle": {
+      "oldUrl": "/the-loved-circle",
+      "sections": [
+        { "kind": "text_image", "heading": "Extravagant Love", "paragraphs": [
+          "Hey my loves, did you know God gets so over the top with his emotions for us. He literally goes beyond the extreme with his love for us. He was consumed with love that he was willing to sacrifice his own son in order for you and I to be a part of his family, for us to call him Father.",
+          "I love my dad so very dearly, but growing up I wasn’t as close to my dad as I would have wanted to be, and I grew up thinking he didn’t love me. The enemy took advantage of that void that had been created to make me think I was not worth anything and I was not good enough. Little did I know that my dad was doing his best to push me to be the best and prepare me for adulthood. That unfortunately caused me to have low self-esteem, feelings of worthlessness and that I could never be anything let alone achieve anything in life.",
+          "All those feelings caused me to think I was unloved and unaccepted. But all those feelings the day God found me were overshadowed and taken over by his intense and overwhelming love. He came into my life with such an encapsulating love. I felt like God loved only me in the whole world. He restored my relationship with my dad and I am enjoying getting to know my dad in a more deeper way.",
+          "Now, you might not know who God is and maybe you feel like I want to experience this love. He wants to you know him and to have and share in this unconditional and extravagant love that he showed us when he separated himself from his beloved son, causing him to die for you and I, taking our place on the cross so that we could become his unconditionally and extravagantly loved children.",
+          "I would like to help you to know him deeper and experience the same healing and love that I personally received in my own journey. So if that is you, send me a quick message here on the website and subscribe to join The Loved Circle, a circle of sisterhood that helps you on a journey of self-discovery, healing, wellness, success and above all LOVE!",
+          "I cannot wait to personally meet you and give you a virtual hug sis!",
+          "With so much love,",
+          "Annalene"
+        ] },
+        { "kind": "scripture", "text": "You are God's only version of you, His very best and He wants nothing but the best for you. He values you so much that He gave Himself just so that He could have you!", "buttons": [{ "label": "FIND OUT MORE", "href": "/freedom-from-religion" }] },
+        { "kind": "podcast", "heading": "PODCAST", "subheading": "About Podcast", "text": "You are God's only version of you, His very best and He wants nothing but the best for you. He values you so much that He gave Himself just so that He could have you!", "rss": "https://rss.com/podcasts/thelovedcircle", "episodes": [
+          { "title": "YOUR NEW NATURE IN CHRIST" },
+          { "title": "Why Does God Love Me?", "date": "2023-06-20", "duration": "00:13:46" },
+          { "title": "Stop The Cycle of Condemnation", "date": "2023-06-13", "duration": "00:18:10" },
+          { "title": "You are not worth PEANUTS!", "date": "2023-05-28", "duration": "00:17:44" }
+        ] },
+        { "kind": "form", "form": "loved-circle", "heading": "CONTACT US", "subheading": "Join The Loved Circle!" },
+        { "kind": "scripture", "text": "See how very much our Father loves, for he calls us his children", "reference": "1 John 3:1" }
+      ]
+    },
+    "contact": {
+      "oldUrl": "/contact-us",
+      "sections": [
+        { "kind": "form", "form": "get-involved", "heading": "CONTACT US", "subheading": "Get Involved!" },
+        { "kind": "text", "heading": "Find out more ways to help!", "text": "There are so many ways to support our mission. Contact us to find out more about volunteer opportunities, fundraising events, and ways to get our message to your friends and family." },
+        { "kind": "directions", "heading": "Visiting Us", "address": "Motorpoint Arena Nottingham, Bolero Sq, Nottingham, England NG1 1LA, United Kingdom", "items": [
+          { "mode": "car", "title": "BY CAR", "text": "The Motorpoint Arena Nottingham is less than 30 minutes from the A52 and located in the heart of Nottingham city centre, making it easily accessible by car. Brown tourist signs are visible on all." },
+          { "mode": "tram", "title": "By Train/ Tram", "text": "The nearest tram stop to the Arena is the Lace Market stop on Fletcher Gate, which is just a 5 minute walk from the venue – making it a convenient and green way to get to the city centre!" },
+          { "mode": "park_and_ride", "title": "Park & Ride", "text": "Trams run at least every 7 minutes until midnight. In addition, there are seven Park & Ride sites with 5000+ spaces, conveniently located close to major roads on the outskirts of the city: Clifton just off the A453, Toton Lane just off junction 25 of the M1, Phoenix Park just off the M1 Junction 26.", "link": "https://click2go.me/.2zioc" }
+        ], "buttonLabel": "GET DIRECTIONS" }
+      ]
+    },
+    "give": {
+      "oldUrl": "/partner-with-us",
+      "sections": [
+        { "kind": "text", "heading": "WHY BECOME A MONTHLY PARTNER", "paragraphs": [
+          "Monthly Partners are an essential part of this ministry.",
+          "Partnership is the intentional sowing and watering of seed to ensure a fruitful harvest. It is the steady stream of income from Monthly Partners that allows us to plan and prepare for projects around the globe.",
+          "Your monthly commitment is changing lives around the world through our weekly broadcasts as well faith resources from THE LIGHT CITY BIBLE COLLEGE. None of this is possible without our monthly partners."
+        ] },
+        { "kind": "giving", "buttonLabel": "PARTNER WITH US" },
+        { "kind": "scripture", "text": "The best time to plant a tree was 20 years ago. The second best time is now.", "reference": "Chinese Proverb" }
+      ]
+    },
+    "privacy-policy": {
+      "oldUrl": "/privacy-policy",
+      "note": "The old page had only the heading 'PRIVACY POLICY' and no body text. A UK GDPR privacy policy must be written before launch."
+    }
+  },
+  "forms": {
+    "get-involved": { "fields": [{ "label": "Name", "required": true }, { "label": "Email", "type": "email", "required": true }], "button": "SEND" },
+    "salvation": { "fields": [{ "label": "Name" }, { "label": "Email", "type": "email", "required": true }, { "label": "City", "required": true }, { "label": "Sign up for our email list for updates, promotions, and more.", "type": "checkbox" }], "button": "SEND" },
+    "loved-circle": { "fields": [{ "label": "Name", "required": true }, { "label": "Email", "type": "email", "required": true }, { "label": "City", "required": true }, { "label": "Contact Number", "type": "phone", "required": true }], "button": "SEND" },
+    "newsletter": { "fields": [{ "label": "Email", "type": "email", "required": true }], "button": "SIGN UP" }
+  },
+  "redirects": [
+    { "from": "/contact-us", "to": "/contact" },
+    { "from": "/partner-with-us", "to": "/give" },
+    { "from": "/partner-with-tlcc", "to": "/give" },
+    { "from": "/dailylightdevotional", "to": "/devotionals" },
+    { "from": "/dailylightdevotional-1", "to": "/gallery" },
+    { "from": "/dailylightdevotional/f/:slug", "to": "/devotionals/:slug" }
+  ]
+}
