@@ -48,7 +48,7 @@
   --fs-eyebrow: 0.75rem;                                 /* 12 */
 
   /* Grid */
-  --container-max: 1280px;
+  --container-max: 1600px; /* content width on large screens (gutters on top) */
   --gutter: 80px;
   --section-y: 112px;
   --radius-card: 28px;
@@ -63,7 +63,7 @@
   color-scheme: light;
 }
 
-/* Container gutter: 80px desktop, 40px tablet, 20px mobile (content max 1280px). */
+/* Container gutter: 80px desktop, 40px tablet, 20px mobile (content max 1600px). */
 @media (max-width: 1024px) {
   :root { --gutter: 40px; --section-y: 88px; }
 }
