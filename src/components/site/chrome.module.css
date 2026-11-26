@@ -41,9 +41,6 @@
 .logoWords { white-space: nowrap; }
 .logoWords strong { font-weight: 600; }
 .logoLight { font-weight: 400; }
-/* On photos the wording and crown turn white so they stay readable (no badge behind them). */
-.onPhoto .logo { color: #ffffff; text-shadow: 0 1px 12px rgba(5, 10, 15, 0.35); }
-.onPhoto .logoMark { filter: brightness(0) invert(1) drop-shadow(0 1px 6px rgba(5, 10, 15, 0.35)); }
 
 .nav { flex: 0 1 auto; min-width: 0; }
 .navList {
@@ -68,9 +65,6 @@
 .light .navLink { color: var(--ink); }
 .light .navLink:hover { background: var(--cream); }
 .light .navLinkActive { background: var(--ink); color: #ffffff; }
-.onPhoto .navLink { color: #ffffff; text-shadow: 0 1px 10px rgba(5, 10, 15, 0.35); }
-.onPhoto .navLink:hover { background: rgba(255, 255, 255, 0.16); }
-.onPhoto .navLinkActive { background: #ffffff; color: var(--ink); }
 .navLink:focus-visible,
 .navLinkActive:focus-visible,
 .cta:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
@@ -91,8 +85,6 @@
 }
 .light .cta { background: var(--ink); color: #ffffff; }
 .light .cta:hover { background: #2b303b; }
-.onPhoto .cta { background: #ffffff; color: var(--ink); }
-.onPhoto .cta:hover { background: rgba(255, 255, 255, 0.86); }
 
 .headerEnd { display: flex; align-items: center; gap: 12px; flex: none; }
 

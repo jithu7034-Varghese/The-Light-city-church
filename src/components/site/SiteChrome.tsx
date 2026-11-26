@@ -1,7 +1,7 @@
 "use client";
 // Public site header, driven by the published "navbar" global (passed in by the layout).
-// Two looks from the design: "light" (dark text on white pages) and "on photo" (glass nav pill,
-// logo on a white badge) when the page starts with a photo hero (`data-hero-photo`).
+// Figma "Header/Light" on every page: white bar, black crown logo + wording, black links with a
+// filled black pill for the current page, and a plain black "Get Involved" button.
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -16,22 +16,6 @@ export type HeaderProps = {
 };
 
 const isCurrent = (pathname: string, href: string) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`));
-
-/** True when the first thing under the header is a photo hero. */
-function usePhotoHero(pathname: string) {
-  const [onPhoto, setOnPhoto] = useState(pathname !== "/");
-  useEffect(() => {
-    const check = () => {
-      const hero = document.querySelector("[data-hero-photo]");
-      setOnPhoto(Boolean(hero && hero.getBoundingClientRect().top + window.scrollY < 120));
-    };
-    check();
-    // Sections stream in; check again once the page has settled.
-    const t = window.setTimeout(check, 300);
-    return () => window.clearTimeout(t);
-  }, [pathname]);
-  return onPhoto;
-}
 
 /** Crown mark + the navbar wording, no badge behind it. */
 export function Logo({ logoText, logoAccent, logo, className = "" }: Pick<HeaderProps, "logoText" | "logoAccent" | "logo"> & { className?: string }) {
@@ -58,7 +42,6 @@ export function SiteHeader({ logoText, logoAccent, logo, items, cta }: HeaderPro
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn === pathname;
   const setOpen = (v: boolean) => setOpenOn(v ? pathname : null);
-  const onPhoto = usePhotoHero(pathname);
   const links = items.filter((i) => i.label && i.href);
   useEffect(() => {
     if (!open) return;
@@ -73,7 +56,7 @@ export function SiteHeader({ logoText, logoAccent, logo, items, cta }: HeaderPro
 
   return (
     <>
-      <header className={`${c.header} ${onPhoto ? c.onPhoto : c.light}`}>
+      <header className={`${c.header} ${c.light}`}>
         <div className={c.headerInner}>
           <Logo logoText={logoText} logoAccent={logoAccent} logo={logo} />
           {links.length > 0 && (
