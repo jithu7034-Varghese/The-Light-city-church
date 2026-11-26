@@ -7,7 +7,7 @@ import d from "./devotionals.module.css";
 import { getPostCategories, getPublishedPosts, POSTS_PER_PAGE } from "@/lib/posts/public";
 import { isValidSlug } from "@/lib/slug";
 import { PostCard } from "./post-card";
-import { getSiteBackground } from "./site-background";
+import { getDevotionalsSettings } from "./site-background";
 
 export const metadata: Metadata = {
   title: "Daily Light Devotionals | The Light City Church",
@@ -16,19 +16,20 @@ export const metadata: Metadata = {
 };
 
 export default async function DevotionalsPage({ searchParams }: PageProps<"/devotionals">) {
-  const background = await getSiteBackground();
+  const { cfg, heroImage } = await getDevotionalsSettings();
   return (
     <>
       <PageHero
-        image={background}
-        title="Daily Light Devotionals"
-        text={<p>Grow in the accurate teaching of the Gospel of grace. Read, reflect and pray with Pastor Ronnie Dube.</p>}
+        image={heroImage}
+        eyebrow={cfg.heroEyebrow || undefined}
+        title={cfg.heroTitle || undefined}
+        text={cfg.heroText ? <p>{cfg.heroText}</p> : undefined}
       />
       <ViewportSection as="section" className={`${ds.section} ${ds.cream} ${d.listSection}`}>
         <div className={ds.container}>
           {/* The page number and category are request data, so the list streams in after the static shell */}
-          <Suspense fallback={<p className={d.notice}>Loading devotionals…</p>}>
-            <PostList searchParams={searchParams} />
+          <Suspense fallback={<p className={d.notice}>{cfg.loadingText}</p>}>
+            <PostList searchParams={searchParams} labels={cfg} />
           </Suspense>
         </div>
       </ViewportSection>
@@ -36,7 +37,9 @@ export default async function DevotionalsPage({ searchParams }: PageProps<"/devo
   );
 }
 
-async function PostList({ searchParams }: { searchParams: PageProps<"/devotionals">["searchParams"] }) {
+type Labels = Awaited<ReturnType<typeof getDevotionalsSettings>>["cfg"];
+
+async function PostList({ searchParams, labels }: { searchParams: PageProps<"/devotionals">["searchParams"]; labels: Labels }) {
   const sp = await searchParams;
   const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
   const requested = Number(one(sp.page));
@@ -56,7 +59,7 @@ async function PostList({ searchParams }: { searchParams: PageProps<"/devotional
   const filters = categories.length > 1 && (
     <nav aria-label="Filter by category" className={d.categoryFilters}>
       <Link href="/devotionals" className={`${d.filterPill} ${!rawCategory ? d.filterPillActive : ""}`} aria-current={!rawCategory ? "page" : undefined}>
-        All
+        {labels.allLabel}
       </Link>
       {categories.map((c) => (
         <Link
@@ -77,11 +80,11 @@ async function PostList({ searchParams }: { searchParams: PageProps<"/devotional
         {filters}
         <p className={d.notice}>
           {unknownCategory ? (
-            <>That category doesn&apos;t exist. <Link href="/devotionals">See all devotionals</Link></>
+            <>{labels.unknownCategoryText} <Link href="/devotionals">{labels.seeAllLabel}</Link></>
           ) : page > 1 ? (
-            <>No devotionals on this page. <Link href={href(1)}>Back to the latest</Link></>
+            <>{labels.emptyPageText} <Link href={href(1)}>{labels.backToLatestLabel}</Link></>
           ) : (
-            "New devotionals are coming soon."
+            labels.emptyText
           )}
         </p>
       </>
@@ -92,18 +95,18 @@ async function PostList({ searchParams }: { searchParams: PageProps<"/devotional
     <>
       {filters}
       <div className={ds.cardGrid3}>
-        {posts.map((p) => <PostCard key={p.slug} post={p} />)}
+        {posts.map((p) => <PostCard key={p.slug} post={p} fallbackCategory={labels.fallbackCategory} />)}
       </div>
       <nav aria-label="Devotional pages" className={d.pagination}>
         {page > 1 && (
           <Link href={href(page - 1)} className={d.pageButton} rel="prev">
-            ← Newer
+            {labels.newerLabel}
           </Link>
         )}
-        <span className={d.pageStatus}>Page {page} of {pages}</span>
+        <span className={d.pageStatus}>{labels.pageStatus.replace("{page}", String(page)).replace("{pages}", String(pages))}</span>
         {page < pages && (
           <Link href={href(page + 1)} className={d.pageButton} rel="next">
-            Older →
+            {labels.olderLabel}
           </Link>
         )}
       </nav>

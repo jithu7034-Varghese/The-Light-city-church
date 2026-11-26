@@ -2,7 +2,8 @@
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
 import { ViewportSection } from "@/cms/sections/shared/animate";
-import { AccentHeading, ds } from "@/components/site/ds";
+import { AccentHeading, PillButton, SectionTag, ds } from "@/components/site/ds";
+import { TAG_HELP } from "@/cms/sections/shared/help";
 import h from "./home.module.css";
 import { ArrowRight } from "./social-icons";
 import { externalProps } from "./util";
@@ -12,7 +13,10 @@ export const homeServices = defineSection({
   label: "Home: ministries",
   description: "A heading and numbered picture cards (best with 4).",
   fields: {
+    tag: f.text("Small text above the heading", { max: 80, help: TAG_HELP }),
     heading: f.text("Heading", { max: 120 }),
+    buttonLabel: f.text("Button on the right: label (optional)", { max: 60, help: "e.g. View All Ministries. Shown only with a link." }),
+    buttonLink: f.link("Button on the right: link (optional)"),
     items: f.list(
       "Cards",
       "Card",
@@ -28,11 +32,13 @@ export const homeServices = defineSection({
   Component: ({ data, ctx }) => (
     <ViewportSection className={`${ds.section} ${ds.cream}`} id="services">
       <div className={ds.container}>
-        {data.heading && (
+        {(data.tag || data.heading || data.buttonLink.href) && (
           <div className={ds.sectionHeader}>
             <div className={ds.sectionHeaderText}>
-              <AccentHeading text={data.heading} as="h2" className={ds.h2} />
+              {data.tag && <SectionTag>{data.tag}</SectionTag>}
+              {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
             </div>
+            <PillButton href={data.buttonLink.href} label={data.buttonLabel || data.buttonLink.label} variant="secondary" />
           </div>
         )}
 

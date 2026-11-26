@@ -13,6 +13,7 @@ export default {
     {
       type: "contact_map_hero",
       data: {
+        image: img("nature/lake.jpg"),
         mapEmbedUrl:
           "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2402.730303649666!2d-1.1448831230006277!3d52.9531818722421!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4879c3d4abfca783%3A0xb3515cf8bfa00cb3!2sMotorpoint%20Arena%20Nottingham!5e0!3m2!1sen!2suk!4v1710000000000!5m2!1sen!2suk",
         tag: "Our Weekly Sunday Services",
@@ -61,6 +62,7 @@ export default {
     {
       type: "directions",
       data: {
+        tag: "Directions",
         heading: "Visiting Us",
         address: "Motorpoint Arena Nottingham, Bolero Sq, Nottingham, England NG1 1LA, United Kingdom",
         items: [

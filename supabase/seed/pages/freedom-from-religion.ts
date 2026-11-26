@@ -1,6 +1,6 @@
 // Old site: /freedom-from-religion (wording verbatim from old-site-content.json).
 import old from "../old-site-content.json";
-import { article, button, paragraphs, type SeedPage } from "./helpers";
+import { article, button, img, paragraphs, type SeedPage } from "./helpers";
 
 type S = { kind: string; [k: string]: unknown };
 const sections = old.pages["freedom-from-religion"].sections as S[];
@@ -18,11 +18,11 @@ export default {
   title: "Freedom from Religion",
   seo: { title: "Be free from religion | The Light City Church", description: "Freedom and peace with God is free. The only requirement is faith in Jesus Christ. Pray the prayer of salvation today." },
   sections: [
-    { type: "page_hero", data: { eyebrow: "", heading: hero.heading, subheading: hero.subheading, image: null, buttons: [] } },
+    { type: "page_hero", data: { eyebrow: "", heading: hero.heading, subheading: hero.subheading, image: img("nature/meadow.jpg"), buttons: [] } },
     { type: "rich_text", data: { heading: "", body: article(body.paragraphs), align: "left" } },
-    { type: "scripture", data: { heading: prayer.heading, text: prayer.text, reference: "", buttons: [] } },
+    { type: "scripture", data: { heading: prayer.heading, text: prayer.text, reference: "", buttons: [], image: img("nature/meadow.jpg") } },
     { type: "rich_text", data: { heading: congrats.heading, body: paragraphs(congrats.text), align: "center" } },
     { type: "enquiry_form", data: { heading: form.heading, subheading: form.subheading, formSlug: "salvation", buttonLabel: "SEND" } },
-    { type: "cta", data: { heading: visit.heading, text: visit.text, buttons: visit.buttons.map((b, i) => button(`visit-${i + 1}`, b.label, b.href)) } },
+    { type: "cta", data: { eyebrow: "", image: img("nature/twilight.jpg"), heading: visit.heading, text: visit.text, buttons: visit.buttons.map((b, i) => button(`visit-${i + 1}`, b.label, b.href)) } },
   ],
 } satisfies SeedPage;

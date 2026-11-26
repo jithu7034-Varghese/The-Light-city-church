@@ -21,6 +21,8 @@ export const homeBlog = defineSection({
     headingItalic: f.text("Heading ending (italic, optional)", { max: 60 }),
     buttonLabel: f.text("Button label", { max: 60, default: "View All Devotionals" }),
     buttonLink: f.link("Button link", { default: { label: "", href: "/devotionals" } }),
+    readLabel: f.text("Link text on the large card (optional)", { max: 40, help: "e.g. Read devotional. Leave empty to show only the arrow." }),
+    fallbackCategory: f.text("Label for devotionals without a category", { max: 40, default: "Devotional" }),
   },
   Component: async ({ data }) => {
     const [featured, ...rest] = await getLatestPosts(4);
@@ -51,7 +53,7 @@ export const homeBlog = defineSection({
                 <img src={featured.image?.url ?? FALLBACK_IMAGE} alt={featured.image?.alt ?? ""} loading="lazy" className={h.fill} />
               </div>
               <div className={h.featuredBody}>
-                <span className={ds.chipCream}>{featured.category ?? "Devotional"}</span>
+                <span className={ds.chipCream}>{featured.category ?? data.fallbackCategory}</span>
                 <h3 className={h.featuredTitle}>{featured.title}</h3>
                 {featured.excerpt && <p className={h.featuredExcerpt}>{featured.excerpt}</p>}
                 <div className={h.meta}>
@@ -60,6 +62,7 @@ export const homeBlog = defineSection({
                     <span>{dateFormat.format(new Date(featured.publishedAt))}</span>
                   </span>
                   <span className={h.cardFoot}>
+                    {data.readLabel}
                     <ArrowRight />
                   </span>
                 </div>
@@ -76,7 +79,7 @@ export const homeBlog = defineSection({
                     <img src={post.image?.url ?? FALLBACK_IMAGE} alt={post.image?.alt ?? ""} loading="lazy" className={h.fill} />
                   </div>
                   <div className={h.postBody}>
-                    <span className={ds.chipCream}>{post.category ?? "Devotional"}</span>
+                    <span className={ds.chipCream}>{post.category ?? data.fallbackCategory}</span>
                     <h3 className={h.cardTitle}>{post.title}</h3>
                     {post.excerpt && <p className={`${h.cardText} ${h.postExcerpt}`}>{post.excerpt}</p>}
                   </div>

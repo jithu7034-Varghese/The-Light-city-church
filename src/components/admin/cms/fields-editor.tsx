@@ -119,6 +119,7 @@ function FieldControl({
       return (
         <fieldset className="space-y-3 rounded-lg border border-border p-4">
           <legend className="px-1 text-sm font-medium">{spec.label}</legend>
+          {spec.help && <p className="text-xs text-muted">{spec.help}</p>}
           <FieldsEditor specs={spec.fields} value={(value as Value) ?? {}} onChange={onChange} media={media} onMedia={onMedia} canUpload={canUpload} idPrefix={id} />
         </fieldset>
       );

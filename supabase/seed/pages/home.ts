@@ -22,6 +22,9 @@ export default {
         text: MISSION,
         image: img("thecitylight.webp"),
         buttons: [button("hero-btn-1", "GET INVOLVED", "/contact"), button("hero-btn-2", "WORSHIP WITH US", "/about")],
+        showServiceCard: true,
+        serviceCardLabel: "This Sunday",
+        serviceCardLink: link("Plan your visit", "/contact"),
       },
     },
     {
@@ -48,6 +51,7 @@ export default {
         text: "to open their eyes and to turn them from darkness to light, and from the power of Satan unto God, that they may receive forgiveness of sins and an inheritance among those who are sanctified by faith that is in Me.",
         reference: "ACTS 26:18",
         buttons: [],
+        image: img("nature/lake.jpg"),
       },
     },
     {
@@ -103,6 +107,8 @@ export default {
     {
       type: "service_times",
       data: {
+        tag: "Service times",
+        image: img("nature/hills.jpg"),
         heading: "Worship with us this Sunday",
         text: "Every Sunday, we get together for Jesus-centred praise and worship, and an anointed time in the Word preached by Pastor Ronnie Dube. We meet every Sunday 10:30am at The Motorpoint Arena in the City of Nottingham. We look forward to receiving you!",
         buttons: [button("service-btn-1", "FIND OUT MORE", "/contact")],
@@ -111,7 +117,10 @@ export default {
     {
       type: "home_services",
       data: {
+        tag: "Get connected",
         heading: "Ministries & Pathways",
+        buttonLabel: "View All Ministries",
+        buttonLink: link("", "/ministries"),
         items: [
           {
             id: "service-worship",
@@ -147,6 +156,7 @@ export default {
     {
       type: "home_gallery",
       data: {
+        tag: "Moments",
         heading: "Photo Gallery",
         text: "Explore key moments, ministries, and events that capture the heart of our community in action.",
         photos: [
@@ -167,11 +177,14 @@ export default {
         headingItalic: "Light",
         buttonLabel: "View All Devotionals",
         buttonLink: link("", "/devotionals"),
+        readLabel: "Read devotional",
+        fallbackCategory: "Devotional",
       },
     },
     {
       type: "giving",
       data: {
+        tag: "Giving",
         heading: "Tithes and Offerings",
         text: "The Bible speaks of giving to God through our tithes and offerings. We believe giving is an act of worship and thanksgiving to the Lord, and our response to Him for all that He has done for us.",
         buttonLabel: "PARTNERSHIP AND OFFERING",
@@ -180,6 +193,7 @@ export default {
     {
       type: "newsletter",
       data: {
+        tag: "Newsletter",
         heading: "Subscribe",
         text: "Sign up to receive our Daily Devotional, monthly newsletter and to hear from us about special conferences and events.",
         buttonLabel: "SIGN UP",
@@ -188,9 +202,10 @@ export default {
     {
       type: "home_prayer",
       data: {
+        eyebrow: "Prayer",
         heading: "Prayer",
         text: "Whatever the need we would like to join our faith with yours and stand in agreement with you in prayer. Please send through your prayer requests and testimonies, we look forward to hearing from you.",
-        image: img("citylights.jpeg"),
+        image: img("nature/meadow.jpg"),
         buttonLabel: "SEND US YOUR PRAYER REQUEST",
         buttonLink: link("", "/contact"),
       },

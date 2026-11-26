@@ -19,9 +19,9 @@ export default {
   title: "The Loved Circle",
   seo: { title: "The Loved Circle | The Light City Church", description: "A circle of sisterhood that helps you on a journey of self-discovery, healing, wellness, success and above all love." },
   sections: [
-    { type: "page_hero", data: { eyebrow: "The Loved Circle", heading: intro.heading, subheading: "", image: null, buttons: [] } },
+    { type: "page_hero", data: { eyebrow: "The Loved Circle", heading: intro.heading, subheading: "", image: img("nature/lake.jpg"), buttons: [] } },
     { type: "text_image", data: { heading: "", body: paragraphs(...intro.paragraphs), image: img("ronnyandanna.jpeg"), imageSide: "right", buttons: [] } },
-    { type: "scripture", data: { heading: "", text: quote.text, reference: "", buttons: quote.buttons.map((b, i) => button(`quote-${i + 1}`, b.label, b.href)) } },
+    { type: "scripture", data: { image: img("nature/hills.jpg"), heading: "", text: quote.text, reference: "", buttons: quote.buttons.map((b, i) => button(`quote-${i + 1}`, b.label, b.href)) } },
     {
       type: "podcast",
       data: {
@@ -33,6 +33,6 @@ export default {
       },
     },
     { type: "enquiry_form", data: { heading: form.heading, subheading: form.subheading, formSlug: "loved-circle", buttonLabel: "SEND" } },
-    { type: "scripture", data: { heading: "", text: verse.text, reference: verse.reference, buttons: [] } },
+    { type: "scripture", data: { heading: "", text: verse.text, reference: verse.reference, buttons: [], image: img("nature/lake.jpg") } },
   ],
 } satisfies SeedPage;

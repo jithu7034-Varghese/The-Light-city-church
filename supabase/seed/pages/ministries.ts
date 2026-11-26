@@ -17,12 +17,13 @@ export default {
         tag: "Paths of Faith",
         heading: "Our Ministries",
         subheading: "Empowering every person to live out their divine inheritance through worship, study, grace, and fellowship.",
-        image: img("thecitylight.webp"),
+        image: img("nature/meadow.jpg"),
       },
     },
     {
       type: "ministries_grid",
       data: {
+        tag: "Get connected",
         heading: "Ministries & Pathways",
         intro: "Explore our core areas of service and find where you can connect, learn, and grow.",
         items: [
@@ -76,6 +77,7 @@ export default {
         headingHighlight: "Community",
         text: "Whether you want to serve, connect in fellowship, or grow through Pastor Ronnie’s teaching, there is a place for you.",
         button: link("Connect With Us", "/contact"),
+        image: img("nature/hills.jpg"),
       },
     },
   ],

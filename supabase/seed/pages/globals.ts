@@ -16,6 +16,11 @@ export const GLOBAL_SEED = {
     phone: "",
     whatsapp: old.site.whatsapp,
     paypal: { business: old.site.giving.paypalBusiness, itemName: old.site.giving.itemName, currency: old.site.giving.currency },
+    sectionBackground: img("nature/lake.jpg"),
+    devotionals: {
+      heroEyebrow: "Daily Devotional",
+      heroImage: img("nature/meadow.jpg"),
+    },
     socials: [
       { id: "facebook", network: "facebook", url: old.site.social.facebook },
       { id: "instagram", network: "instagram", url: old.site.social.instagram },
@@ -39,6 +44,11 @@ export const GLOBAL_SEED = {
     cta: { label: "Get Involved", href: "/contact" },
   },
   footer: {
+    taglineAccent: "Christ in you.",
+    tagline: "The hope of glory.",
+    socialsHeading: "Socials",
+    visitHeading: "Visit",
+    sceneImage: img("nature/twilight.jpg"),
     ctaHeading: "Prayer",
     ctaText: (old.pages.home.sections.find((s) => s.kind === "cta") as { text: string }).text,
     ctaButton: { label: "SEND US YOUR PRAYER REQUEST", href: "/contact" },

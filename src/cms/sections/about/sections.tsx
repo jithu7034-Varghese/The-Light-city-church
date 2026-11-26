@@ -1,6 +1,7 @@
 // About page sections (server components), Figma "About — Desktop 1440" (12:61).
 // Every text, image and link comes from the section's fields or Site settings.
 import { defineSection } from "@/cms/define";
+import { BG_PHOTO_HELP } from "@/cms/sections/shared/help";
 import { f } from "@/cms/fields";
 import { ViewportSection } from "@/cms/sections/shared/animate";
 import { ds, AccentHeading, SectionTag, PillButton, PhotoBackground, PageHero } from "@/components/site/ds";
@@ -15,7 +16,7 @@ export const aboutHero = defineSection({
     tag: f.text("Small text above the title", { max: 80 }),
     heading: f.text("Title", { max: 120 }),
     subheading: f.textarea("Subtitle", { max: 400 }),
-    image: f.image("Background image"),
+    image: f.image("Background image", { help: BG_PHOTO_HELP }),
   },
   Component: ({ data, ctx }) => (
     <PageHero image={ctx.image(data.image) ?? ctx.background} eyebrow={data.tag} title={data.heading} text={data.subheading || undefined} className={a.hero} />
@@ -194,7 +195,7 @@ export const aboutVisit = defineSection({
     locationLabel: f.text("Label for the venue", { max: 60, default: "Location" }),
     showServiceTimes: f.boolean("Show service times and venue (from Site settings)", { default: true }),
     button: f.link("Button"),
-    image: f.image("Image"),
+    image: f.image("Background photo", { help: BG_PHOTO_HELP }),
   },
   Component: ({ data, ctx }) => {
     const img = ctx.image(data.image) ?? ctx.background;

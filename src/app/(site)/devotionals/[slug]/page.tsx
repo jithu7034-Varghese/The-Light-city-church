@@ -11,7 +11,7 @@ import { articleJsonLd, JsonLd } from "@/lib/seo/jsonld";
 import { tiptapToText } from "@/lib/tiptap/render";
 import { isValidSlug } from "@/lib/slug";
 import { formatPostDate, PostCard } from "../post-card";
-import { getSiteBackground } from "../site-background";
+import { getDevotionalsSettings } from "../site-background";
 import { ArticleBody } from "./article-body";
 
 // Known slugs are prerendered; new ones render on first visit. `ensureStatic = "navigation"`
@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: PageProps<"/devotionals/[slug
 export default async function DevotionalPage({ params }: PageProps<"/devotionals/[slug]">) {
   const { slug } = await params;
   if (!isValidSlug(slug)) notFound();
-  const [post, latest, site, background] = await Promise.all([getPostBySlug(slug), getLatestPosts(4), getGlobal("site"), getSiteBackground()]);
+  const [post, latest, { site, cfg, background }] = await Promise.all([getPostBySlug(slug), getLatestPosts(4), getDevotionalsSettings()]);
   if (!post) notFound();
   const related = latest.filter((p) => p.slug !== post.slug).slice(0, 3);
 
@@ -83,7 +83,7 @@ export default async function DevotionalPage({ params }: PageProps<"/devotionals
                   ))}
                 </ul>
               ) : (
-                <SectionTag plain>Devotional</SectionTag>
+                <SectionTag plain>{cfg.fallbackCategory}</SectionTag>
               )}
               <h1 className={ds.pageHeroTitle}>{post.title}</h1>
               <div className={d.byline}>
@@ -112,7 +112,7 @@ export default async function DevotionalPage({ params }: PageProps<"/devotionals
         <section className={d.articleSection}>
           <div className={ds.container}>
             <div className={d.articleColumn}>
-              <Link href="/devotionals" className={d.backLink}>← All devotionals</Link>
+              <Link href="/devotionals" className={d.backLink}>{cfg.backLabel}</Link>
               <div className={d.articleBody}>
                 <ArticleBody doc={post.content} />
               </div>
@@ -124,9 +124,9 @@ export default async function DevotionalPage({ params }: PageProps<"/devotionals
       {related.length > 0 && (
         <ViewportSection as="section" className={`${ds.cream} ${d.relatedSection}`}>
           <div className={ds.container}>
-            <AccentHeading text="More devotionals" as="h2" className={`${ds.h2} ${d.relatedTitle}`} />
+            <AccentHeading text={cfg.relatedHeading} as="h2" className={`${ds.h2} ${d.relatedTitle}`} />
             <div className={ds.cardGrid3}>
-              {related.map((p) => <PostCard key={p.slug} post={p} />)}
+              {related.map((p) => <PostCard key={p.slug} post={p} fallbackCategory={cfg.fallbackCategory} />)}
             </div>
           </div>
         </ViewportSection>

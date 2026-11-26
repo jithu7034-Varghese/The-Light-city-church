@@ -201,6 +201,20 @@
   gap: 24px;
 }
 .footerLogo { color: #ffffff; font-size: 24px; }
+.footerTagline {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-align: right;
+}
+.footerTaglineAccent { color: var(--amber); }
+@media (max-width: 767px) {
+  .footerTop { flex-direction: column; align-items: flex-start; }
+  .footerTagline { font-size: 16px; text-align: left; }
+}
 .footerLogo .logoMark {
   box-sizing: content-box;
   width: 52px;

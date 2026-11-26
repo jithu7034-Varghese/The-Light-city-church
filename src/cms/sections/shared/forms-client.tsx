@@ -136,7 +136,15 @@ export function EnquiryFormClient({ slug, fields, buttonLabel, sourcePage }: { s
   );
 }
 
-export function NewsletterFormClient({ buttonLabel }: { buttonLabel: string }) {
+export function NewsletterFormClient({
+  buttonLabel,
+  placeholder = "Email",
+  sendingLabel = "Signing up…",
+}: {
+  buttonLabel: string;
+  placeholder?: string;
+  sendingLabel?: string;
+}) {
   const { status, fieldErrors, send, turnstile, setToken } = useSubmit("newsletter", "/");
   if (status.kind === "ok") return <p className={s.alertOk} role="status">{status.message}</p>;
   return (
@@ -151,8 +159,8 @@ export function NewsletterFormClient({ buttonLabel }: { buttonLabel: string }) {
     >
       <div className={s.newsletterRow}>
         <label htmlFor="newsletter-email" className={s.srOnly}>Email</label>
-        <input id="newsletter-email" name="email" type="email" required autoComplete="email" placeholder="Email" className={s.input} aria-invalid={fieldErrors.email ? true : undefined} aria-describedby={fieldErrors.email ? "newsletter-email-err" : undefined} />
-        <SubmitButton label={status.kind === "sending" ? "Signing up…" : buttonLabel} disabled={status.kind === "sending"} />
+        <input id="newsletter-email" name="email" type="email" required autoComplete="email" placeholder={placeholder} className={s.input} aria-invalid={fieldErrors.email ? true : undefined} aria-describedby={fieldErrors.email ? "newsletter-email-err" : undefined} />
+        <SubmitButton label={status.kind === "sending" ? sendingLabel : buttonLabel} disabled={status.kind === "sending"} />
       </div>
       {fieldErrors.email && <p id="newsletter-email-err" className={s.fieldError}>{fieldErrors.email}</p>}
       {status.kind === "error" && <p className={`${s.alertError} ${s.alertSpaced}`} role="alert">{status.message}</p>}

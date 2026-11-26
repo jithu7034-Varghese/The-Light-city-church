@@ -43,19 +43,47 @@ const siteFields = {
     { max: 10, titleKey: "network" },
   ),
   sectionBackground: f.image("Section background image", {
-    help: "A church photo shown behind the page background and the large call-to-action/footer areas, under a dark overlay. Leave empty for a plain dark gradient.",
+    help: "The standard nature photo behind photo sections (page headings, scripture, service times, prayer, calls to action) whenever a section has no photo of its own. Also the footer scene if the footer has none. Leave empty for a plain dark gradient.",
   }),
+  devotionals: f.group(
+    "Devotionals pages",
+    {
+      heroEyebrow: f.text("Heading: small text above the title (optional)", { max: 80, help: "e.g. DAILY DEVOTIONAL. Leave empty to hide it." }),
+      heroTitle: f.text("Heading: title", { max: 120, default: "Daily Light Devotionals" }),
+      heroText: f.textarea("Heading: text under the title", {
+        max: 400,
+        default: "Grow in the accurate teaching of the Gospel of grace. Read, reflect and pray with Pastor Ronnie Dube.",
+      }),
+      allLabel: f.text("Filter button for all devotionals", { max: 40, default: "All" }),
+      loadingText: f.text("Text while the list loads", { max: 80, default: "Loading devotionals…" }),
+      emptyText: f.text("Text when there are no devotionals yet", { max: 160, default: "New devotionals are coming soon." }),
+      unknownCategoryText: f.text("Text for a category that doesn't exist", { max: 160, default: "That category doesn't exist." }),
+      seeAllLabel: f.text("Link back to all devotionals", { max: 60, default: "See all devotionals" }),
+      emptyPageText: f.text("Text for a page number past the end", { max: 160, default: "No devotionals on this page." }),
+      backToLatestLabel: f.text("Link back to the first page", { max: 60, default: "Back to the latest" }),
+      newerLabel: f.text("Newer page button", { max: 40, default: "← Newer" }),
+      olderLabel: f.text("Older page button", { max: 40, default: "Older →" }),
+      pageStatus: f.text("Page counter", { max: 60, default: "Page {page} of {pages}", help: "{page} and {pages} are replaced by the numbers." }),
+      fallbackCategory: f.text("Label for devotionals without a category", { max: 40, default: "Devotional" }),
+      backLabel: f.text("Devotional page: link back to the list", { max: 60, default: "← All devotionals" }),
+      relatedHeading: f.text("Devotional page: heading above more devotionals", { max: 80, default: "More devotionals" }),
+      heroImage: f.image("Heading photo", { help: "Nature photo behind the heading of the devotionals list. A devotional's own featured image is used on its page. Leave empty to use the Section background image above." }),
+    },
+    { help: "Wording and the heading photo for /devotionals and each devotional page." },
+  ),
 };
 
 const navbarFields = {
+  logoImage: f.image("Logo image (optional)", { help: "The crown logo, shown in front of the logo text in the header and footer." }),
   logoText: f.text("Logo text (bold part)", { max: 30, default: "City" }),
   logoAccent: f.text("Logo text (light part)", { max: 30, default: "Light" }),
-  logoImage: f.image("Logo image (optional, replaces the text)"),
   items: f.list("Menu items", "Menu item", linkItem, { max: 10, titleKey: "label" }),
   cta: f.link("Button on the right"),
 };
 
 const footerFields = {
+  taglineAccent: f.text("Tagline: first part, in amber (optional)", { max: 60, help: "Shown top right, e.g. CHRIST IN YOU. Leave both tagline parts empty to hide it." }),
+  tagline: f.text("Tagline: rest, in white (optional)", { max: 80, help: "e.g. THE HOPE OF GLORY." }),
   ctaHeading: f.text("Call-to-action heading", { max: 160 }),
   ctaText: f.textarea("Call-to-action text", { max: 600 }),
   ctaButton: f.link("Call-to-action button"),
@@ -65,10 +93,16 @@ const footerFields = {
     { heading: f.text("Column heading", { max: 60 }), links: f.list("Links", "Link", linkItem, { max: 12, titleKey: "label" }) },
     { max: 5, titleKey: "heading" },
   ),
-  showContact: f.boolean("Show email, WhatsApp and service times (from Site settings)", { default: true }),
   showSocials: f.boolean("Show social media links (from Site settings)", { default: true }),
+  socialsHeading: f.text("Heading above the social links (optional)", { max: 40, help: "e.g. SOCIALS. Leave empty for no heading." }),
+  showContact: f.boolean("Show email, WhatsApp and service times (from Site settings)", { default: true }),
+  visitHeading: f.text("Heading above the service times (optional)", { max: 40, help: "e.g. VISIT. Leave empty for no heading." }),
+  whatsappLabel: f.text("WhatsApp link text", { max: 40, default: "WhatsApp" }),
   copyright: f.text("Copyright line", { max: 200 }),
   brandText: f.text("Large brand text", { max: 30, default: "LIGHT CITY" }),
+  sceneImage: f.image("Scene photo at the top of the footer", {
+    help: "A wide evening/nature photo that fades into the dark footer. Leave empty to use the Section background image from Site settings.",
+  }),
 };
 
 const announcementFields = {

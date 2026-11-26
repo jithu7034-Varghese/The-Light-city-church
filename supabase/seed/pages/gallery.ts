@@ -15,12 +15,13 @@ export default {
         tag: "Life in Focus",
         heading: "Capturing Our Faith",
         subheading: "A glimpse into the worship and fellowship of our church family.",
-        image: img("thecitylight.webp"),
+        image: img("nature/lake.jpg"),
       },
     },
     {
       type: "gallery_grid",
       data: {
+        tag: "Gallery",
         heading: "Moments in Community",
         intro: "Click on any photograph to view it in full size.",
         items: [

@@ -3,7 +3,8 @@
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
 import { ViewportSection } from "@/cms/sections/shared/animate";
-import { AccentHeading, PageHero, ds } from "@/components/site/ds";
+import { AccentHeading, PageHero, SectionTag, ds } from "@/components/site/ds";
+import { BG_PHOTO_HELP, TAG_HELP } from "@/cms/sections/shared/help";
 import { GalleryGrid, type GalleryPhoto } from "./gallery-grid";
 import g from "./gallery.module.css";
 
@@ -14,7 +15,7 @@ export const galleryHero = defineSection({
     tag: f.text("Small text above the title", { max: 80 }),
     heading: f.text("Title", { max: 120 }),
     subheading: f.textarea("Subtitle", { max: 400 }),
-    image: f.image("Background image"),
+    image: f.image("Background image", { help: BG_PHOTO_HELP }),
   },
   Component: ({ data, ctx }) => (
     <PageHero
@@ -31,6 +32,7 @@ export const galleryGrid = defineSection({
   label: "Gallery: photo grid",
   description: "Photos that open full size, with a caption, when clicked.",
   fields: {
+    tag: f.text("Small text above the heading", { max: 80, help: TAG_HELP }),
     heading: f.text("Heading", { max: 160 }),
     intro: f.textarea("Intro", { max: 800 }),
     items: f.list(
@@ -54,9 +56,10 @@ export const galleryGrid = defineSection({
     return (
       <ViewportSection as="section" className={ds.section}>
         <div className={ds.container}>
-          {(data.heading || data.intro) && (
+          {(data.tag || data.heading || data.intro) && (
             <div className={ds.sectionHeader}>
               <div className={ds.sectionHeaderText}>
+                {data.tag && <SectionTag>{data.tag}</SectionTag>}
                 {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
                 {data.intro && <p className={`${ds.lead} ${g.intro}`}>{data.intro}</p>}
               </div>

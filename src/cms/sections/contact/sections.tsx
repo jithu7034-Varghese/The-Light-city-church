@@ -5,40 +5,34 @@ import { f } from "@/cms/fields";
 import { ViewportSection } from "@/cms/sections/shared/animate";
 import { Icon, iconField, paragraphsOf } from "@/cms/sections/about/icons";
 import { ds, AccentHeading, SectionTag, PillButton, PhotoBackground } from "@/components/site/ds";
+import { BG_PHOTO_HELP } from "@/cms/sections/shared/help";
+import { mapEmbedField, safeMapEmbed } from "@/cms/sections/shared/map-embed";
 import { ContactForm } from "./contact-form";
 import c from "./contact.module.css";
-
-const MAP_EMBED = /^https:\/\/www\.google\.com\/maps\/embed\?[^\s"'<>]*$/;
-
-const mapEmbedField = (() => {
-  const base = f.text("Google Maps embed link (optional)", {
-    max: 2000,
-    help: "In Google Maps: Share → Embed a map → copy only the https://www.google.com/maps/embed?… address from the code.",
-  });
-  return { ...base, zod: base.zod.refine((v) => v === "" || MAP_EMBED.test(v), "Paste a https://www.google.com/maps/embed?… link") };
-})();
 
 export const contactMapHero = defineSection({
   type: "contact_map_hero",
   label: "Contact: map with service card",
   description: "Full-width map, a heading, and a card with the next service from Site settings.",
   fields: {
-    mapEmbedUrl: mapEmbedField,
+    // Same order as on the page: title card, then the service card top to bottom, then photos.
     tag: f.text("Small text above the title", { max: 80 }),
     headingLine1: f.text("Title, first line", { max: 80 }),
     headingLine2: f.text("Title, second line (optional)", { max: 80 }),
     subheading: f.textarea("Subtitle", { max: 400 }),
     cardBadge: f.text("Card badge", { max: 40, default: "Next Service" }),
-    cardImage: f.image("Card image (optional)"),
+    mapEmbedUrl: mapEmbedField,
     welcomeText: f.text("Card note (optional)", { max: 60, placeholder: "All welcome" }),
     footerLabel: f.text("Card footer label (optional)", { max: 60, placeholder: "Senior Pastor" }),
     footerValue: f.text("Card footer text (optional)", { max: 80, placeholder: "Pastor Ronnie Dube" }),
     directions: f.link("Directions button", { help: "e.g. a https://maps.google.com/?q=… link." }),
+    cardImage: f.image("Card image (optional)"),
+    image: f.image("Background photo", { help: BG_PHOTO_HELP }),
   },
   Component: ({ data, ctx }) => {
     const service = ctx.site.serviceTimes[0];
     const img = ctx.image(data.cardImage);
-    const mapUrl = MAP_EMBED.test(data.mapEmbedUrl) ? data.mapEmbedUrl : "";
+    const mapUrl = safeMapEmbed(data.mapEmbedUrl);
     const when = service ? [service.day, service.time].filter(Boolean).join(" ") : "";
     const where = service ? [service.venue, service.address].filter(Boolean).join(", ") : "";
     const title = [data.headingLine1, data.headingLine2].filter(Boolean).join(" ");
@@ -46,7 +40,7 @@ export const contactMapHero = defineSection({
     const hasButton = data.directions.href && data.directions.label;
     return (
       <section className={`${ds.pageHero} ${c.hero}`} data-hero-photo>
-        <PhotoBackground image={ctx.background} zoom priority />
+        <PhotoBackground image={ctx.image(data.image) ?? ctx.background} zoom priority />
         <div className={`${ds.container} ${c.heroRow}`}>
           <div className={`${ds.pageHeroCard} ${c.heroCard}`}>
             {data.tag && <SectionTag plain>{data.tag}</SectionTag>}
@@ -153,21 +147,6 @@ export const contactForm = defineSection({
     tag: f.text("Small text above the heading", { max: 80 }),
     heading: f.text("Heading", { max: 160 }),
     text: f.textarea("Text", { max: 1200, help: "Leave a blank line between paragraphs." }),
-    nameLabel: f.text("Name label", { max: 60, default: "Full Name *" }),
-    namePlaceholder: f.text("Name placeholder", { max: 80, default: "John Doe" }),
-    emailLabel: f.text("Email label", { max: 60, default: "Email Address *" }),
-    emailPlaceholder: f.text("Email placeholder", { max: 80, default: "john@example.com" }),
-    phoneLabel: f.text("Phone label", { max: 60, default: "Phone Number" }),
-    phonePlaceholder: f.text("Phone placeholder", { max: 80, default: "+44 7123 456789" }),
-    subjectLabel: f.text("Subject label", { max: 60, default: "Subject" }),
-    subjectPlaceholder: f.text("Subject placeholder", { max: 80, default: "How can we help?" }),
-    messageLabel: f.text("Message label", { max: 60, default: "Message *" }),
-    messagePlaceholder: f.text("Message placeholder", { max: 120, default: "Write your message or prayer request here..." }),
-    buttonLabel: f.text("Button text", { max: 60, default: "Send Message" }),
-    sendingLabel: f.text("Button text while sending", { max: 60, default: "Sending Message..." }),
-    successTitle: f.text("Success heading", { max: 80, default: "Message sent successfully!", help: "The message under it is the form's success message (Forms settings)." }),
-    errorTitle: f.text("Error heading", { max: 80, default: "Failed to send message." }),
-    errorText: f.text("Error text if the connection fails", { max: 200, default: "There was a problem submitting your request. Please try again." }),
     cards: f.list(
       "Info cards beside the form",
       "Card",
@@ -183,6 +162,21 @@ export const contactForm = defineSection({
       },
       { max: 6, titleKey: "title" },
     ),
+    nameLabel: f.text("Name label", { max: 60, default: "Full Name *" }),
+    namePlaceholder: f.text("Name placeholder", { max: 80, default: "John Doe" }),
+    emailLabel: f.text("Email label", { max: 60, default: "Email Address *" }),
+    emailPlaceholder: f.text("Email placeholder", { max: 80, default: "john@example.com" }),
+    phoneLabel: f.text("Phone label", { max: 60, default: "Phone Number" }),
+    phonePlaceholder: f.text("Phone placeholder", { max: 80, default: "+44 7123 456789" }),
+    subjectLabel: f.text("Subject label", { max: 60, default: "Subject" }),
+    subjectPlaceholder: f.text("Subject placeholder", { max: 80, default: "How can we help?" }),
+    messageLabel: f.text("Message label", { max: 60, default: "Message *" }),
+    messagePlaceholder: f.text("Message placeholder", { max: 120, default: "Write your message or prayer request here..." }),
+    buttonLabel: f.text("Button text", { max: 60, default: "Send Message" }),
+    sendingLabel: f.text("Button text while sending", { max: 60, default: "Sending Message..." }),
+    successTitle: f.text("Success heading", { max: 80, default: "Message sent successfully!", help: "The message under it is the form's success message (Forms settings)." }),
+    errorTitle: f.text("Error heading", { max: 80, default: "Failed to send message." }),
+    errorText: f.text("Error text if the connection fails", { max: 200, default: "There was a problem submitting your request. Please try again." }),
   },
   Component: ({ data, ctx }) => {
     const { tag, heading, text, cards, ...formText } = data;

@@ -7,7 +7,16 @@ const FALLBACK_IMAGE = "/citylights.jpeg";
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/London" });
 export const formatPostDate = (iso: string) => dateFmt.format(new Date(iso));
 
-export function PostCard({ post, showExcerpt = true }: { post: PublicPostCard; showExcerpt?: boolean }) {
+export function PostCard({
+  post,
+  showExcerpt = true,
+  fallbackCategory = "Devotional",
+}: {
+  post: PublicPostCard;
+  showExcerpt?: boolean;
+  /** Site settings → Devotionals pages → label for devotionals without a category. */
+  fallbackCategory?: string;
+}) {
   return (
     <Link href={`/devotionals/${post.slug}`} className={`${ds.card} ${ds.reveal} ${d.postCard}`}>
       <div className={d.postCardMedia}>
@@ -16,7 +25,7 @@ export function PostCard({ post, showExcerpt = true }: { post: PublicPostCard; s
         <img src={post.image?.url ?? FALLBACK_IMAGE} alt={post.image?.alt ?? ""} loading="lazy" decoding="async" className={d.postCardImage} />
       </div>
       <div className={d.postCardBody}>
-        <span className={ds.chipCream}>{post.category ?? "Devotional"}</span>
+        <span className={ds.chipCream}>{post.category ?? fallbackCategory}</span>
         <h3 className={`${ds.h4} ${d.postCardTitle}`}>{post.title}</h3>
         {showExcerpt && post.excerpt && <p className={`${ds.small} ${d.postCardExcerpt}`}>{post.excerpt}</p>}
         <p className={d.postCardMeta}>

@@ -3,7 +3,7 @@ import posts from "../supabase/seed/posts.json";
 import oldSite from "../supabase/seed/old-site-content.json";
 import { legacyRedirects, oldDevotionalSlug } from "@/lib/seo/legacy-redirects";
 import { articleJsonLd, churchJsonLd, serializeJsonLd } from "@/lib/seo/jsonld";
-import type { SiteData } from "@/cms/globals";
+import { GLOBALS, type SiteData } from "@/cms/globals";
 
 const rules = legacyRedirects(posts, oldSite.redirects);
 const destinationFor = (path: string) => {
@@ -65,6 +65,7 @@ const site: SiteData = {
   paypal: { business: "", itemName: "", currency: "GBP" },
   socials: [{ id: "f", network: "facebook", url: "https://www.facebook.com/102820662239782" }, { id: "bad", network: "x", url: "javascript:alert(1)" }],
   sectionBackground: null,
+  devotionals: GLOBALS.site.parse({}).devotionals,
 };
 
 describe("JSON-LD", () => {

@@ -10,6 +10,11 @@ export const SEED_IMAGES = {
   "thecitylight.webp": "“Welcome to The Light City Church” with three crosses above the empty tomb",
   "logo1.png": "A crown of thorns",
   "citylights.jpeg": "Sunrise over a mountain peak",
+  // Calm nature photos behind the photo sections (hero, scripture, service times, prayer, CTA, footer).
+  "nature/lake.jpg": "A calm lake at sunrise with mist over the water",
+  "nature/hills.jpg": "Green hills with a winding river under a blue sky",
+  "nature/meadow.jpg": "A golden meadow at sunset with mountains behind",
+  "nature/twilight.jpg": "A valley at twilight under a starry sky and glowing clouds",
 } as const;
 export type SeedImageFile = keyof typeof SEED_IMAGES;
 

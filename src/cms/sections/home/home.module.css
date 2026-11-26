@@ -147,6 +147,7 @@
   line-height: 1.5;
   color: var(--muted);
 }
+.sundayLink { margin-top: 6px; }
 
 /* Small laptops / landscape tablets: not enough room beside the rocks, so the intro and card sit
    at the top, either side of the artwork's title. */

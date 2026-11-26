@@ -1,6 +1,6 @@
 // Old site: /partner-with-us (wording verbatim from old-site-content.json).
 import old from "../old-site-content.json";
-import { paragraphs, type SeedPage } from "./helpers";
+import { img, paragraphs, type SeedPage } from "./helpers";
 
 type S = { kind: string; [k: string]: unknown };
 const sections = old.pages.give.sections as S[];
@@ -16,9 +16,9 @@ export default {
   title: "Partner with us",
   seo: { title: "Partner with us | The Light City Church", description: "Monthly partners are an essential part of this ministry. Give online through PayPal." },
   sections: [
-    { type: "page_hero", data: { eyebrow: "Give", heading: "Partner with us", subheading: "", image: null, buttons: [] } },
+    { type: "page_hero", data: { eyebrow: "Give", heading: "Partner with us", subheading: "", image: img("nature/hills.jpg"), buttons: [] } },
     { type: "rich_text", data: { heading: why.heading, body: paragraphs(...why.paragraphs), align: "left" } },
-    { type: "giving", data: { heading: tithes.heading, text: tithes.text, buttonLabel: giving.buttonLabel } },
-    { type: "scripture", data: { heading: "", text: proverb.text, reference: proverb.reference, buttons: [] } },
+    { type: "giving", data: { tag: "Giving", heading: tithes.heading, text: tithes.text, buttonLabel: giving.buttonLabel, note: "Secure giving through PayPal." } },
+    { type: "scripture", data: { heading: "", text: proverb.text, reference: proverb.reference, buttons: [], image: img("nature/twilight.jpg") } },
   ],
 } satisfies SeedPage;

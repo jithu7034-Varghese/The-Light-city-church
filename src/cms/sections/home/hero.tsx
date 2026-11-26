@@ -16,8 +16,17 @@ export const homeHero = defineSection({
     heading: f.text("Title", { max: 120 }),
     headingLine2: f.text("Title, second line (optional)", { max: 120 }),
     text: f.textarea("Text under the title", { max: 600 }),
-    image: f.image("Background image", { help: "Leave empty to use the standard church background." }),
     buttons: f.list("Buttons", "Button", buttonFields, { max: 2, titleKey: "label" }),
+    showServiceCard: f.boolean("Sunday card: show it", {
+      default: true,
+      help: "The white card on the right. Its time, venue and address come from Site settings → Service times (the first one).",
+    }),
+    serviceCardLabel: f.text("Sunday card: small label at the top (optional)", {
+      max: 40,
+      help: "e.g. THIS SUNDAY. Leave empty to show the day from Site settings.",
+    }),
+    serviceCardLink: f.link("Sunday card: link at the bottom (optional)", { help: "e.g. Plan your visit → /contact. Leave empty to hide it." }),
+    image: f.image("Background image", { help: "The welcome artwork across the hero. Leave empty to use the standard church background." }),
   },
   Component: ({ data, ctx }) => {
     const img = ctx.image(data.image);
@@ -43,12 +52,15 @@ export const homeHero = defineSection({
               <PillButtons items={data.buttons} className={`${ds.btnRow} ${h.heroButtons} ${h.rise} ${h.rise3}`} />
             </div>
 
-            {service && (service.time || service.venue || service.day) && (
+            {data.showServiceCard && service && (service.time || service.venue || service.day) && (
               <div className={`${h.sundayCard} ${h.rise} ${h.rise4}`}>
-                {service.day && <p className={h.sundayDay}>{service.day}</p>}
+                {(data.serviceCardLabel || service.day) && <p className={h.sundayDay}>{data.serviceCardLabel || service.day}</p>}
                 {service.time && <p className={h.sundayTime}>{service.time}</p>}
                 {service.venue && <p className={h.sundayVenue}>{service.venue}</p>}
                 {service.address && <p className={h.sundayAddress}>{service.address}</p>}
+                {data.serviceCardLink.href && data.serviceCardLink.label && (
+                  <a href={data.serviceCardLink.href} className={`${ds.textLink} ${h.sundayLink}`}>{data.serviceCardLink.label}</a>
+                )}
               </div>
             )}
           </div>

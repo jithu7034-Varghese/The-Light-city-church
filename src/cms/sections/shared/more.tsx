@@ -7,6 +7,8 @@ import { getPublicForm } from "@/cms/queries";
 import { getLatestPosts } from "@/lib/posts/public";
 import { AccentHeading, PhotoBackground, PillButton, PillButtons, SectionTag, ds } from "@/components/site/ds";
 import { ViewportSection } from "./animate";
+import { BG_PHOTO_HELP, TAG_HELP } from "./help";
+import { mapEmbedField, safeMapEmbed } from "./map-embed";
 import { EnquiryFormClient, NewsletterFormClient } from "./forms-client";
 import s from "./shared.module.css";
 
@@ -55,9 +57,11 @@ export const serviceTimes = defineSection({
   label: "Service times",
   description: "Times and venue come from Site settings.",
   fields: {
+    tag: f.text("Small text above the heading", { max: 80, help: TAG_HELP }),
     heading: f.text("Heading", { max: 160 }),
     text: f.textarea("Text", { max: 1200 }),
     buttons: f.list("Buttons", "Button", buttonFields, { max: 2, titleKey: "label" }),
+    image: f.image("Background photo", { help: BG_PHOTO_HELP }),
   },
   Component: ({ data, ctx }) => {
     const times = ctx.site.serviceTimes;
@@ -65,8 +69,9 @@ export const serviceTimes = defineSection({
       <ViewportSection className={`${ds.section} ${s.sec} ${s.white}`}>
         <div className={ds.container}>
           <div className={`${ds.photo} ${s.servicePanel} ${times.length ? "" : s.servicePanelSolo}`}>
-            <PhotoBackground image={ctx.background} />
+            <PhotoBackground image={ctx.image(data.image) ?? ctx.background} />
             <div className={`${ds.reveal} ${s.serviceText}`}>
+              {data.tag && <SectionTag plain>{data.tag}</SectionTag>}
               {data.heading && <AccentHeading text={data.heading} as="h2" className={`${ds.h2} ${s.onPhotoHeading}`} />}
               {data.text && <p className={s.onPhotoText}>{data.text}</p>}
               <PillButtons items={data.buttons} first="onPhoto" rest="secondaryOnPhoto" className={`${ds.btnRow} ${s.buttons}`} />
@@ -109,9 +114,16 @@ export const giving = defineSection({
   label: "Giving (PayPal)",
   description: "The PayPal account comes from Site settings.",
   fields: {
+    tag: f.text("Small text above the heading", { max: 80, help: TAG_HELP }),
     heading: f.text("Heading", { max: 160 }),
     text: f.textarea("Text", { max: 1500 }),
     buttonLabel: f.text("Button label", { max: 60, default: "Give" }),
+    note: f.text("Small note under the button (optional)", { max: 120, help: "e.g. Secure giving through PayPal. Leave empty to hide it." }),
+    notReadyText: f.text("Message while online giving isn't set up", {
+      max: 200,
+      default: "Online giving is being set up. Please speak to us on Sunday.",
+      help: "Shown instead of the button until a PayPal account is entered in Site settings.",
+    }),
   },
   Component: ({ data, ctx }) => {
     const pp = ctx.site.paypal;
@@ -122,6 +134,7 @@ export const giving = defineSection({
         <div className={`${ds.container} ${s.pairInner}`}>
           <div className={s.givingCard}>
             <div className={s.givingText}>
+              {data.tag && <SectionTag className={s.cardTag}>{data.tag}</SectionTag>}
               {data.heading && <AccentHeading text={data.heading} as="h2" className={`${ds.h2} ${s.givingTitle}`} />}
               {data.text && <p className={ds.body}>{data.text}</p>}
             </div>
@@ -138,9 +151,10 @@ export const giving = defineSection({
                     <img src="/icons/arrow-up-right-dark.svg" alt="" width={16} height={16} />
                   </span>
                 </button>
+                {data.note && <p className={`${ds.small} ${s.givingNote}`}>{data.note}</p>}
               </form>
             ) : (
-              <p className={`${ds.small} ${s.givingAction}`}>Online giving is being set up. Please speak to us on Sunday.</p>
+              data.notReadyText && <p className={`${ds.small} ${s.givingAction}`}>{data.notReadyText}</p>
             )}
           </div>
         </div>
@@ -153,18 +167,26 @@ export const newsletter = defineSection({
   type: "newsletter",
   label: "Newsletter sign-up",
   fields: {
+    tag: f.text("Small text above the heading", { max: 80, help: TAG_HELP }),
     heading: f.text("Heading", { max: 160 }),
     text: f.textarea("Text", { max: 800 }),
+    emailPlaceholder: f.text("Text inside the email box", { max: 60, default: "Email" }),
     buttonLabel: f.text("Button label", { max: 40, default: "Sign up" }),
+    sendingLabel: f.text("Button text while sending", { max: 40, default: "Signing up…" }),
   },
   Component: ({ data }) => (
     <section className={`${ds.section} ${s.sec} ${s.white} ${s.newsletter}`}>
       <div className={`${ds.container} ${s.pairInner}`}>
         <div className={s.newsletterCard}>
+          {data.tag && <SectionTag className={s.cardTag}>{data.tag}</SectionTag>}
           {data.heading && <AccentHeading text={data.heading} as="h2" className={`${ds.h3} ${s.newsletterTitle}`} />}
           {data.text && <p className={ds.body}>{data.text}</p>}
           <div className={ds.cardFoot}>
-            <NewsletterFormClient buttonLabel={data.buttonLabel || "Sign up"} />
+            <NewsletterFormClient
+              buttonLabel={data.buttonLabel || "Sign up"}
+              placeholder={data.emailPlaceholder || "Email"}
+              sendingLabel={data.sendingLabel || "Signing up…"}
+            />
           </div>
         </div>
       </div>
@@ -324,19 +346,23 @@ export const directions = defineSection({
   type: "directions",
   label: "Directions",
   fields: {
+    tag: f.text("Small text above the heading", { max: 80, help: TAG_HELP }),
     heading: f.text("Heading", { max: 160 }),
     address: f.textarea("Address", { max: 300 }),
-    items: f.list("Ways to get here", "Option", { title: f.text("Title", { max: 80 }), text: f.textarea("Text", { max: 1200 }), link: f.link("Link (optional)") }, { max: 8, titleKey: "title" }),
+    mapEmbedUrl: { ...mapEmbedField, spec: { ...mapEmbedField.spec, help: "Shows a live map in the panel. In Google Maps: Share → Embed a map → copy only the https://www.google.com/maps/embed?… address. Leave empty for the plain panel." } },
     buttonLabel: f.text("Map button label", { max: 60, default: "Get directions" }),
+    items: f.list("Ways to get here", "Option", { title: f.text("Title", { max: 80 }), text: f.textarea("Text", { max: 1200 }), link: f.link("Link (optional)") }, { max: 8, titleKey: "title" }),
   },
   Component: ({ data }) => {
     const mapHref = data.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.address)}` : "";
+    const embed = safeMapEmbed(data.mapEmbedUrl);
     return (
       <ViewportSection className={`${ds.section} ${ds.cream} ${s.sec}`}>
         <div className={ds.container}>
-          {(data.heading || data.address) && (
+          {(data.tag || data.heading || data.address) && (
             <div className={ds.sectionHeader}>
               <div className={ds.sectionHeaderText}>
+                {data.tag && <SectionTag>{data.tag}</SectionTag>}
                 {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
                 {data.address && <p className={ds.lead}>{data.address}</p>}
               </div>
@@ -344,7 +370,17 @@ export const directions = defineSection({
           )}
           <div className={`${s.directions} ${mapHref ? "" : s.directionsSolo}`}>
             {mapHref && (
-              <div className={`${ds.reveal} ${s.mapPanel}`}>
+              <div className={`${ds.reveal} ${s.mapPanel} ${embed ? s.mapPanelLive : ""}`}>
+                {embed && (
+                  <iframe
+                    src={embed}
+                    className={s.mapEmbed}
+                    loading="lazy"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title={data.address ? `Map: ${data.address}` : "Map"}
+                  />
+                )}
                 <span className={s.mapPin} aria-hidden>
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 21s-7-6.1-7-11.5a7 7 0 1 1 14 0C19 14.9 12 21 12 21Z" />

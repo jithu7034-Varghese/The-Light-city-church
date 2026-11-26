@@ -3,7 +3,8 @@ import { defineSection } from "@/cms/define";
 import { f, type ImageRef } from "@/cms/fields";
 import type { SectionCtx } from "@/cms/define";
 import { ViewportSection } from "@/cms/sections/shared/animate";
-import { AccentHeading, ds, PillButton } from "@/components/site/ds";
+import { AccentHeading, ds, PillButton, SectionTag } from "@/components/site/ds";
+import { TAG_HELP } from "@/cms/sections/shared/help";
 import h from "./home.module.css";
 
 type Photo = { id: string; image: ImageRef; caption: string };
@@ -26,11 +27,12 @@ export const homeGallery = defineSection({
   label: "Home: photo collage",
   description: "Intro text and up to 4 photos in three columns, with a button.",
   fields: {
+    tag: f.text("Small text above the heading", { max: 80, help: TAG_HELP }),
     heading: f.text("Heading", { max: 120 }),
     text: f.textarea("Intro", { max: 600 }),
-    photos: f.list("Photos", "Photo", { image: f.image("Photo"), caption: f.text("Caption (optional)", { max: 60 }) }, { max: 4, titleKey: "caption", help: "Order: left, middle top, middle bottom, right." }),
     buttonLabel: f.text("Button label", { max: 60 }),
     buttonLink: f.link("Button link"),
+    photos: f.list("Photos", "Photo", { image: f.image("Photo"), caption: f.text("Caption (optional)", { max: 60 }) }, { max: 4, titleKey: "caption", help: "Order: left, middle top, middle bottom, right." }),
   },
   Component: ({ data, ctx }) => {
     const [p1, p2, p3, p4] = data.photos;
@@ -38,9 +40,10 @@ export const homeGallery = defineSection({
     return (
       <ViewportSection className={ds.section} id="gallery">
         <div className={ds.container}>
-          {(data.heading || data.text || (label && data.buttonLink.href)) && (
+          {(data.tag || data.heading || data.text || (label && data.buttonLink.href)) && (
             <div className={ds.sectionHeader}>
               <div className={ds.sectionHeaderText}>
+                {data.tag && <SectionTag>{data.tag}</SectionTag>}
                 {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
                 {data.text && <p className={`${ds.body} ${h.galleryIntro}`}>{data.text}</p>}
               </div>

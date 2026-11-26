@@ -16,7 +16,7 @@ export default {
         tag: "Welcome to Our House",
         heading: "Our Story & Vision",
         subheading: "To empower every man, woman, and child to live in the fulness of their inheritance in Christ.",
-        image: img("thecitylight.webp"),
+        image: img("nature/hills.jpg"),
       },
     },
     {
@@ -100,7 +100,7 @@ export default {
         locationLabel: "Location",
         showServiceTimes: true,
         button: link("Find out more", "/contact"),
-        image: img("thecitylight.webp"),
+        image: img("nature/meadow.jpg"),
       },
     },
   ],

@@ -1,7 +1,7 @@
 // Public site footer + announcement bar, driven by the published "footer", "site", "navbar" and
 // "announcement" globals. Server components.
-// Design: dark footer (#0B0F16) with the Site settings "Section background image" as the scene at
-// the top fading to dark, logo on a white badge, link columns with rules, legal row, wordmark.
+// Design: dark footer (#0B0F16) with a scene photo at the top fading to dark (Footer → scene photo,
+// else Site settings "Section background image"), logo, tagline, link columns, legal row, wordmark.
 import Link from "next/link";
 import shared from "@/cms/sections/shared/shared.module.css";
 import c from "./chrome.module.css";
@@ -50,6 +50,13 @@ export function SiteFooter({
       <div className={c.footerInner}>
         <div className={c.footerTop}>
           <Logo {...brand} className={c.footerLogo} />
+          {(footer.taglineAccent || footer.tagline) && (
+            <p className={c.footerTagline}>
+              {footer.taglineAccent && <span className={c.footerTaglineAccent}>{footer.taglineAccent}</span>}
+              {footer.taglineAccent && footer.tagline ? " " : ""}
+              {footer.tagline}
+            </p>
+          )}
         </div>
 
         <div className={c.footerScenespace}>
@@ -75,8 +82,11 @@ export function SiteFooter({
           ))}
           {socials.length > 0 && (
             <div className={c.footerColumn}>
-              {/* No CMS heading exists for this column; keep the rule aligned with the others. */}
-              <span className={c.footerHeadingSpacer} aria-hidden />
+              {footer.socialsHeading ? (
+                <p className={c.footerHeading}>{footer.socialsHeading}</p>
+              ) : (
+                <span className={c.footerHeadingSpacer} aria-hidden />
+              )}
               <ul className={c.footerLinks}>
                 {socials.map((s) => (
                   <li key={s.id}><a href={s.url} target="_blank" rel="noopener">{networkLabel(s.network)}</a></li>
@@ -86,7 +96,11 @@ export function SiteFooter({
           )}
           {contact && (site.serviceTimes.length > 0 || site.email || site.phone || site.whatsapp || ctaButton) && (
             <div className={`${c.footerColumn} ${c.footerVisit}`}>
-              <span className={c.footerHeadingSpacer} aria-hidden />
+              {footer.visitHeading ? (
+                <p className={c.footerHeading}>{footer.visitHeading}</p>
+              ) : (
+                <span className={c.footerHeadingSpacer} aria-hidden />
+              )}
               <ul className={c.footerLinks}>
                 {site.serviceTimes.map((t) => (
                   <li key={t.id} className={c.footerVisitItem}>
@@ -97,7 +111,7 @@ export function SiteFooter({
                 ))}
                 {site.email && <li><a href={`mailto:${site.email}`}>{site.email}</a></li>}
                 {site.phone && <li><a href={`tel:${site.phone.replace(/[^\d+]/g, "")}`}>{site.phone}</a></li>}
-                {site.whatsapp && safeHref(site.whatsapp) && <li><a href={site.whatsapp} target="_blank" rel="noopener">WhatsApp</a></li>}
+                {site.whatsapp && safeHref(site.whatsapp) && <li><a href={site.whatsapp} target="_blank" rel="noopener">{footer.whatsappLabel || "WhatsApp"}</a></li>}
               </ul>
               {ctaButton && <div className={c.footerCtaButton}>{ctaButton}</div>}
             </div>

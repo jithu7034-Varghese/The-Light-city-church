@@ -42,13 +42,17 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     getGlobal("site"),
     getGlobal("announcement"),
   ]);
-  const imageIds = [navbar.logoImage?.mediaId, site.sectionBackground?.mediaId].filter((id): id is string => Boolean(id)).sort();
+  const imageIds = [navbar.logoImage?.mediaId, site.sectionBackground?.mediaId, footer.sceneImage?.mediaId]
+    .filter((id): id is string => Boolean(id))
+    .sort();
   const media = await getMediaByIds(imageIds);
   const logoMedia = navbar.logoImage ? media[navbar.logoImage.mediaId] : undefined;
   const logo = logoMedia ? { url: logoMedia.url, alt: logoMedia.alt } : null;
-  // Site settings → "Section background image": the footer's scene (sections use it as the
-  // fallback photo through ctx.background).
-  const sceneMedia = site.sectionBackground ? media[site.sectionBackground.mediaId] : undefined;
+  // Footer scene: Footer → scene photo, else Site settings → "Section background image" (which is
+  // also the fallback photo for sections, through ctx.background).
+  const sceneMedia =
+    (footer.sceneImage ? media[footer.sceneImage.mediaId] : undefined) ??
+    (site.sectionBackground ? media[site.sectionBackground.mediaId] : undefined);
 
   return (
     <html lang="en-GB" className={`${outfit.variable} ${playfair.variable}`}>

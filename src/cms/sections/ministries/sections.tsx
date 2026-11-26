@@ -3,7 +3,8 @@
 import { defineSection } from "@/cms/define";
 import { f } from "@/cms/fields";
 import { ViewportSection } from "@/cms/sections/shared/animate";
-import { AccentHeading, PageHero, PhotoBackground, PillButton, ds } from "@/components/site/ds";
+import { AccentHeading, PageHero, PhotoBackground, PillButton, SectionTag, ds } from "@/components/site/ds";
+import { BG_PHOTO_HELP, TAG_HELP } from "@/cms/sections/shared/help";
 import m from "./ministries.module.css";
 
 export const ministriesHero = defineSection({
@@ -13,7 +14,7 @@ export const ministriesHero = defineSection({
     tag: f.text("Small text above the title", { max: 80 }),
     heading: f.text("Title", { max: 120 }),
     subheading: f.textarea("Subtitle", { max: 400 }),
-    image: f.image("Background image"),
+    image: f.image("Background image", { help: BG_PHOTO_HELP }),
   },
   Component: ({ data, ctx }) => (
     <PageHero
@@ -30,6 +31,7 @@ export const ministriesGrid = defineSection({
   label: "Ministries: list of ministries",
   description: "Numbered cards with an image, label, description, when and where.",
   fields: {
+    tag: f.text("Small text above the heading", { max: 80, help: TAG_HELP }),
     heading: f.text("Heading", { max: 160 }),
     intro: f.textarea("Intro", { max: 800 }),
     items: f.list(
@@ -50,9 +52,10 @@ export const ministriesGrid = defineSection({
   Component: ({ data, ctx }) => (
     <ViewportSection as="section" className={`${ds.section} ${ds.cream}`}>
       <div className={ds.container}>
-        {(data.heading || data.intro) && (
+        {(data.tag || data.heading || data.intro) && (
           <div className={ds.sectionHeader}>
             <div className={ds.sectionHeaderText}>
+              {data.tag && <SectionTag>{data.tag}</SectionTag>}
               {data.heading && <AccentHeading text={data.heading} as="h2" className={ds.h2} />}
               {data.intro && <p className={`${ds.lead} ${m.intro}`}>{data.intro}</p>}
             </div>
@@ -122,11 +125,12 @@ export const ministriesCta = defineSection({
     headingHighlight: f.text("Highlighted end of heading (optional)", { max: 60, help: "Shown in italics after the heading." }),
     text: f.textarea("Text", { max: 1200 }),
     button: f.link("Button"),
+    image: f.image("Background photo", { help: BG_PHOTO_HELP }),
   },
   // No image field on this section: the photo is the Site settings "Section background image".
   Component: ({ data, ctx }) => (
     <ViewportSection as="section" className={`${ds.photo} ${m.cta}`}>
-      <PhotoBackground image={ctx.background} />
+      <PhotoBackground image={ctx.image(data.image) ?? ctx.background} />
       <div className={ds.container}>
         <div className={`${ds.glass} ${ds.reveal} ${m.ctaCard}`}>
           {(data.heading || data.headingHighlight) && (

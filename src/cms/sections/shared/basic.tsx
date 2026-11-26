@@ -4,6 +4,7 @@ import { f, type RichText } from "@/cms/fields";
 import { TiptapContent } from "@/lib/tiptap/render";
 import { AccentHeading, PageHero, PhotoBackground, PillButtons, SectionTag, ds } from "@/components/site/ds";
 import { ViewportSection } from "./animate";
+import { BG_PHOTO_HELP } from "./help";
 import s from "./shared.module.css";
 
 const buttonFields = { label: f.text("Button label", { max: 80 }), link: f.link("Button link") };
@@ -30,8 +31,8 @@ export const pageHero = defineSection({
     eyebrow: f.text("Small text above the title", { max: 80 }),
     heading: f.text("Title", { max: 160 }),
     subheading: f.textarea("Subtitle", { max: 400 }),
-    image: f.image("Background image (optional)"),
     buttons: f.list("Buttons", "Button", buttonFields, { max: 3, titleKey: "label" }),
+    image: f.image("Background image (optional)", { help: BG_PHOTO_HELP }),
   },
   Component: ({ data, ctx }) => (
     <PageHero image={ctx.image(data.image) ?? ctx.background} eyebrow={data.eyebrow} title={data.heading} text={data.subheading || undefined}>
@@ -92,10 +93,11 @@ export const scripture = defineSection({
     text: f.textarea("Verse or quote", { max: 1500 }),
     reference: f.text("Reference", { max: 80, placeholder: "ACTS 26:18" }),
     buttons: f.list("Buttons", "Button", buttonFields, { max: 2, titleKey: "label" }),
+    image: f.image("Background photo", { help: BG_PHOTO_HELP }),
   },
   Component: ({ data, ctx }) => (
     <ViewportSection className={`${ds.photo} ${s.scripture}`}>
-      <PhotoBackground image={ctx.background} />
+      <PhotoBackground image={ctx.image(data.image) ?? ctx.background} />
       <div className={ds.container}>
         <div className={`${ds.glass} ${ds.reveal} ${s.scriptureCard}`}>
           <span className={s.rule} aria-hidden />
@@ -114,16 +116,19 @@ export const cta = defineSection({
   label: "Call to action",
   description: "Heading, short text and buttons.",
   fields: {
+    eyebrow: f.text("Small text above the heading", { max: 80, help: "Small amber label above the heading. Leave empty to hide it." }),
     heading: f.text("Heading", { max: 160 }),
     text: f.textarea("Text", { max: 1200 }),
     buttons: f.list("Buttons", "Button", buttonFields, { max: 3, titleKey: "label" }),
+    image: f.image("Background photo", { help: BG_PHOTO_HELP }),
   },
   Component: ({ data, ctx }) => (
     <ViewportSection className={`${ds.section} ${s.sec} ${s.white}`}>
       <div className={ds.container}>
         <div className={`${ds.photo} ${s.ctaPanel}`}>
-          <PhotoBackground image={ctx.background} />
+          <PhotoBackground image={ctx.image(data.image) ?? ctx.background} />
           <div className={`${ds.glass} ${ds.reveal} ${s.ctaCard}`}>
+            {data.eyebrow && <SectionTag plain>{data.eyebrow}</SectionTag>}
             {data.heading && <AccentHeading text={data.heading} as="h2" className={`${ds.h2} ${s.ctaHeading}`} />}
             {data.text && <p className={s.ctaText}>{data.text}</p>}
             <PillButtons items={data.buttons} first="onPhoto" rest="secondaryOnPhoto" className={`${ds.btnRow} ${s.buttonsCenter}`} />
@@ -140,9 +145,9 @@ export const textImage = defineSection({
   fields: {
     heading: f.text("Heading", { max: 160 }),
     body: f.richtext("Text"),
+    buttons: f.list("Buttons", "Button", buttonFields, { max: 2, titleKey: "label" }),
     image: f.image("Image"),
     imageSide: f.select("Image position", [{ value: "right", label: "Right" }, { value: "left", label: "Left" }] as const),
-    buttons: f.list("Buttons", "Button", buttonFields, { max: 2, titleKey: "label" }),
   },
   Component: ({ data, ctx }) => {
     const img = ctx.image(data.image);
