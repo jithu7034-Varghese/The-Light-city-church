@@ -1,61 +1,64 @@
 /* src/app/globals.css */
 
 :root {
-  /* Colors - Default Dark Obsidian Theme (matching the modernized premium style) */
-  --bg-primary: #0b0c0e; /* Deep obsidian charcoal */
-  --bg-secondary: #121418; /* Premium dark card background */
-  --text-primary: #f5f6f8;
-  --text-secondary: #9aa3b2;
-  --accent: #ffffff;
-  --accent-light: #17191e;
-  --accent-hover: #e2e8f0;
-  --border-color: rgba(245, 246, 248, 0.08);
-  --border-glow: rgba(0, 0, 0, 0.4);
-  --glass-bg: linear-gradient(135deg, rgba(20, 22, 28, 0.92) 0%, rgba(15, 17, 22, 0.88) 100%);
-  --glass-border: rgba(255, 255, 255, 0.09);
-  --glass-border-top: rgba(255, 255, 255, 0.09);
-  --glass-blur: 60px;
-  --glass-shadow: 
-    inset 0 1px 0px rgba(255, 255, 255, 0.08),
-    0 20px 40px rgba(0, 0, 0, 0.3);
-  
+  /* Colors - White theme: white page, dark text, light cards */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f8fa;
+  --text-primary: #0e1118;
+  --text-secondary: #5e6675;
+  --accent: #0e1118; /* dark fill for buttons and highlights; text on it is white */
+  --accent-light: #f1f3f6;
+  --accent-hover: #2b303b;
+  --border-color: rgba(14, 17, 24, 0.10);
+  --border-glow: rgba(14, 17, 24, 0.06);
+  --glass-bg: #ffffff;
+  --glass-border: rgba(14, 17, 24, 0.08);
+  --glass-border-top: rgba(14, 17, 24, 0.08);
+  --glass-blur: 0px;
+  --glass-shadow:
+    0 1px 2px rgba(14, 17, 24, 0.04),
+    0 12px 32px rgba(14, 17, 24, 0.06);
+
   /* Shadows */
-  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.7);
- 
+  --shadow-sm: 0 2px 8px rgba(14, 17, 24, 0.06);
+  --shadow-md: 0 12px 28px rgba(14, 17, 24, 0.08);
+  --shadow-lg: 0 24px 56px rgba(14, 17, 24, 0.10);
+
   /* Fonts */
   --font-sans: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-heading: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
- 
+
   /* Spacing */
   --container-max: 1280px;
   --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
- 
-[data-theme="dark"] {
-  /* Keep same as root to maintain unified dark premium style */
-  --bg-primary: #0b0c0e;
-  --bg-secondary: #121418;
-  --text-primary: #f5f6f8;
-  --text-secondary: #9aa3b2;
-  --accent: #ffffff;
-  --accent-light: #17191e;
-  --accent-hover: #e2e8f0;
-  --border-color: rgba(245, 246, 248, 0.08);
-  --border-glow: rgba(0, 0, 0, 0.4);
-  --glass-bg: linear-gradient(135deg, rgba(20, 22, 28, 0.92) 0%, rgba(15, 17, 22, 0.88) 100%);
-  --glass-border: rgba(255, 255, 255, 0.09);
-  --glass-border-top: rgba(255, 255, 255, 0.09);
-  --glass-blur: 60px;
-  --glass-shadow: 
-    inset 0 1px 0px rgba(255, 255, 255, 0.08),
-    0 20px 40px rgba(0, 0, 0, 0.3);
 
-  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.7);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  /* The public site is light only: same values as :root */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f8fa;
+  --text-primary: #0e1118;
+  --text-secondary: #5e6675;
+  --accent: #0e1118; /* dark fill for buttons and highlights; text on it is white */
+  --accent-light: #f1f3f6;
+  --accent-hover: #2b303b;
+  --border-color: rgba(14, 17, 24, 0.10);
+  --border-glow: rgba(14, 17, 24, 0.06);
+  --glass-bg: #ffffff;
+  --glass-border: rgba(14, 17, 24, 0.08);
+  --glass-border-top: rgba(14, 17, 24, 0.08);
+  --glass-blur: 0px;
+  --glass-shadow:
+    0 1px 2px rgba(14, 17, 24, 0.04),
+    0 12px 32px rgba(14, 17, 24, 0.06);
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(14, 17, 24, 0.06);
+  --shadow-md: 0 12px 28px rgba(14, 17, 24, 0.08);
+  --shadow-lg: 0 24px 56px rgba(14, 17, 24, 0.10);
 }
 
 /* Reset */
@@ -68,16 +71,8 @@
 html, body {
   max-width: 100vw;
   overflow-x: hidden;
-  background-color: #08090c;
-  /* --section-bg-image: the church photo chosen in Site settings ("Section background image"),
-     set on <html> by the site layout. Without it, the dark gradient alone is the background. */
-  background-image:
-    linear-gradient(rgba(11, 12, 14, 0.70) 0%, rgba(11, 12, 14, 0.82) 100%),
-    var(--section-bg-image, none),
-    linear-gradient(160deg, #14161c 0%, #08090c 100%);
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
+  /* Plain white page. (The "Section background image" site setting is no longer shown.) */
+  background: #ffffff;
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 16px;

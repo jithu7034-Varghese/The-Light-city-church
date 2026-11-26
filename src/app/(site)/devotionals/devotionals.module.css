@@ -58,7 +58,7 @@
 
 .filterPillActive {
   background: var(--accent);
-  color: var(--bg-secondary);
+  color: #ffffff;
   border-color: var(--accent);
 }
 

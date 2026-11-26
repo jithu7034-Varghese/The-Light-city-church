@@ -5,9 +5,10 @@ import styles from "@/app/(site)/page.module.css";
 import h from "./home.module.css";
 import { cssImageUrl } from "@/lib/media/url";
 
-const SHADE = "linear-gradient(rgba(18, 20, 24, 0.45), rgba(18, 20, 24, 0.15))";
-// Without its own photo, the section uses Site settings → "Section background image", else a dark gradient.
-const NO_IMAGE = `${SHADE}, var(--section-bg-image, none), linear-gradient(135deg, #1c1f26 0%, #0b0c0e 100%)`;
+// White wash over the photo so the dark text stays readable (the site uses a white theme).
+const SHADE = "linear-gradient(rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.72))";
+// Without its own photo, the section is a plain soft-grey panel.
+const NO_IMAGE = "linear-gradient(#f7f8fa, #f7f8fa)";
 
 export const homePrayer = defineSection({
   type: "home_prayer",

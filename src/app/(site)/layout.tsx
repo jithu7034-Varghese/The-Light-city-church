@@ -36,8 +36,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const imageIds = [navbar.logoImage?.mediaId, site.sectionBackground?.mediaId].filter((id): id is string => Boolean(id)).sort();
   const media = await getMediaByIds(imageIds);
   const logoMedia = navbar.logoImage ? media[navbar.logoImage.mediaId] : undefined;
-  // Site settings → "Section background image": used by globals.css / page.module.css through
-  // --section-bg-image, over a dark gradient that also stands alone when no image is chosen.
+  // Site settings → "Section background image", exposed as --section-bg-image. The white theme
+  // no longer paints it behind the page; kept so a section can opt back in.
   const sectionBg = cssImageUrl(site.sectionBackground ? media[site.sectionBackground.mediaId]?.url : null);
   const htmlStyle = sectionBg ? ({ "--section-bg-image": sectionBg } as React.CSSProperties) : undefined;
 
