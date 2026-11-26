@@ -42,6 +42,8 @@
   overflow: hidden;
   min-height: 100vh;
   min-height: 100svh;
+  display: flex;
+  flex-direction: column;
   background: #ffffff;
 }
 .heroArt {
@@ -56,13 +58,17 @@
   /* The artwork's off-white background melts into the white page (no visible image box). */
   mix-blend-mode: multiply;
 }
+/* The intro and the Sunday card sit low in the hero, either side of the rocks (bottom-aligned),
+   well below the artwork's title. */
 .heroLayer {
   position: relative;
-  padding-top: clamp(120px, 12.2vw, 176px);
+  margin-top: auto;
+  padding-top: 112px;
+  padding-bottom: clamp(56px, 12vh, 150px);
 }
 .heroInner {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
 }
@@ -142,11 +148,18 @@
   color: var(--muted);
 }
 
+/* Small laptops / landscape tablets: not enough room beside the rocks, so the intro and card sit
+   at the top, either side of the artwork's title. */
+@media (max-width: 1199px) {
+  .heroLayer { margin-top: 0; padding-top: clamp(120px, 12.2vw, 176px); padding-bottom: 40px; }
+  .heroInner { align-items: flex-start; }
+}
+
 /* Narrow screens: the intro and card stack above the artwork. The layer keeps the bottom
    85% of the artwork's height clear (everything below its title), so nothing covers the title;
    on very short screens the hero grows instead of cutting content. */
 @media (max-width: 959px) {
-  .heroLayer { padding-top: 112px; padding-bottom: calc(var(--art-h) * 0.85); }
+  .heroLayer { margin-top: 0; padding-top: 112px; padding-bottom: calc(var(--art-h) * 0.85); }
   .heroInner { flex-direction: column; gap: 24px; }
   .heroIntro { width: min(560px, 100%); gap: 16px; }
   .heroButtons { max-width: 100%; }
